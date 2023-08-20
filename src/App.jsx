@@ -1,9 +1,10 @@
-import SigninForm from "./components/forms/signinForm"
+import SigninForm from "./pages/SigninForm"
+import UserDetailsForm from "./components/forms/UserDetailsForm"
 
 const App = () => {
   return (
     <div className='w-screen h-screen flex flex-col justify-center items-center'>
-        <SigninForm/>
+        <UserDetailsForm/>
     </div>
   )
 }
