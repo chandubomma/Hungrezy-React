@@ -4,7 +4,6 @@ const UserDetailsForm = ({user,setUser}) => {
     
   return (
     <div className="w-80 md:w-96">
-      <Heading/>
       <div className="flex flex-col md:flex-row">
         <div className="form-floating md:mr-2 mt-2">
             <input 
@@ -107,12 +106,4 @@ const UserDetailsForm = ({user,setUser}) => {
 export default UserDetailsForm
 
 
-const Heading = ()=>{
 
-  return(
-    <div className="mb-3">
-      <h1 className="text-5xl font-bold mb-3"><span className="text-green-800">Hun</span><span className="text-amber-500">Grezy</span></h1>
-      <h4 className="text-lg font-medium text-gray-500">Sign Up</h4>
-    </div>
-  )
-}
