@@ -7,7 +7,7 @@ const UserDetailsForm = ({user,setUser}) => {
       <div className="flex flex-col md:flex-row">
         <div className="form-floating md:mr-2 mt-2">
             <input 
-              className="form-control focus:shadow-none focus:border-amber-600 rounded-sm" 
+              className="form-control focus:shadow-none focus:border-amber-600 rounded-md" 
               id="firstName"
               placeholder="Enter First Name"
               name="firstName"
@@ -25,7 +25,7 @@ const UserDetailsForm = ({user,setUser}) => {
           </div>
           <div className="form-floating mt-2">
             <input 
-              className="form-control focus:shadow-none focus:border-amber-600 rounded-sm" 
+              className="form-control focus:shadow-none focus:border-amber-600 rounded-md" 
               id="lastName"
               placeholder="Enter Last Name"
               name="lastName"
@@ -42,7 +42,7 @@ const UserDetailsForm = ({user,setUser}) => {
         </div>
         <div className="form-floating mt-2">
             <input 
-              className="form-control focus:shadow-none focus:border-amber-600 rounded-sm" 
+              className="form-control focus:shadow-none focus:border-amber-600 rounded-md" 
               id="email"
               placeholder="Enter Email"
               name="email"
@@ -58,7 +58,7 @@ const UserDetailsForm = ({user,setUser}) => {
           </div>
           <div className="form-floating mt-2">
           <input
-            className="form-control focus:shadow-none focus:border-amber-600 rounded-sm" 
+            className="form-control focus:shadow-none focus:border-amber-600 rounded-md" 
             id="password" 
             placeholder="Enter Password" 
             name="password"
@@ -74,13 +74,11 @@ const UserDetailsForm = ({user,setUser}) => {
         </div>
         <div className="form-floating mt-2">
           <input
-            className="form-control focus:shadow-none focus:border-amber-600 rounded-sm" 
+            className="form-control focus:shadow-none focus:border-amber-600 rounded-md" 
             id="confirmPassword" 
             placeholder="Enter Password" 
             name="confirmPassword"
             type="password"
-           
-            
           />
           <label 
             htmlFor="confirmPassword"
@@ -90,12 +88,12 @@ const UserDetailsForm = ({user,setUser}) => {
           </label>
         </div>
         <div className="mt-6">
-          <button className="h-10 w-full bg-amber-500 text-white text-lg font-semibold hover:bg-amber-600 rounded-none">
+          <button className="h-10 w-full bg-gradient-to-r from-amber-700 to-amber-300 text-white text-md font-semibold hover:bg-gradient-to-r hover:from-amber-600 hover:to-amber-300 ease-in-out duration-300 transition-colors rounded-md">
             Sign Up
           </button>
         </div>
         <div className="mt-10 flex flex-row ">
-          <h6 className="text-gray-500 font-semibold text-md w-fit hover:cursor-pointer hover:text-gray-400">
+          <h6 className="text-gray-500 font-medium text-sm w-fit hover:cursor-pointer hover:text-gray-400">
             By creating account, you are accepting all T&C 
           </h6>
         </div>

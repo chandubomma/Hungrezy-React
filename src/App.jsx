@@ -1,11 +1,15 @@
 import SignUpForm from "./pages/SignUpForm"
 import SigninForm from "./pages/SigninForm"
-import UserDetailsForm from "./components/forms/UserDetailsForm"
+import AccountTypeOptions from "./pages/AccountTypeOptions"
+import Home from "./pages/Home"
+
 
 const App = () => {
   return (
     <div className='w-screen h-screen flex flex-col justify-center items-center'>
-        <SignUpForm/>
+      <div className="w-fit">
+       <Home/>
+      </div>
     </div>
   )
 }

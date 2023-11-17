@@ -80,7 +80,7 @@ const OTPField = ({handleVerifyOTP}) => {
               <input value={otp.d6} onKeyDown={(e)=>handleKeyDown6(e)} onChange={(e)=>handleDigit6(e)} ref={d6ref} name="d6" maxLength={1} className="form-control w-12 h-12 focus:shadow-none focus:border-amber-600 rounded-sm mx-1 text-center"/>
             </div>
             <div>
-                <button onClick={()=>handleVerifyOTP()} className="h-10 mt-10 w-[21rem] bg-amber-500 text-white text-lg font-semibold hover:bg-amber-600 rounded-none">
+                <button onClick={()=>handleVerifyOTP()} className="h-10 mt-10 w-[21rem] bg-amber-500 text-white text-md font-semibold hover:bg-amber-600 rounded-none">
                 Verify OTP
                 </button>
             </div>

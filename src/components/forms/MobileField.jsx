@@ -30,7 +30,7 @@ const MobileField = ({signin,handleMobileNumber,handleSendOTP,setSignInWithOTP})
         }
           
         <div className="mb-10">
-            <button onClick={()=>handleSendOTP()} className="h-10 mt-6 w-full bg-amber-500 text-white text-lg font-semibold hover:bg-amber-600 rounded-none">
+            <button onClick={()=>handleSendOTP()} className="h-10 mt-6 w-full bg-amber-500 text-white text-md font-semibold hover:bg-amber-600 rounded-none">
               Send OTP
             </button>
         </div>
