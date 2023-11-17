@@ -128,7 +128,7 @@ const OTPField = ({ handleVerifyOTP }) => {
         <div>
           <button
             onClick={() => handleVerifyOTP()}
-            className="h-10 mt-10 w-[21rem] bg-amber-500 text-white text-lg font-semibold hover:bg-amber-600 rounded-none"
+            className="h-10 mt-10 w-[21rem] bg-amber-500 text-white text-md font-semibold hover:bg-amber-600 rounded-none"
           >
             Verify OTP
           </button>

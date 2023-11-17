@@ -52,12 +52,12 @@ const MobileAndPassword = ({setSignInWithOTP,mobileNumber,handleMobileNumber}) =
           </h6>
         </div>
         <div className="mt-6">
-          <button className="h-10 w-full bg-amber-500 text-white text-lg font-semibold hover:bg-amber-600 rounded-none">
+          <button className="h-10 w-full bg-amber-500 text-white text-md font-semibold hover:bg-amber-600 rounded-none">
             Sign in
           </button>
         </div>
         <div className="mt-16 flex flex-row ">
-          <h6 className="text-gray-500 font-semibold text-md w-fit hover:cursor-pointer hover:text-gray-400">
+          <h6 className="text-gray-500 font-medium text-sm w-fit hover:cursor-pointer hover:text-gray-400">
             New to Hungrezy? create an account
           </h6>
         </div>
