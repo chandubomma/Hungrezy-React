@@ -9,6 +9,9 @@ import {
 } from "react-router-dom";
 import React from "react";
 import Home from "./pages/Home";
+import Restaurants from "./pages/Restaurants";
+import Cart from "./pages/Cart";
+import RestaurantMenu from "./pages/RestaurantMenu";
 
 const Root = () => {
   return (
@@ -24,6 +27,10 @@ const Router = createBrowserRouter(
       <Route index element={<Home />} />
       <Route path="/signup" element={<SignUpForm />} />
       <Route path="/signin" element={<SigninForm />} />
+      <Route path="/restaurants" element={<Restaurants />} />
+      <Route path="/restaurants/:id" element={<RestaurantMenu />} />
+      <Route path="/cart" element={<Cart />} />
+      <Route path="*">Not Found</Route>
     </Route>
   )
 );
