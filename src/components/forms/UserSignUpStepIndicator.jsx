@@ -25,47 +25,27 @@ const StepIndicator = ({ currStep, stepNo, children, lastIndicator }) => {
   if (currStep > stepNo)
     return (
       <div className="flex flex-row justify-center items-center">
-        <div className="w-8 h-8 rounded-full border-amber-500 bg-amber-500 border-2 items-center flex justify-center flex-row">
+        <div className="w-8 h-8 rounded-full border-none bg-gradient-to-r from-amber-500 to-amber-300 border-2 items-center flex justify-center flex-row">
           <TiTick className="text-white text-xl" />
         </div>
         {lastIndicator ? (
           <span></span>
         ) : (
-          <span className="w-24 bg-amber-500 h-0.5 mx-3"></span>
+          <span className="md:w-24 w-16 bg-amber-500 h-0.5 mx-3"></span>
         )}
       </div>
-    )
-}
-
-
-export default UserSignUpStepIndicator
-
-
-const StepIndicator = ({currStep,stepNo,children,lastIndicator})=>{
-    if(currStep>stepNo)
-    return(
-        <div className="flex flex-row justify-center items-center">
-            <div className="w-8 h-8 rounded-full border-none bg-gradient-to-r from-amber-500 to-amber-300 border-2 items-center flex justify-center flex-row">
-                <TiTick className="text-white text-xl"/>
-            </div>
-            {
-                lastIndicator?
-                <span></span>:
-                <span className="md:w-24 w-16 bg-amber-500 h-0.5 mx-3"></span>
-            }
+    );
+  else
+    return (
+      <div className="flex flex-row justify-center items-center">
+        <div className="w-8 h-8 rounded-full border-gray-500 border-2 items-center flex justify-center flex-row">
+          {children}
         </div>
-    )
-    else
-    return(
-        <div className="flex flex-row justify-center items-center">
-            <div className="w-8 h-8 rounded-full border-gray-500 border-2 items-center flex justify-center flex-row">
-                {children}
-            </div>
-            {
-                lastIndicator?
-                <span></span>:
-                <span className="md:w-24 w-16 bg-gray-500 h-0.5 mx-3"></span>
-            }
-        </div>
-    )
-}
+        {lastIndicator ? (
+          <span></span>
+        ) : (
+          <span className="md:w-24 w-16 bg-gray-500 h-0.5 mx-3"></span>
+        )}
+      </div>
+    );
+};
