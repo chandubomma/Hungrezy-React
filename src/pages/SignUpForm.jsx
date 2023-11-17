@@ -18,7 +18,7 @@ const SignUpForm = () => {
 
   if (currStep == 1)
     return (
-      <div className="flex flex-col h-screen w-screen justify-center items-center">
+      <div className="flex flex-col my-20 w-screen justify-center items-center">
         <div className="flex justify-center">
           <UserSignUpStepIndicator currStep={currStep} />
         </div>
@@ -45,7 +45,7 @@ const SignUpForm = () => {
     );
 
   return (
-    <div className="flex flex-col h-screen w-screen justify-center items-center">
+    <div className="flex flex-col my-20 w-screen justify-center items-center">
       <div className="flex justify-center">
         <UserSignUpStepIndicator currStep={currStep} />
       </div>
