@@ -1,12 +1,16 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import logo from "./../../assets/logoAsset.png";
 import { FaUser, FaBars } from "react-icons/fa";
 import { FaXmark } from "react-icons/fa6";
+import { motion } from "framer-motion";
+
 const Navbar = () => {
   const { pathname } = useLocation();
   const [showDropdown, setShowDropdown] = useState(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [prevScrollPos, setPrevScrollPos] = useState(0);
+  const [visible, setVisible] = useState(true);
 
   const isLinkActive = (path) => {
     return pathname === path;
@@ -17,18 +21,34 @@ const Navbar = () => {
   };
 
   const handleLogout = () => {
-    // Implement your logout logic here
-    // For example, clear authentication token, user data, etc.
-    // Then redirect the user to the home page or login page
     setShowDropdown(false);
+    // Implement your logout logic here
   };
 
   const handleDrawerToggle = () => {
     setIsDrawerOpen(!isDrawerOpen);
   };
 
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollPos = window.scrollY;
+
+      setVisible(currentScrollPos <= 50 || currentScrollPos < prevScrollPos);
+      setPrevScrollPos(currentScrollPos);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [prevScrollPos]);
+
   return (
-    <div className="w-full">
+    <motion.div
+      className={`w-full fixed top-0 z-50 ${visible ? "bg-white" : "hidden"}`}
+      animate={{ opacity: visible ? 1 : 0 }}
+      transition={{ duration: 0.2 }}
+    >
       <div className="hidden lg:flex px-48 py-10 w-full justify-between items-center">
         <Link
           to="/"
@@ -155,15 +175,30 @@ const Navbar = () => {
 
       {/* Drawer for Mobile */}
       {isDrawerOpen && (
-        <div className="lg:hidden fixed inset-0 bg-black/80 bg-opacity-30 z-50">
-          <div className="bg-white h-full w-72 p-4 fixed top-0 left-0">
+        <motion.div
+          className="lg:hidden fixed inset-0 bg-black/80 bg-opacity-30 z-50"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+        >
+          <motion.div
+            className="bg-white h-full w-72 p-4 fixed top-0 left-0"
+            initial={{ x: "-100%" }}
+            animate={{ x: 0 }}
+            transition={{ duration: 0.5 }}
+          >
             <div className="flex justify-end">
               <FaXmark
                 className="text-3xl cursor-pointer"
                 onClick={handleDrawerToggle}
               />
             </div>
-            <div className="flex flex-col gap-4">
+            <motion.div
+              className="flex flex-col gap-4"
+              initial={{ opacity: 0, y: -50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1 }}
+            >
               <Link
                 to="/"
                 className={`${
@@ -202,11 +237,11 @@ const Navbar = () => {
               >
                 Contact Us
               </Link>
-            </div>
-          </div>
-        </div>
+            </motion.div>
+          </motion.div>
+        </motion.div>
       )}
-    </div>
+    </motion.div>
   );
 };
 
