@@ -4,7 +4,7 @@ import { FaStar } from "react-icons/fa6";
 const RestaurantCard = ({ restaurant }) => {
   return (
     <div className="w-96 mx-auto bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition duration-300 ease-in-out">
-      <img className="w-full h-48 object-cover" src='https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/fartmcdlydc0soohkevd' alt={restaurant.name} />
+      <img className="w-full h-48 object-cover" src={restaurant.image || 'https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/fartmcdlydc0soohkevd'} alt={restaurant.name} />
       <div className="p-6">
         <h2 className="font-semibold text-xl mb-2">{restaurant.name}</h2>
         <p className="text-gray-600 text-sm mb-4">{restaurant.cuisine}</p>
