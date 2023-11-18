@@ -21,7 +21,7 @@ const Welcome = () => {
 
   return (
     <motion.div
-      className="lg:px-48 min-[100px]:px-16 pt-16 flex flex-col md:flex-row justify-between items-center"
+      className="lg:px-48 min-[100px]:px-16 pt-56 flex flex-col md:flex-row justify-between items-center"
       initial="hidden"
       animate={controls}
       variants={variants}

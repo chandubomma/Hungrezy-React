@@ -11,6 +11,7 @@ body {
   font-family: "Montserrat", sans-serif;
   /* background-color: #f4f4f4; */
   margin: 0;
+  overflow-x: hidden;
 }
 
 h1,
@@ -51,4 +52,33 @@ h6 {
   stroke-dashoffset: calc(125.6 * (1 - var(--progress)));
   stroke-dasharray: 125.6;
   transform: rotate(-90deg);
+}
+
+/* For WebKit browsers (Chrome, Safari) */
+::-webkit-scrollbar {
+  width: 6px; /* Set the width of the scrollbar */
+}
+
+::-webkit-scrollbar-track {
+  background-color: #f1f1f1; /* Set the background color of the scrollbar track */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #888; /* Set the color of the scrollbar thumb (the draggable part) */
+  border-radius: 6px; /* Round the corners of the thumb */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #555; /* Change the color of the thumb on hover */
+}
+
+/* For Firefox */
+/* Note: These properties may be experimental and subject to change */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #888 #f1f1f1;
+}
+
+*:hover {
+  scrollbar-color: #555 #f1f1f1;
 }

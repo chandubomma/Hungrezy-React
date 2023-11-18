@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import logo from "./../../assets/logoAsset.png";
 import { FaUser, FaBars } from "react-icons/fa";
@@ -9,6 +9,8 @@ const Navbar = () => {
   const { pathname } = useLocation();
   const [showDropdown, setShowDropdown] = useState(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [prevScrollPos, setPrevScrollPos] = useState(0);
+  const [visible, setVisible] = useState(true);
 
   const isLinkActive = (path) => {
     return pathname === path;
@@ -19,24 +21,35 @@ const Navbar = () => {
   };
 
   const handleLogout = () => {
-    // Implement your logout logic here
-    // For example, clear authentication token, user data, etc.
-    // Then redirect the user to the home page or login page
     setShowDropdown(false);
+    // Implement your logout logic here
   };
 
   const handleDrawerToggle = () => {
     setIsDrawerOpen(!isDrawerOpen);
   };
 
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollPos = window.scrollY;
+
+      setVisible(currentScrollPos <= 50 || currentScrollPos < prevScrollPos);
+      setPrevScrollPos(currentScrollPos);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [prevScrollPos]);
+
   return (
-    <div className="w-full">
-      <motion.div
-        className="hidden lg:flex px-48 py-10 w-full justify-between items-center"
-        initial={{ opacity: 0, y: -50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1 }}
-      >
+    <motion.div
+      className={`w-full fixed top-0 z-50 ${visible ? "bg-white" : "hidden"}`}
+      animate={{ opacity: visible ? 1 : 0 }}
+      transition={{ duration: 0.2 }}
+    >
+      <div className="hidden lg:flex px-48 py-10 w-full justify-between items-center">
         <Link
           to="/"
           className="flex align-middle items-center gap-2 transition-transform transform hover:scale-110 hover:opacity-80"
@@ -82,25 +95,15 @@ const Navbar = () => {
             Contact Us
           </Link>
         </div>
-        <motion.div
-          className="relative"
-          initial={{ opacity: 0, y: -50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1 }}
-        >
-          <motion.div
+        <div className="relative">
+          <div
             className="w-fit h-fit border-[1.5px] p-2 rounded-full border-gray-500 hover:scale-110 transition-transform transform cursor-pointer"
             onClick={handleUserClick}
           >
             <FaUser className="text-2xl text-gray-500" />
-          </motion.div>
+          </div>
           {showDropdown && (
-            <motion.div
-              className="absolute top-12 right-0 bg-white border border-gray-400 p-2 w-36 rounded shadow-md flex flex-col items-center"
-              initial={{ opacity: 0, y: -50 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.2 }}
-            >
+            <div className="absolute top-12 right-0 bg-white border border-gray-400 p-2 w-36 rounded shadow-md flex flex-col items-center">
               <Link
                 to="/signup"
                 className="block py-1 px-4 hover:bg-gray-50 hover:font-semibold text-gray-800 border-b border-gray-300 w-full text-center"
@@ -113,24 +116,18 @@ const Navbar = () => {
               >
                 Sign In
               </Link>
-              <motion.button
+              <button
                 onClick={handleLogout}
                 className="block py-1 px-4 hover:font-semibold hover:bg-gray-50 text-gray-800 border-gray-300 w-full text-center"
-                whileHover={{ scale: 1.05 }}
               >
                 Logout
-              </motion.button>
-            </motion.div>
+              </button>
+            </div>
           )}
-        </motion.div>
-      </motion.div>
+        </div>
+      </div>
 
-      <motion.div
-        className="lg:hidden px-10 py-10 flex justify-between items-center"
-        initial={{ opacity: 0, y: -50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1 }}
-      >
+      <div className="lg:hidden px-10 py-10 flex justify-between items-center">
         <Link
           to="/"
           className="flex align-middle items-center gap-2 transition-transform transform hover:scale-110 hover:opacity-80"
@@ -138,25 +135,15 @@ const Navbar = () => {
           <img src={logo} alt="logo" className="w-16" />
           <h2 className="font-bold text-2xl">Hungrezy</h2>
         </Link>
-        <motion.div
-          className="relative"
-          initial={{ opacity: 0, y: -50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1 }}
-        >
-          <motion.div
+        <div className="relative">
+          <div
             className="w-fit h-fit border-[1.5px] p-2 rounded-full border-gray-500 hover:scale-110 transition-transform transform cursor-pointer"
             onClick={handleUserClick}
           >
             <FaUser className="text-2xl text-gray-500" />
-          </motion.div>
+          </div>
           {showDropdown && (
-            <motion.div
-              className="absolute top-12 right-0 bg-white border border-gray-300 p-2 w-32 rounded shadow-md"
-              initial={{ opacity: 0, y: -50 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1 }}
-            >
+            <div className="absolute top-12 right-0 bg-white border border-gray-300 p-2 w-32 rounded shadow-md">
               <Link
                 to="/signup"
                 className="block py-1 px-4 hover:font-semibold text-gray-800 hover:text-amber-500 hover:scale-105 transition-colors duration-300 rounded border-b border-gray-300"
@@ -169,23 +156,22 @@ const Navbar = () => {
               >
                 SignIn
               </Link>
-              <motion.button
+              <button
                 onClick={handleLogout}
                 className="block py-1 px-4 hover:font-semibold text-gray-800 hover:text-red-500 hover:scale-105 transition-colors duration-300 rounded border-b border-gray-300"
-                whileHover={{ scale: 1.05 }}
               >
                 Logout
-              </motion.button>
-            </motion.div>
+              </button>
+            </div>
           )}
-        </motion.div>
+        </div>
         <div>
           <FaBars
             className="text-3xl cursor-pointer"
             onClick={handleDrawerToggle}
           />
         </div>
-      </motion.div>
+      </div>
 
       {/* Drawer for Mobile */}
       {isDrawerOpen && (
@@ -255,7 +241,7 @@ const Navbar = () => {
           </motion.div>
         </motion.div>
       )}
-    </div>
+    </motion.div>
   );
 };
 
