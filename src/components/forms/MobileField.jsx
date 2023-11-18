@@ -3,7 +3,7 @@
 const MobileField = ({signin,handleMobileNumber,handleSendOTP,setSignInWithOTP}) => {
   return (
     <div>
-        <div className="form-floating  mt-3">
+        <div className="form-floating  mt-3 w-80">
             <input 
               className="form-control focus:shadow-none focus:border-amber-600 rounded-sm" 
               id="mobileNumber"
