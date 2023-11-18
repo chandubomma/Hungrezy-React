@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion, useAnimation } from "framer-motion";
 import { FaFacebook, FaTwitter, FaInstagram } from "react-icons/fa";
 import logo from "./../../assets/logoAsset.png";
 import { useInView } from "react-intersection-observer";
@@ -8,21 +8,22 @@ const Footer = () => {
   const [ref, inView] = useInView({
     triggerOnce: true,
   });
+  const controls = useAnimation();
 
   useEffect(() => {
     if (inView) {
-      // Add any logic you want to run when the Footer component becomes visible
+      controls.start("visible");
     }
-  }, [inView]);
+  }, [inView, controls]);
 
   const containerVariants = {
     hidden: { opacity: 0, y: 50 },
-    visible: { opacity: 1, y: 0, transition: { duration: 1 } },
+    visible: { opacity: 1, y: 0, transition: { duration: 2 } },
   };
 
   const socialIconVariants = {
     hidden: { opacity: 0, scale: 0.8 },
-    visible: { opacity: 1, scale: 1, transition: { duration: 1 } },
+    visible: { opacity: 1, scale: 1, transition: { duration: 2 } },
   };
 
   return (

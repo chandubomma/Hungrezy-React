@@ -78,19 +78,19 @@ const Welcome = () => {
         <motion.img
           src={pexels}
           alt="pexels"
-          className="min-[1100px]:w-96 w-72 max-[766px]:max-w-[18rem]"
+          className="min-[1200px]:w-96 w-72 min-[1000]:w-80 max-[766px]:max-w-[18rem]"
           whileHover={{ scale: 1.05 }}
         />
         <motion.img
           src={jonathan}
           alt="jonathon"
-          className="w-1/2 md:w-40 absolute -left-[2rem] -top-2.5 max-w-[15rem] md:max-w-full"
+          className="w-1/2 md:w-40 absolute -left-[4.5rem] -top-2.5 max-w-[15rem] md:max-w-full"
           whileHover={{ scale: 1.05 }}
         />
         <motion.img
           src={uliana}
           alt="pexels"
-          className="w-1/2 md:w-40 absolute -left-[2rem] -bottom-2 max-w-[15rem] md:max-w-full"
+          className="w-1/2 md:w-40 absolute -left-[4.5rem] -bottom-2 max-w-[15rem] md:max-w-full"
           whileHover={{ scale: 1.05 }}
         />
       </motion.div>
