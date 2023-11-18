@@ -9,7 +9,7 @@ const SigninForm = () => {
     setMobileNumber(e.target.value);
   };
   return (
-    <div className="w-screen my-20 flex flex-col justify-center items-center">
+    <div className="w-screen my-56 flex flex-col justify-center items-center">
       {signInWithOTP ? (
         <MobileAndOTP
           mobileNumber={mobileNumber}

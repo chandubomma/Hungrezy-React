@@ -18,13 +18,13 @@ const SignUpForm = () => {
 
   if (currStep == 1)
     return (
-      <div className="flex flex-col my-20 w-screen justify-center items-center">
+      <div className="flex flex-col my-56 w-screen justify-center items-center">
         <div className="flex justify-center">
           <UserSignUpStepIndicator currStep={currStep} />
         </div>
 
         <div className="mt-16">
-          <h3 className="mb-8 text-xl text-gray-500 font-medium">
+          <h3 className="mb-8 w-80 text-xl text-gray-500 font-medium">
             Verify Mobile Number
           </h3>
           <MobileField handleSendOTP={handleSendOTP} />
@@ -33,7 +33,7 @@ const SignUpForm = () => {
     );
   else if (currStep == 2)
     return (
-      <div className="flex flex-col my-20 w-screen justify-center items-center">
+      <div className="flex flex-col my-56 w-screen justify-center items-center">
         <div className="flex justify-center">
           <UserSignUpStepIndicator currStep={currStep} />
         </div>
@@ -45,7 +45,7 @@ const SignUpForm = () => {
     );
 
   return (
-    <div className="flex flex-col my-20 w-screen justify-center items-center">
+    <div className="flex flex-col my-56 w-screen justify-center items-center">
       <div className="flex justify-center">
         <UserSignUpStepIndicator currStep={currStep} />
       </div>
