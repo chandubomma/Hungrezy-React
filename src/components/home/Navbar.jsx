@@ -83,22 +83,22 @@ const Navbar = () => {
             <FaUser className="text-2xl text-gray-500" />
           </div>
           {showDropdown && (
-            <div className="absolute top-12 right-0 bg-white border border-gray-300 p-2 w-32 rounded shadow-md">
+            <div className="absolute top-12 right-0 bg-white border border-gray-400 p-2 w-36 rounded shadow-md flex flex-col items-center">
               <Link
                 to="/signup"
-                className="block py-1 px-4 hover:font-semibold text-gray-800 hover:text-amber-500 hover:scale-105 transition-colors duration-300 rounded border-b border-gray-300"
+                className="block py-1 px-4 hover:bg-gray-50 hover:font-semibold text-gray-800 border-b border-gray-300 w-full text-center"
               >
-                SignUp
+                Sign Up
               </Link>
               <Link
                 to="/signin"
-                className="block py-1 px-4 hover:font-semibold text-gray-800 hover:text-amber-500 hover:scale-105 transition-colors duration-300 rounded border-b border-gray-300"
+                className="block py-1 px-4 hover:font-semibold text-gray-800 border-b hover:bg-gray-50 border-gray-300 w-full text-center"
               >
-                SignIn
+                Sign In
               </Link>
               <button
                 onClick={handleLogout}
-                className="block py-1 px-4 hover:font-semibold text-gray-800 hover:text-red-500 hover:scale-105 transition-colors duration-300 rounded border-b border-gray-300"
+                className="block py-1 px-4 hover:font-semibold hover:bg-gray-50 text-gray-800 border-gray-300 w-full text-center"
               >
                 Logout
               </button>
