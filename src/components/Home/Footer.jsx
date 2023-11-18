@@ -1,22 +1,60 @@
+import { motion } from "framer-motion";
 import { FaFacebook, FaTwitter, FaInstagram } from "react-icons/fa";
 import logo from "./../../assets/logoAsset.png";
+import { useInView } from "react-intersection-observer";
+import { useEffect } from "react";
 
 const Footer = () => {
+  const [ref, inView] = useInView({
+    triggerOnce: true,
+  });
+
+  useEffect(() => {
+    if (inView) {
+      // Add any logic you want to run when the Footer component becomes visible
+    }
+  }, [inView]);
+
+  const containerVariants = {
+    hidden: { opacity: 0, y: 50 },
+    visible: { opacity: 1, y: 0, transition: { duration: 1 } },
+  };
+
+  const socialIconVariants = {
+    hidden: { opacity: 0, scale: 0.8 },
+    visible: { opacity: 1, scale: 1, transition: { duration: 1 } },
+  };
+
   return (
-    <footer className="bg-gray-800 text-white py-24 mt-4">
+    <motion.footer
+      className="bg-gray-800 text-white py-24 mt-4"
+      variants={containerVariants}
+      initial="hidden"
+      animate={inView ? "visible" : "hidden"}
+      ref={ref}
+    >
       <div className="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
-        <div className="col-span-1 md:col-span-1 flex flex-col items-center">
-          <div className="flex items-center justify-center rounded-full h-16 w-16 mb-4">
-            <img src={logo} alt="logo" className="w-16" />
-          </div>
-          <div className="text-center">
+        <motion.div
+          className="col-span-1 md:col-span-1 flex flex-col items-center"
+          variants={containerVariants}
+        >
+          <motion.div
+            className="flex items-center justify-center rounded-full h-16 w-16 mb-4"
+            variants={socialIconVariants}
+          >
+            <motion.img src={logo} alt="logo" whileHover={{ scale: 1.1 }} />
+          </motion.div>
+          <motion.div className="text-center" variants={containerVariants}>
             <h2 className="font-bold text-3xl">Hungrezy</h2>
             <p className="text-md font-light my-2">Food Delivery App</p>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
         {/* Contact Information */}
-        <div className="col-span-1 md:col-span-1">
+        <motion.div
+          className="col-span-1 md:col-span-1"
+          variants={containerVariants}
+        >
           <div className="mb-4 font-light">
             <strong className="text-md font-semibold">Contact:</strong>{" "}
             hungrezy@gmail.com
@@ -30,12 +68,15 @@ const Footer = () => {
           <div className="mb-4">
             <strong>Timings:</strong> Mon-Fri: 9am-6pm
           </div>
-        </div>
+        </motion.div>
 
         {/* Quick Links */}
-        <div className="col-span-1 md:col-span-1">
+        <motion.div
+          className="col-span-1 md:col-span-1"
+          variants={containerVariants}
+        >
           <div className="mb-4">Quick Links:</div>
-          <ul className="list-none">
+          <motion.ul className="list-none" variants={containerVariants}>
             <li className="mb-2">
               <a href="/">Home</a>
             </li>
@@ -48,20 +89,32 @@ const Footer = () => {
             <li className="mb-2">
               <a href="/contact">Contact</a>
             </li>
-          </ul>
-        </div>
+          </motion.ul>
+        </motion.div>
 
         {/* Social Media */}
-        <div className="col-span-1 md:col-span-1">
+        <motion.div
+          className="col-span-1 md:col-span-1"
+          variants={containerVariants}
+        >
           <div className="mb-4">Connect with Us:</div>
-          <div className="flex items-center space-x-4">
-            <FaFacebook className="text-2xl hover:text-blue-600 cursor-pointer" />
-            <FaInstagram className="text-2xl hover:text-fuchsia-500 cursor-pointer" />
-            <FaTwitter className="text-2xl hover:text-sky-500 cursor-pointer" />
-          </div>
-        </div>
+          <motion.div
+            className="flex items-center space-x-4"
+            variants={socialIconVariants}
+          >
+            <motion.span whileHover={{ scale: 1.1 }}>
+              <FaFacebook className="text-2xl hover:text-blue-600 cursor-pointer" />
+            </motion.span>
+            <motion.span whileHover={{ scale: 1.1 }}>
+              <FaInstagram className="text-2xl hover:text-pink-600 cursor-pointer" />
+            </motion.span>
+            <motion.span whileHover={{ scale: 1.1 }}>
+              <FaTwitter className="text-2xl hover:text-blue-400 cursor-pointer" />
+            </motion.span>
+          </motion.div>
+        </motion.div>
       </div>
-    </footer>
+    </motion.footer>
   );
 };
 

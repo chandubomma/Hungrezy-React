@@ -1,8 +1,37 @@
 import { FaList, FaMotorcycle, FaSearch } from "react-icons/fa";
+import { motion, useAnimation } from "framer-motion";
+import { useInView } from "react-intersection-observer";
+import { useEffect } from "react";
 
 const Working = () => {
+  const controls = useAnimation();
+  const [ref, inView] = useInView({ triggerOnce: true });
+
+  useEffect(() => {
+    if (inView) {
+      controls.start("visible");
+    }
+  }, [controls, inView]);
+
+  const containerVariants = {
+    hidden: { opacity: 0, y: 50 },
+    visible: { opacity: 1, y: 0, transition: { duration: 1.5 } },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, x: -50 },
+    visible: { opacity: 1, x: 0, transition: { duration: 1 } },
+    hover: { scale: 1.1 },
+  };
+
   return (
-    <div className="lg:px-48 min-[100px]:px-16 lg:mt-64 mt-32 flex flex-col justify-between items-center bg-yellow-50 py-20">
+    <motion.div
+      className="lg:px-48 min-[100px]:px-16 lg:mt-64 mt-32 flex flex-col justify-between items-center bg-yellow-50 py-20"
+      variants={containerVariants}
+      initial="hidden"
+      animate={controls}
+      ref={ref}
+    >
       <h2 className="mx-auto font-semibold text-2xl text-orange-500">
         HOW DOES IT WORK
       </h2>
@@ -15,8 +44,15 @@ const Working = () => {
         <span className="text-orange-500">Fresh</span>.
       </p>
 
-      <div className="flex flex-col md:flex-row justify-between items-center w-full mt-10">
-        <div className="flex flex-col items-center cursor-pointer">
+      <motion.div
+        className="flex flex-col md:flex-row justify-between items-center w-full mt-10"
+        variants={containerVariants}
+      >
+        <motion.div
+          className="flex flex-col items-center cursor-pointer"
+          variants={itemVariants}
+          whileHover="hover"
+        >
           <div className="w-24 h-24 bg-amber-500 rounded-full flex justify-center items-center">
             <FaSearch className="w-10 h-10 text-white" />
           </div>
@@ -24,8 +60,12 @@ const Working = () => {
           <p className="text-gray-600 text-center font-light mt-2">
             Find restaurants that deliver to you by entering your address.
           </p>
-        </div>
-        <div className="flex flex-col items-center mt-10 md:mt-0 cursor-pointer">
+        </motion.div>
+        <motion.div
+          className="flex flex-col items-center mt-10 md:mt-0 cursor-pointer"
+          variants={itemVariants}
+          whileHover="hover"
+        >
           <div className="w-24 h-24 bg-amber-500 rounded-full flex justify-center items-center">
             <FaList className="w-10 h-10 text-white" />
           </div>
@@ -33,8 +73,12 @@ const Working = () => {
           <p className="text-gray-600 text-center font-light mt-2">
             Browse hundreds of menus to find the food you like.
           </p>
-        </div>
-        <div className="flex flex-col items-center mt-10 md:mt-0 cursor-pointer">
+        </motion.div>
+        <motion.div
+          className="flex flex-col items-center mt-10 md:mt-0 cursor-pointer"
+          variants={itemVariants}
+          whileHover="hover"
+        >
           <div className="w-24 h-24 bg-amber-500 rounded-full flex justify-center items-center">
             <FaMotorcycle className="w-10 h-10 text-white" />
           </div>
@@ -42,9 +86,9 @@ const Working = () => {
           <p className="text-gray-600 text-center font-light mt-2">
             Your order will be delivered to you in no time.
           </p>
-        </div>
-      </div>
-    </div>
+        </motion.div>
+      </motion.div>
+    </motion.div>
   );
 };
 
