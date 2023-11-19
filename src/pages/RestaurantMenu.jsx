@@ -3,6 +3,7 @@ import RestaurantMenuCategory from '../components/Restaurant/RestaurantMenuCateg
 import { FaCircleInfo } from "react-icons/fa6";
 import { FaStar } from "react-icons/fa6";
 import { MdRestaurantMenu } from "react-icons/md";
+import RestaurantReviews from '../components/Restaurant/RestaurantReviews';
 
 
 const RestaurantMenu = ({ restaurant }) => {
@@ -136,7 +137,7 @@ const RestaurantMenu = ({ restaurant }) => {
       {
         activeTab=="reviews" &&
         <div>
-          Reviews
+         <RestaurantReviews/>
         </div>
       }
 
