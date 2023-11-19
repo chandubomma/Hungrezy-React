@@ -35,7 +35,7 @@ const Testimonials = () => {
       <h2 className="mx-auto font-semibold text-lg text-orange-500">
         TESTIMONIALS
       </h2>
-      <p className="lg:mx-auto font-normal text-5xl my-3">
+      <p className="lg:mx-auto font-normal text-7xl my-3">
         What our customers say
       </p>
       <div className="flex flex-wrap justify-center">
