@@ -4,9 +4,11 @@ import { FaCircleInfo } from "react-icons/fa6";
 import { FaStar } from "react-icons/fa6";
 import { MdRestaurantMenu } from "react-icons/md";
 import RestaurantReviews from '../components/Restaurant/RestaurantReviews';
+import { useLocation } from 'react-router-dom';
 
-
-const RestaurantMenu = ({ restaurant }) => {
+const RestaurantMenu = () => {
+  const location = useLocation();
+  const restaurant = location.state?.restaurant;
   const [foodItems, setFoodItems] = useState(restaurant.menu);
   const [activeTab, setActiveTab] = useState('menu');
   const [isCategoryListVisible, setCategoryListVisible] = useState(false);
@@ -70,7 +72,7 @@ const RestaurantMenu = ({ restaurant }) => {
   };
   
   return (
-    <div className="container w-[55rem] mx-auto p-4">
+    <div className="container w-[55rem] mx-auto p-4 mt-28">
       <div className='flex h-fit bg-gradient-to-r from-amber-200 to-orange-400/90 py-8 px-4 rounded-md shadow-md'>
         <div>
           <h2 className="text-3xl font-extrabold pt-2 text-gray-600">{restaurant.name}</h2>

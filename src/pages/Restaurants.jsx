@@ -155,13 +155,12 @@ const Restaurants = () => {
   ];
   return (
     <div className="mt-32">
-      {/* <RestaurantTopBar/> */}
+      <RestaurantTopBar/>
       {
         data!=null &&
-        //  <div className="mt-6">
-        //   <RestaurantGrid restaurants={data} /> 
-        //  </div>
-        <RestaurantMenu restaurant={data[8]}/>
+         <div className="mt-6">
+          <RestaurantGrid restaurants={data} /> 
+         </div>
       }
       
     </div>
