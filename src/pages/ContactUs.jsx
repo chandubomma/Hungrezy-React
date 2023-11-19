@@ -1,7 +1,7 @@
 import { FaAddressBook, FaChevronRight, FaPhoneAlt } from "react-icons/fa";
 import { motion } from "framer-motion";
 import contactBackground from "../assets/contactBackground.jpg";
-import overlayImage from "../assets/contactOverlay.png";
+import overlayImage from "../assets/overlay.png";
 import { MdEmail } from "react-icons/md";
 import { FaLocationDot } from "react-icons/fa6";
 import { IoIosSend } from "react-icons/io";
@@ -41,8 +41,8 @@ const ContactUs = () => {
         src={overlayImage}
         alt="overlay image"
         className="absolute top-0 left-0 w-full h-[60%] object-cover"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
+        initial={{ opacity: 1 }}
+        animate={{ opacity: 0.8 }}
         transition={{ duration: 1 }}
       />
       <motion.div
