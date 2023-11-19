@@ -2,13 +2,14 @@ import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import logo from "./../../assets/logoAsset.png";
 import { FaUser, FaBars } from "react-icons/fa";
-import { FaXmark } from "react-icons/fa6";
+import { FaCartShopping, FaXmark } from "react-icons/fa6";
 import { motion } from "framer-motion";
 
 const Navbar = () => {
   const { pathname } = useLocation();
   const [showDropdown, setShowDropdown] = useState(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isCartDrawerOpen, setIsCartDrawerOpen] = useState(false);
   const [prevScrollPos, setPrevScrollPos] = useState(0);
   const [visible, setVisible] = useState(true);
 
@@ -27,6 +28,10 @@ const Navbar = () => {
 
   const handleDrawerToggle = () => {
     setIsDrawerOpen(!isDrawerOpen);
+  };
+
+  const handleCartDrawerToggle = () => {
+    setIsCartDrawerOpen(!isCartDrawerOpen);
   };
 
   useEffect(() => {
@@ -57,7 +62,7 @@ const Navbar = () => {
           <img src={logo} alt="logo" className="w-16" />
           <h2 className="font-bold text-2xl">Hungrezy</h2>
         </Link>
-        <div className="flex items-center gap-10">
+        <div className="flex items-center lg:gap-10 gap-4">
           <Link
             to="/"
             className={`${
@@ -95,7 +100,14 @@ const Navbar = () => {
             Contact Us
           </Link>
         </div>
-        <div className="relative">
+
+        <div className="relative flex lg:gap-4">
+          <div
+            onClick={handleCartDrawerToggle}
+            className="w-fit h-fit border-[1.5px] p-2 rounded-full border-gray-500 hover:scale-110 transition-transform transform cursor-pointer"
+          >
+            <FaCartShopping className="text-2xl text-gray-500" />
+          </div>
           <div
             className="w-fit h-fit border-[1.5px] p-2 rounded-full border-gray-500 hover:scale-110 transition-transform transform cursor-pointer"
             onClick={handleUserClick}
@@ -135,43 +147,76 @@ const Navbar = () => {
           <img src={logo} alt="logo" className="w-16" />
           <h2 className="font-bold text-2xl">Hungrezy</h2>
         </Link>
-        <div className="relative">
+
+        <div className="flex items-center justify-between gap-3">
           <div
+            onClick={handleCartDrawerToggle}
             className="w-fit h-fit border-[1.5px] p-2 rounded-full border-gray-500 hover:scale-110 transition-transform transform cursor-pointer"
-            onClick={handleUserClick}
           >
-            <FaUser className="text-2xl text-gray-500" />
+            <FaCartShopping className="text-2xl text-gray-500" />
           </div>
-          {showDropdown && (
-            <div className="absolute top-12 right-0 bg-white border border-gray-300 p-2 w-32 rounded shadow-md">
-              <Link
-                to="/signup"
-                className="block py-1 px-4 hover:font-semibold text-gray-800 hover:text-amber-500 hover:scale-105 transition-colors duration-300 rounded border-b border-gray-300"
-              >
-                SignUp
-              </Link>
-              <Link
-                to="/signin"
-                className="block py-1 px-4 hover:font-semibold text-gray-800 hover:text-amber-500 hover:scale-105 transition-colors duration-300 rounded border-b border-gray-300"
-              >
-                SignIn
-              </Link>
-              <button
-                onClick={handleLogout}
-                className="block py-1 px-4 hover:font-semibold text-gray-800 hover:text-red-500 hover:scale-105 transition-colors duration-300 rounded border-b border-gray-300"
-              >
-                Logout
-              </button>
+          <div className="relative">
+            <div
+              className="w-fit h-fit border-[1.5px] p-2 rounded-full border-gray-500 hover:scale-110 transition-transform transform cursor-pointer"
+              onClick={handleUserClick}
+            >
+              <FaUser className="text-2xl text-gray-500" />
             </div>
-          )}
-        </div>
-        <div>
+            {showDropdown && (
+              <div className="absolute top-12 right-0 bg-white border border-gray-300 p-2 w-32 rounded shadow-md">
+                <Link
+                  to="/signup"
+                  className="block py-1 px-4 hover:font-semibold text-gray-800 hover:text-amber-500 hover:scale-105 transition-colors duration-300 rounded border-b border-gray-300"
+                >
+                  SignUp
+                </Link>
+                <Link
+                  to="/signin"
+                  className="block py-1 px-4 hover:font-semibold text-gray-800 hover:text-amber-500 hover:scale-105 transition-colors duration-300 rounded border-b border-gray-300"
+                >
+                  SignIn
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="block py-1 px-4 hover:font-semibold text-gray-800 hover:text-red-500 hover:scale-105 transition-colors duration-300 rounded border-b border-gray-300"
+                >
+                  Logout
+                </button>
+              </div>
+            )}
+          </div>
           <FaBars
             className="text-3xl cursor-pointer"
             onClick={handleDrawerToggle}
           />
         </div>
       </div>
+
+      {isCartDrawerOpen && (
+        <motion.div
+          className="fixed inset-0 bg-black/80 bg-opacity-30 z-50"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+        >
+          <motion.div
+            className={`bg-white h-full w-96 p-4 fixed top-0 ${
+              isDrawerOpen ? "left-0" : "right-0"
+            }`}
+            initial={{ x: isDrawerOpen ? "-100%" : "100%" }}
+            animate={{ x: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <div className="flex justify-end">
+              <FaXmark
+                className="text-3xl cursor-pointer"
+                onClick={handleCartDrawerToggle}
+              />
+            </div>
+            {/* Add your cart items and other content here */}
+          </motion.div>
+        </motion.div>
+      )}
 
       {/* Drawer for Mobile */}
       {isDrawerOpen && (
