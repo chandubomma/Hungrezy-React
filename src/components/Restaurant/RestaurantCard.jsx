@@ -12,7 +12,7 @@ const RestaurantCard = ({ restaurant }) => {
           <button className="bg-amber-400 hover:bg-amber-500 text-white font-bold py-2 px-4 rounded-full">
             Order Now
           </button>
-          <span className='font-medium'>{restaurant.rating}<FaStar className='inline ml-1 mb-1.5 text-yellow-600' /></span>
+          <span className='font-medium'>{restaurant.rating}<FaStar className='inline ml-1 mb-1.5 text-amber-500' /></span>
           <span className="text-gray-500">{restaurant.cost}</span>
         </div>
       </div>
