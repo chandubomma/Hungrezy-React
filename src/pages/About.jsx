@@ -8,6 +8,7 @@ import payment from "./../assets/payment.png";
 import orderSent from "./../assets/orderSent.png";
 import happyTummy from "./../assets/happy.png";
 import Footer from "./../components/home/Footer";
+import aboutImage from "./../assets/aboutImage.png";
 
 const About = () => {
   const containerVariants = {
@@ -72,16 +73,16 @@ const About = () => {
       {/* Content */}
       <motion.div className="w-full py-20 flex lg:px-48 min-[100px]:px-16 px-16 justify-between gap-5">
         <motion.div
-          className="flex-1 rounded-3xl bg-red-100 overflow-hidden"
+          className="flex-1 rounded-3xl h-[30rem] overflow-hidden"
           variants={contentVariants}
         >
           <img
-            src={aboutBackground}
+            src={aboutImage}
             alt="about background"
             className="object-cover w-full h-full"
           />
         </motion.div>
-        <motion.div className="flex-1" variants={contentVariants}>
+        <motion.div className="flex-1 h-[30rem]" variants={contentVariants}>
           <h1 className="text-orange-500 font-bold text-lg my-3">
             ABOUT HUNGREZY
           </h1>
