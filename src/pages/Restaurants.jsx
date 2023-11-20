@@ -11,27 +11,33 @@ const Restaurants = () => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [location, setLocation] = useState('Hyderabad-Begumpet');
+  const [visibleRestaurants, setVisibleRestaurants] = useState(0);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const key1 = 'Hyderabad'; // Replace with your key1
-        const key2 = 'Begumpet'; // Replace with your key2
-
+        const arr = location.split('-')
+        const key1 = arr[0].trim(); // Replace with your key1
+        const key2 = arr[1].trim(); // Replace with your key2
+        console.log(key1,key2)
         const response = await fetch(`http://localhost:3000/Restaurants/getData?key1=${key1}&key2=${key2}`);
-
+        const response2 = await fetch(`http://localhost:3000/Restaurants/getAllKeys`);
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
 
         const result = await response.json();
+        const locations = await response2.json();
         const restaurantsArray = Object.values(result.value.restaurants);
         // console.log(restaurantsArray);
+        console.log(locations)
         const restaurants = restaurantsArray.map(restaurant=>{
           restaurant.image = imageArray[getRandomInt(100)]
           return restaurant
         })
         setData(restaurants);
+        setVisibleRestaurants(0)
       } catch (error) {
         setError(error.message);
       } finally {
@@ -40,7 +46,7 @@ const Restaurants = () => {
     };
 
     fetchData();
-  }, []);
+  }, [location]);
 
   function getRandomInt(n) {
     return Math.floor(Math.random() * n) + 1;
@@ -155,11 +161,11 @@ const Restaurants = () => {
   ];
   return (
     <div className="mt-32">
-      <RestaurantTopBar/>
+      <RestaurantTopBar location={location} setLocation={setLocation}/>
       {
         data!=null &&
          <div className="mt-6">
-          <RestaurantGrid restaurants={data} /> 
+          <RestaurantGrid restaurants={data} visibleRestaurants={visibleRestaurants} setVisibleRestaurants={setVisibleRestaurants} /> 
          </div>
       }
       
