@@ -19,19 +19,15 @@ const Restaurants = () => {
       try {
         const arr = location.split('-')
         const key1 = arr[0].trim(); // Replace with your key1
-        const key2 = arr[1].trim(); // Replace with your key2
+        const key2 = encodeURIComponent(arr[1].trim()); // Replace with your key2
         console.log(key1,key2)
         const response = await fetch(`http://localhost:3000/Restaurants/getData?key1=${key1}&key2=${key2}`);
-        const response2 = await fetch(`http://localhost:3000/Restaurants/getAllKeys`);
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
 
         const result = await response.json();
-        const locations = await response2.json();
         const restaurantsArray = Object.values(result.value.restaurants);
-        // console.log(restaurantsArray);
-        console.log(locations)
         const restaurants = restaurantsArray.map(restaurant=>{
           restaurant.image = imageArray[getRandomInt(100)]
           return restaurant

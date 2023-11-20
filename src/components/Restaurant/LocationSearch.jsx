@@ -1,6 +1,8 @@
 // LocationSearch.js
 import React, { useState, useEffect } from 'react';
 import { IoLocationOutline } from "react-icons/io5";
+import { FaLocationCrosshairs } from "react-icons/fa6";
+import axios from 'axios';
 
 const LocationSearch = ({isSticky,searchText,setSearchText}) => {
  
@@ -31,22 +33,32 @@ const LocationSearch = ({isSticky,searchText,setSearchText}) => {
   };
 
   useEffect(() => {
-    // Display all key1s with their corresponding key2s initially
-    const initialResults = keysAtLevel1.map(key1 => ({
+    // Arrange key1s alphabetically
+    const sortedKey1s = keysAtLevel1.slice().sort();
+  
+    // Arrange key2s alphabetically within each key1
+    const sortedResults = sortedKey1s.map(key1 => ({
       key1,
-      key2s: keysAtLevel2[key1],
+      key2s: keysAtLevel2[key1].slice().sort(),
     }));
-    setInitialResult(initialResults);
+  
+    setInitialResult(sortedResults);
   }, [keysAtLevel1, keysAtLevel2]);
+  
 
   useEffect(() => {
     if (searchText.length === 0) {
       // If searchText is empty, display all key1s with their corresponding key2s
-      const initialResults = keysAtLevel1.map(key1 => ({
+      // Arrange key1s alphabetically
+        const sortedKey1s = keysAtLevel1.slice().sort();
+    
+        // Arrange key2s alphabetically within each key1
+        const sortedResults = sortedKey1s.map(key1 => ({
         key1,
-        key2s: keysAtLevel2[key1],
-      }));
-      setInitialResult(initialResults);
+        key2s: keysAtLevel2[key1].slice().sort(),
+        }));
+    
+        setInitialResult(sortedResults);
       return;
     }
 
@@ -74,6 +86,51 @@ const filterResults = (searchText) => {
       return filteredResults;
     }, []);
   };
+
+  useEffect(() => {
+    // Arrange key1s alphabetically
+    const sortedKey1s = searchResults.map(result => result.key1).sort();
+  
+    // Arrange key2s alphabetically within each key1
+    const sortedResults = sortedKey1s.map(key1 => ({
+      key1,
+      key2s: searchResults.find(result => result.key1 === key1).key2s.slice().sort(),
+    }));
+  
+    setSearchResults(sortedResults);
+  }, [searchText]);
+
+
+  const locateMe = async () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const { latitude, longitude } = position.coords;
+
+          // Use the OpenCage Geocoding API to get the address
+          const apiKey = '78c1d7dfb8434e56a448612a32758adf';
+          const geocodingApiUrl = `https://api.opencagedata.com/geocode/v1/json?key=${apiKey}&q=${latitude}+${longitude}&language=en`;
+
+          try {
+            const response = await axios.get(geocodingApiUrl);
+            let city = response.data.results[0].components.suburb;
+            const state = response.data.results[0].components.state;
+            console.log(response.data.results[0].components);
+            if(!city)city =  response.data.results[0].components.village;
+            setSearchText(`${city}-${state}`);
+            setSearchResults([]); // Clear search results
+          } catch (error) {
+            console.error('Error fetching address:', error.message);
+          }
+        },
+        (error) => {
+          console.error('Error getting location:', error.message);
+        }
+      );
+    } else {
+      alert('Geolocation is not supported by your browser.');
+    }
+  };
   
 
   const handleResultClick = (key1, key2) => {
@@ -99,13 +156,25 @@ const filterResults = (searchText) => {
       />
       <div className={`z-10  w-full max-h-[36rem] overflow-auto  bg-white border rounded shadow-lg ${searchResults.length==0? 'invisible' : 'absolute'}`}>
         {searchResults.map((result, index) => (
-          <div key={index} className="p-2 ">
+          result.key1 != 'Warangal' && 
+          <div key={index} className="p-3">
+            {
+                index==0 && 
+                <div
+                className="font-bold text-gray-500 cursor-pointer my-3 pb-3 border-b-2"
+                onClick={()=> locateMe()}
+                >
+                    <FaLocationCrosshairs className='inline mr-3 mb-1 text-xl'/>
+                    Get Current Location
+                </div>
+            }
             <div className="font-bold text-gray-500">{result.key1.toUpperCase()}</div>
-            <div className="flex flex-col">
+            <div className="flex flex-col pl-4 ">
               {result.key2s.map((key2, subIndex) => (
+                key2!='link' &&
                 <div
                   key={subIndex}
-                  className="cursor-pointer hover:bg-gray-100 p-1 text-gray-400"
+                  className="cursor-pointer hover:bg-gray-100 p-1  text-gray-400"
                   onClick={() => handleResultClick(result.key1, key2)}
                 >
                   {key2}
