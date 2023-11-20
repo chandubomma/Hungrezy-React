@@ -4,6 +4,9 @@ import logo from "./../../assets/logoAsset.png";
 import { FaUser, FaBars } from "react-icons/fa";
 import { FaCartShopping, FaXmark } from "react-icons/fa6";
 import { motion } from "framer-motion";
+import { useSelector } from "react-redux";
+import { selectTotalItems } from "../../redux/slices/cartSlice";
+import CartDrawerContent from "../cart/cartDrawerContent";
 
 const Navbar = () => {
   const { pathname } = useLocation();
@@ -12,6 +15,7 @@ const Navbar = () => {
   const [isCartDrawerOpen, setIsCartDrawerOpen] = useState(false);
   const [prevScrollPos, setPrevScrollPos] = useState(0);
   const [visible, setVisible] = useState(true);
+  const totalItems = useSelector(selectTotalItems);
 
   const isLinkActive = (path) => {
     return pathname === path;
@@ -107,6 +111,11 @@ const Navbar = () => {
             className="w-fit h-fit border-[1.5px] p-2 rounded-full border-gray-500 hover:scale-110 transition-transform transform cursor-pointer"
           >
             <FaCartShopping className="text-2xl text-gray-500" />
+            {totalItems > 0 && (
+              <div className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full px-2 py-1 text-xs">
+                {totalItems}
+              </div>
+            )}
           </div>
           <div
             className="w-fit h-fit border-[1.5px] p-2 rounded-full border-gray-500 hover:scale-110 transition-transform transform cursor-pointer"
@@ -154,6 +163,11 @@ const Navbar = () => {
             className="w-fit h-fit border-[1.5px] p-2 rounded-full border-gray-500 hover:scale-110 transition-transform transform cursor-pointer"
           >
             <FaCartShopping className="text-2xl text-gray-500" />
+            {totalItems > 0 && (
+              <div className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full px-2 py-1 text-xs">
+                {totalItems}
+              </div>
+            )}
           </div>
           <div className="relative">
             <div
@@ -193,29 +207,10 @@ const Navbar = () => {
       </div>
 
       {isCartDrawerOpen && (
-        <motion.div
-          className="fixed inset-0 bg-black/80 bg-opacity-30 z-50"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5 }}
-        >
-          <motion.div
-            className={`bg-white h-full w-96 p-4 fixed top-0 ${
-              isDrawerOpen ? "left-0" : "right-0"
-            }`}
-            initial={{ x: isDrawerOpen ? "-100%" : "100%" }}
-            animate={{ x: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <div className="flex justify-end">
-              <FaXmark
-                className="text-3xl cursor-pointer"
-                onClick={handleCartDrawerToggle}
-              />
-            </div>
-            {/* Add your cart items and other content here */}
-          </motion.div>
-        </motion.div>
+        <CartDrawerContent
+          isDrawerOpen={isDrawerOpen}
+          handleCartDrawerToggle={handleCartDrawerToggle}
+        />
       )}
 
       {/* Drawer for Mobile */}

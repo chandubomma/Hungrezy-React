@@ -5,10 +5,12 @@ import pexels from "../../assets/pexelsAsset.png";
 import uliana from "../../assets/ulianaAsset.png";
 import jonathan from "../../assets/jonathanAsset.png";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router";
 
 const Welcome = () => {
   const [count, setCount] = useState(0);
   const controls = useAnimation();
+  const navigate = useNavigate();
 
   const variants = {
     hidden: { opacity: 0, y: 50 },
@@ -58,6 +60,7 @@ const Welcome = () => {
             className="py-3 px-8 bg-amber-500 hover:bg-amber-600 transition-colors duration-300 text-white rounded-full flex items-center"
             whileHover={{ scale: 1.05 }}
             variants={variants}
+            onClick={() => navigate("/restaurants")}
           >
             <span className="align-baseline">Order Now</span>
             <FaArrowRight className="ml-2 align-baseline" />

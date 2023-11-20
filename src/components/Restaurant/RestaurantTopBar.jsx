@@ -11,10 +11,10 @@ const RestaurantTopBar = ({location,setLocation}) => {
       setSticky(window.scrollY > 0);
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
 
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
@@ -22,7 +22,7 @@ const RestaurantTopBar = ({location,setLocation}) => {
   return (
     <div
       className={`p-4 shadow-md flex justify-between h-24 ${
-        isSticky ? 'bg-white text-white' : 'bg-amber-300 text-white'
+        isSticky ? "bg-white text-white" : "bg-amber-300 text-white"
       } sticky top-0 transition-colors duration-300 ease-in-out z-50`}
     >
       {/* Location Selector */}
