@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import RestaurantCard from './RestaurantCard';
 
-const RestaurantGrid = ({ restaurants }) => {
-  const [visibleRestaurants, setVisibleRestaurants] = useState(6);
+const RestaurantGrid = ({ restaurants,visibleRestaurants,setVisibleRestaurants }) => {
+  
   const [loading, setLoading] = useState(false);
   const gridRef = useRef(null);
 
@@ -10,7 +10,7 @@ const RestaurantGrid = ({ restaurants }) => {
     setLoading(true);
     // Simulate an API call or any asynchronous operation to load more restaurants
     setTimeout(() => {
-      setVisibleRestaurants((prev) => prev + 6); // You can adjust the number of restaurants to load
+      setVisibleRestaurants((prev) => prev + 9); // You can adjust the number of restaurants to load
       setLoading(false);
     }, 1500);
   };
@@ -46,16 +46,16 @@ const RestaurantGrid = ({ restaurants }) => {
         <RestaurantCard key={index} restaurant={restaurant} />
       ))}
       {loading &&
-        Array.from({ length: 6 }).map((_, index) => (
+        Array.from({ length: 9 }).map((_, index) => (
           <div
             key={`loading-${index}`}
-            className="animate-pulse bg-gray-200 rounded-xl overflow-hidden shadow-md"
+            className="animate-pulse w-96 bg-gray-100 rounded-xl overflow-hidden shadow-md"
           >
-            <div className="h-48 bg-gray-400"></div>
+            <div className="h-48 bg-gray-300"></div>
             <div className="p-6">
-              <div className="h-4 bg-gray-300 mb-2"></div>
-              <div className="h-4 bg-gray-300 mb-2 w-2/3"></div>
-              <div className="h-4 bg-gray-300 w-1/3"></div>
+              <div className="h-4 bg-gray-200 mb-2"></div>
+              <div className="h-4 bg-gray-200 mb-2 w-2/3"></div>
+              <div className="h-4 bg-gray-200 w-1/3"></div>
             </div>
           </div>
         ))}

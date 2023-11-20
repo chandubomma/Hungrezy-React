@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FaSearch } from 'react-icons/fa';
+import LocationSearch from './LocationSearch';
 
-const RestaurantTopBar = () => {
+const RestaurantTopBar = ({location,setLocation}) => {
   const [userLocation, setUserLocation] = useState(null);
   const [selectedOption, setSelectedOption] = useState('setLocation');
   const [isSticky, setSticky] = useState(false);
@@ -58,26 +59,25 @@ const RestaurantTopBar = () => {
 
   return (
     <div
-      className={`p-4 shadow-md flex justify-between ${
+      className={`p-4 shadow-md flex justify-between h-24 ${
         isSticky ? 'bg-white text-white' : 'bg-amber-300 text-white'
       } sticky top-0 transition-colors duration-300 ease-in-out z-50`}
     >
       {/* Location Selector */}
       <div className="flex items-center space-x-4 font-semibold">
-        <select
+        {/* <select
           value={selectedOption}
           onChange={handleDropdownChange}
           className={`${
             isSticky ? 'bg-white text-gray-500' : 'bg-amber-300 text-white'
           }  p-2 rounded w-60 h-12 focus:outline-none`}
         >
-          {/* Add location options here */}
           <option value="setLocation">Set Your Location</option>
           <option value="gps">Locate Using GPS</option>
           <option value="location1">Location 1</option>
           <option value="location2">Location 2</option>
-          {/* Add more city options as needed */}
-        </select>
+        </select> */}
+        <LocationSearch isSticky = {isSticky} searchText={location} setSearchText={setLocation}/>
         {/* Display User Location */}
         {userLocation && (
           <div className="">
