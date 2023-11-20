@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { FaSearch } from 'react-icons/fa';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { FaSearch } from "react-icons/fa";
 
 const RestaurantTopBar = () => {
   const [userLocation, setUserLocation] = useState(null);
-  const [selectedOption, setSelectedOption] = useState('setLocation');
+  const [selectedOption, setSelectedOption] = useState("setLocation");
   const [isSticky, setSticky] = useState(false);
 
   useEffect(() => {
@@ -12,10 +12,10 @@ const RestaurantTopBar = () => {
       setSticky(window.scrollY > 0);
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
 
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
@@ -26,7 +26,7 @@ const RestaurantTopBar = () => {
           const { latitude, longitude } = position.coords;
 
           // Use the OpenCage Geocoding API to get the address
-          const apiKey = '78c1d7dfb8434e56a448612a32758adf';
+          const apiKey = "78c1d7dfb8434e56a448612a32758adf";
           const geocodingApiUrl = `https://api.opencagedata.com/geocode/v1/json?key=${apiKey}&q=${latitude}+${longitude}&language=en`;
 
           try {
@@ -35,23 +35,23 @@ const RestaurantTopBar = () => {
             const state = response.data.results[0].components.state;
 
             setUserLocation(`${city}, ${state}`);
-            setSelectedOption('gps');
+            setSelectedOption("gps");
           } catch (error) {
-            console.error('Error fetching address:', error.message);
+            console.error("Error fetching address:", error.message);
           }
         },
         (error) => {
-          console.error('Error getting location:', error.message);
+          console.error("Error getting location:", error.message);
         }
       );
     } else {
-      alert('Geolocation is not supported by your browser.');
+      alert("Geolocation is not supported by your browser.");
     }
   };
 
   const handleDropdownChange = (event) => {
     setSelectedOption(event.target.value);
-    if (event.target.value === 'gps') {
+    if (event.target.value === "gps") {
       locateMe();
     }
   };
@@ -59,8 +59,8 @@ const RestaurantTopBar = () => {
   return (
     <div
       className={`p-4 shadow-md flex justify-between ${
-        isSticky ? 'bg-white text-white' : 'bg-amber-300 text-white'
-      } sticky top-0 transition-colors duration-300 ease-in-out z-50`}
+        isSticky ? "bg-white text-white" : "bg-amber-300 text-white"
+      } sticky top-0 z-0 transition-colors duration-300 ease-in-out`}
     >
       {/* Location Selector */}
       <div className="flex items-center space-x-4 font-semibold">
@@ -68,7 +68,7 @@ const RestaurantTopBar = () => {
           value={selectedOption}
           onChange={handleDropdownChange}
           className={`${
-            isSticky ? 'bg-white text-gray-500' : 'bg-amber-300 text-white'
+            isSticky ? "bg-white text-gray-500" : "bg-amber-300 text-white"
           }  p-2 rounded w-60 h-12 focus:outline-none`}
         >
           {/* Add location options here */}
@@ -81,7 +81,9 @@ const RestaurantTopBar = () => {
         {/* Display User Location */}
         {userLocation && (
           <div className="">
-            <span className="text-white font-semibold text-lg">{userLocation}</span>
+            <span className="text-white font-semibold text-lg">
+              {userLocation}
+            </span>
           </div>
         )}
       </div>
