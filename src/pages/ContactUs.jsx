@@ -6,8 +6,10 @@ import { MdEmail } from "react-icons/md";
 import { FaLocationDot } from "react-icons/fa6";
 import { IoIosSend } from "react-icons/io";
 import Footer from "../components/home/Footer";
+import { useNavigate } from "react-router-dom";
 
 const ContactUs = () => {
+  const navigate = useNavigate();
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: { opacity: 1, transition: { duration: 1 } },
@@ -52,7 +54,12 @@ const ContactUs = () => {
         <div className="flex flex-col justify-center">
           <motion.h1 className="text-5xl font-light">Our Contact</motion.h1>
           <div className="flex items-center py-3 gap-2 mx-5">
-            <p>Home</p>
+            <p
+              onClick={() => navigate("/")}
+              className="hover:underline cursor-pointer hover:text-amber-500"
+            >
+              Home
+            </p>
             <span>
               <FaChevronRight className="text-orange-500" />
             </span>

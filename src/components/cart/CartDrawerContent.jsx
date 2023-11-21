@@ -78,12 +78,10 @@ const CartDrawerContent = ({ isDrawerOpen, handleCartDrawerToggle }) => {
                 <li key={index} className="mb-4 border-b pb-2">
                   <div className="flex items-center mb-2">
                     <FaUtensils className="text-gray-500 mr-2" />
-                    <p className="font-semibold text-black">
-                      {item.restaurant}
-                    </p>
+                    <p className="font-bold text-black">{item.restaurant}</p>
                   </div>
                   <div className="flex items-center justify-between">
-                    <p className="text-amber-500 font-bold py-1">
+                    <p className="text-gray-500 font-semibold py-1">
                       {item.itemName}
                     </p>
                     <div className="flex items-center justify-between">
@@ -96,7 +94,7 @@ const CartDrawerContent = ({ isDrawerOpen, handleCartDrawerToggle }) => {
                     </div>
                   </div>
                   <div className="flex items-center mt-2 flex-grow gap-28">
-                    <p className="text-gray-600">${item.price}</p>
+                    <p className="text-gray-800">${item.price}</p>
                     <div className="flex items-center">
                       <FaMinus
                         className="text-red-500 cursor-pointer"
@@ -117,8 +115,8 @@ const CartDrawerContent = ({ isDrawerOpen, handleCartDrawerToggle }) => {
 
         {cartItems.length > 0 && (
           <div className="flex justify-between items-center mt-4">
-            <p className="text-red-600 font-bold text-lg">Subtotal</p>
-            <p className="text-red-600 font-bold text-3xl">${totalPrice}</p>
+            <p className="text-black font-bold text-lg">Subtotal</p>
+            <p className="text-black font-bold text-3xl">${totalPrice}</p>
           </div>
         )}
 
@@ -126,13 +124,13 @@ const CartDrawerContent = ({ isDrawerOpen, handleCartDrawerToggle }) => {
           <div className="flex justify-between items-center mt-4">
             <motion.button
               type="button"
-              className="py-[0.7rem] px-4 bg-red-500 hover:bg-red-600 transition-colors duration-300 text-white text-sm rounded-full flex items-center"
+              className="py-3 px-6 bg-red-500 hover:bg-red-600 transition-colors duration-300 text-white rounded-full flex items-center"
               whileHover={{ scale: 1.05 }}
               variants={variants}
               onClick={handleClearCart}
             >
               <FaTrash className="align-baseline w-4 h-4" />
-              <span className="ml-2 align-baseline">Clear Cart</span>
+              <span className="ml-2 align-baseline">Clear</span>
             </motion.button>
 
             <motion.button
@@ -140,7 +138,10 @@ const CartDrawerContent = ({ isDrawerOpen, handleCartDrawerToggle }) => {
               className="py-3 px-8 bg-amber-500 hover:bg-amber-600 transition-colors duration-300 text-white rounded-full flex items-center"
               whileHover={{ scale: 1.05 }}
               variants={variants}
-              onClick={() => navigate("/checkout")}
+              onClick={() => {
+                navigate("/checkout");
+                handleCartDrawerToggle();
+              }}
             >
               <span className="align-baseline">Check out</span>
               <FaArrowRight className="ml-2 align-baseline" />

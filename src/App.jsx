@@ -10,11 +10,11 @@ import {
 import React from "react";
 import Home from "./pages/Home";
 import Restaurants from "./pages/Restaurants";
-import Cart from "./pages/Cart";
 import RestaurantMenu from "./pages/RestaurantMenu";
 import About from "./pages/About";
 import ContactUs from "./pages/ContactUs";
 import Navbar from "./components/home/Navbar";
+import CheckOut from "./pages/CheckOut";
 
 const Root = () => {
   return (
@@ -33,7 +33,7 @@ const Router = createBrowserRouter(
       <Route path="/restaurantmenu" element={<RestaurantMenu />} />
       <Route path="/about" element={<About />} />
       <Route path="/contact" element={<ContactUs />} />
-      <Route path="/cart" element={<Cart />} />
+      <Route path="/checkout" element={<CheckOut />} />
       <Route path="/signin" element={<SigninForm />} />
       <Route path="/signup" element={<SignUpForm />} />
       <Route path="*">Not Found</Route>

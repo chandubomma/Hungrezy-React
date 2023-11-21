@@ -54,7 +54,9 @@ const Navbar = () => {
 
   return (
     <motion.div
-      className={`w-full fixed top-0 z-50 ${visible ? "bg-white" : "hidden"}`}
+      className={`w-full fixed top-0 z-[100] ${
+        visible ? "bg-white" : "hidden"
+      }`}
       animate={{ opacity: visible ? 1 : 0 }}
       transition={{ duration: 0.2 }}
     >

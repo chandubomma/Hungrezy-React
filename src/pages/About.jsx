@@ -9,8 +9,10 @@ import orderSent from "./../assets/orderSent.png";
 import happyTummy from "./../assets/happy.png";
 import Footer from "./../components/home/Footer";
 import aboutImage from "./../assets/aboutImage.png";
+import { useNavigate } from "react-router-dom";
 
 const About = () => {
+  const navigate = useNavigate();
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: { opacity: 1, transition: { duration: 1 } },
@@ -61,7 +63,12 @@ const About = () => {
         <div className="flex flex-col justify-center">
           <motion.h1 className="text-5xl font-light">About Us</motion.h1>
           <div className="flex items-center py-3 gap-2 mx-5">
-            <p>Home</p>
+            <p
+              onClick={() => navigate("/")}
+              className="hover:underline cursor-pointer hover:text-amber-500"
+            >
+              Home
+            </p>
             <span>
               <FaChevronRight className="text-orange-500" />
             </span>
