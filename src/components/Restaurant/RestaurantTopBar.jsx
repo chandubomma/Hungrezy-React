@@ -61,7 +61,7 @@ const RestaurantTopBar = ({ location, setLocation }) => {
     <div
       className={`p-4 shadow-md flex justify-between h-24 ${
         isSticky ? "bg-white text-white" : "bg-amber-300 text-white"
-      } sticky top-0 transition-colors duration-300 ease-in-out z-50`}
+      } sticky top-0 transition-colors duration-300 ease-in-out z-0`}
     >
       {/* Location Selector */}
       <div className="flex items-center space-x-4 font-semibold">
