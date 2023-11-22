@@ -94,7 +94,7 @@ const CartDrawerContent = ({ isDrawerOpen, handleCartDrawerToggle }) => {
                     </div>
                   </div>
                   <div className="flex items-center mt-2 flex-grow gap-28">
-                    <p className="text-gray-800">${item.price}</p>
+                    <p className="text-gray-800">&#8377;{item.price}</p>
                     <div className="flex items-center">
                       <FaMinus
                         className="text-red-500 cursor-pointer"

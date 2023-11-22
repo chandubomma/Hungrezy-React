@@ -71,13 +71,15 @@ const CheckOutCart = () => {
                   <FaPlus />
                 </motion.button>
               </div>
-              <p className="text-xl font-bold text-gray-500">${item.price}</p>
+              <p className="text-xl font-bold text-gray-500">
+                &#8377;{item.price}
+              </p>
             </div>
           </div>
         ))}
         <div className="flex justify-end mb-20">
           <div className="text-2xl font-bold text-black">To Pay:</div>
-          <div className="text-2xl font-bold ml-2">${totalPrice}</div>
+          <div className="text-2xl font-bold ml-2">&#8377;{totalPrice}</div>
         </div>
       </div>
     </div>
