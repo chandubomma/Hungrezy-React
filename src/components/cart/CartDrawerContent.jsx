@@ -116,7 +116,7 @@ const CartDrawerContent = ({ isDrawerOpen, handleCartDrawerToggle }) => {
         {cartItems.length > 0 && (
           <div className="flex justify-between items-center mt-4">
             <p className="text-black font-bold text-lg">Subtotal</p>
-            <p className="text-black font-bold text-3xl">${totalPrice}</p>
+            <p className="text-black font-bold text-3xl">&#8377;{totalPrice}</p>
           </div>
         )}
 
