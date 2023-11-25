@@ -16,6 +16,7 @@ import ContactUs from "./pages/ContactUs";
 import Navbar from "./components/home/Navbar";
 import CheckOut from "./pages/CheckOut";
 import { Toaster } from "react-hot-toast";
+import PageNotFound from "./pages/PageNotFound";
 
 const Root = () => {
   return (
@@ -38,7 +39,7 @@ const Router = createBrowserRouter(
       <Route path="/checkout" element={<CheckOut />} />
       <Route path="/signin" element={<SigninForm />} />
       <Route path="/signup" element={<SignUpForm />} />
-      <Route path="*">Not Found</Route>
+      <Route path="*" element={<PageNotFound />} />
     </Route>
   )
 );
