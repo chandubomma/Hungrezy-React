@@ -15,12 +15,14 @@ import About from "./pages/About";
 import ContactUs from "./pages/ContactUs";
 import Navbar from "./components/home/Navbar";
 import CheckOut from "./pages/CheckOut";
+import { Toaster } from "react-hot-toast";
 
 const Root = () => {
   return (
     <React.Fragment>
       <Navbar />
       <Outlet />
+      <Toaster />
     </React.Fragment>
   );
 };

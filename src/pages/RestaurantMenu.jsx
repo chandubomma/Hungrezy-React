@@ -11,6 +11,7 @@ import {
   removeFromCart,
   selectCartItems,
 } from "../redux/slices/cartSlice";
+import toast from "react-hot-toast";
 
 const RestaurantMenu = () => {
   const location = useLocation();
@@ -50,6 +51,11 @@ const RestaurantMenu = () => {
         veg_or_non_veg,
       })
     );
+
+    toast.success("Item added to cart", {
+      position: "bottom-center",
+      duration: 2000,
+    });
 
     const item = cartItems.find(
       (item) => item.category === category && item.itemName === itemName
