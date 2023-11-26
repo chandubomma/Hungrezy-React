@@ -4,6 +4,7 @@ import { FaCircleInfo } from "react-icons/fa6";
 import { FaStar } from "react-icons/fa6";
 import { MdRestaurantMenu } from "react-icons/md";
 import RestaurantReviews from "../components/Restaurant/RestaurantReviews";
+import BookTable from "../components/Restaurant/BookTable";
 import { useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -181,6 +182,16 @@ const RestaurantMenu = () => {
         </button>
         <button
           className={`px-4 py-2 text-xl font-semibold ${
+            activeTab === "booktable"
+              ? " text-amber-500 border-b-2 border-amber-500"
+              : "text-gray-400"
+          } `}
+          onClick={() => switchTab("booktable")}
+        >
+          Book Table
+        </button>
+        <button
+          className={`px-4 py-2 text-xl font-semibold ${
             activeTab === "reviews"
               ? " text-amber-500 border-b-2 border-amber-500"
               : "text-gray-400"
@@ -205,6 +216,12 @@ const RestaurantMenu = () => {
               />
             </div>
           ))}
+        </div>
+      )}
+
+      {activeTab == "booktable" && (
+        <div>
+          <BookTable/>
         </div>
       )}
 
