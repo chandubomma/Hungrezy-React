@@ -2,7 +2,7 @@ import RestaurantTopBar from "../components/Restaurant/RestaurantTopBar";
 import RestaurantGrid from "../components/Restaurant/RestaurantGrid";
 import { useEffect,useState } from "react";
 import RestaurantMenu from "./RestaurantMenu";
-
+import NoDelivery from "../components/Restaurant/NoDelivery";
 
 
 
@@ -23,6 +23,7 @@ const Restaurants = () => {
         console.log(key1,key2)
         const response = await fetch(`http://localhost:3000/Restaurants/getData?key1=${key1}&key2=${key2}`);
         if (!response.ok) {
+          setData(null);
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
 
@@ -163,6 +164,12 @@ const Restaurants = () => {
          <div className="mt-6">
           <RestaurantGrid restaurants={data} visibleRestaurants={visibleRestaurants} setVisibleRestaurants={setVisibleRestaurants} /> 
          </div>
+      }
+      {
+        data==null && 
+        <div className="h-fit">
+          <NoDelivery/>
+        </div>
       }
       
     </div>
