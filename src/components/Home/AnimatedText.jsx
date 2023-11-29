@@ -16,8 +16,8 @@ const AnimatedText = ({ textArray }) => {
   }, [textArray]);
 
   return (
-    <div className="text-center mt-8">
-      <h1 className="text-3xl font-bold text-gray-500 transition duration-500 ease-in-out transform">
+    <div className="">
+      <h1 className="font-bold text-gray-500 transition duration-1000 ease-in-out transform">
         {textArray[currentTextIndex]}
       </h1>
     </div>
