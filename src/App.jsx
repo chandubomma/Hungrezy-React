@@ -18,6 +18,7 @@ import CheckOut from "./pages/CheckOut";
 import { Toaster } from "react-hot-toast";
 import PageNotFound from "./pages/PageNotFound";
 import Profile from "./pages/Profile";
+import Recipes from "./pages/Recipes";
 
 const Root = () => {
   return (
@@ -34,6 +35,7 @@ const Router = createBrowserRouter(
     <Route path="/" element={<Root />}>
       <Route index element={<Home />} />
       <Route path="/restaurants" element={<Restaurants />} />
+      <Route path="/recipes" element={<Recipes/>} />
       <Route path="/restaurantmenu" element={<RestaurantMenu />} />
       <Route path="/about" element={<About />} />
       <Route path="/profile" element={<Profile />} />
