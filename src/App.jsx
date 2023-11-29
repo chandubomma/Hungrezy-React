@@ -17,6 +17,7 @@ import Navbar from "./components/home/Navbar";
 import CheckOut from "./pages/CheckOut";
 import { Toaster } from "react-hot-toast";
 import PageNotFound from "./pages/PageNotFound";
+import Profile from "./pages/Profile";
 
 const Root = () => {
   return (
@@ -35,6 +36,7 @@ const Router = createBrowserRouter(
       <Route path="/restaurants" element={<Restaurants />} />
       <Route path="/restaurantmenu" element={<RestaurantMenu />} />
       <Route path="/about" element={<About />} />
+      <Route path="/profile" element={<Profile />} />
       <Route path="/contact" element={<ContactUs />} />
       <Route path="/checkout" element={<CheckOut />} />
       <Route path="/signin" element={<SigninForm />} />
