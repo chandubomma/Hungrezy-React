@@ -16,7 +16,10 @@ const RecipeBar = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      setSticky(window.scrollY > 0);
+     if(window.scrollY > 0){
+        setSticky(true);
+     }
+     else setSticky(false);
     };
 
     window.addEventListener("scroll", handleScroll);
@@ -30,8 +33,8 @@ const RecipeBar = () => {
   return (
     <div
       className={` ${
-        isSticky ? "bg-white text-white p-4 shadow-md flex justify-between h-24" : "h-fit flex"
-      } sticky top-0 transition-colors duration-300 ease-in-out z-50`}
+        isSticky ? "bg-white text-white p-4 shadow-md flex justify-between h-24 z-50" : "h-fit flex"
+      } sticky top-0 transition-colors duration-300 ease-in-out `}
     >
       <div className={`${isSticky? 'flex justify-between w-full':'flex-col pt-60 pl-32 pr-10'}`}>
             
