@@ -29,10 +29,10 @@ const Sidebar = () => {
       }, []);
 
   return (
-    <div className="w-96 bg-gray-100 min-h-screen p-4 overflow-y-auto">
+    <div className="w-96 border-r-2 border-dotted min-h-screen p-4 pt-0 overflow-y-auto">
       <h2 className="text-2xl font-bold mb-4">Today's Recipes</h2>
       {recipes.map((recipe) => (
-        <div key={recipe.idMeal} className="pb-3 mb-3 border-b-2 ">
+        <div key={recipe.idMeal} className="pb-3 mb-3 border-b-2 border-gray-400 border-dotted">
           <div className="flex">
             <img src={recipe.strMealThumb} alt={recipe.strMeal} className="w-20 h-20 mr-4 mt-2 object-cover" />
             <div>

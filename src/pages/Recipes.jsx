@@ -1,11 +1,80 @@
 // RecipesPage.js
-
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import RecipeBar from '../components/Recipes/RecipeBar';
 import CountryCards from '../components/Recipes/CountryCards';
 import Sidebar from '../components/Recipes/Sidebar';
+import RecipeGrid from '../components/Recipes/RecipeGrid';
 
 const Recipes = () => {
+    const [allRecipes, setAllRecipes] = useState([]);
+
+
+    const fetchMealDetails = async (mealIds) => {
+        const apiUrl = 'https://www.themealdb.com/api/json/v1/1/lookup.php?i=';
+      
+        try {
+          const fetchRequests = mealIds.map(async (mealId) => {
+            const response = await fetch(`${apiUrl}${mealId}`);
+            const data = await response.json();
+      
+            if (data.meals && data.meals.length > 0) {
+              return data.meals[0];
+            }
+      
+            return null;
+          });
+      
+          const mealsDetails = await Promise.all(fetchRequests);
+      
+          // Filter out null values (failed requests)
+          return mealsDetails.filter((meal) => meal !== null);
+        } catch (error) {
+          console.error('Error fetching meal details:', error);
+          return [];
+        }
+      };
+
+    const fetchRecipesByCategory = async (category) => {
+        const apiUrl = `https://www.themealdb.com/api/json/v1/1/filter.php?c=${category.strCategory}`;
+        
+        try {
+          const response = await fetch(apiUrl);
+          const data = await response.json();
+  
+          if (data.meals && data.meals.length > 0) {
+            return data.meals;
+          }
+        } catch (error) {
+          console.error(`Error fetching recipes for category ${category.strCategory}:`, error);
+        }
+  
+        return [];
+      };
+
+      const fetchAllRecipes = async () => {
+        const allRecipes = [];
+  
+        for (const category of categories) {
+          const categoryRecipes = await fetchRecipesByCategory(category);
+          allRecipes.push(...categoryRecipes);
+        }
+  
+        // Randomize the combined recipes array
+        const randomizedRecipes = allRecipes.sort(() => Math.random() - 0.5);
+  
+        // Extract meal IDs from the randomized recipes
+        const mealIds = randomizedRecipes.map((recipe) => recipe.idMeal);
+  
+        // Fetch full details for the randomized recipes
+        const fullDetails = await fetchMealDetails(mealIds.slice(0,13));
+  
+        setAllRecipes(fullDetails);
+      };
+
+    useEffect(()=>{
+        fetchAllRecipes()
+    },[])
+
   return (
     <div className="w-screen min-h-screen">
       {/* Header */}
@@ -16,8 +85,11 @@ const Recipes = () => {
         <CountryCards countries={areas}/>
       </div>
       <div className='flex mt-40'>
-            <div>
+            <div >
                 <Sidebar recipes={meals}/>
+            </div>
+            <div>
+                <RecipeGrid recipes={allRecipes}/>
             </div>
       </div>
     </div>
@@ -136,13 +208,11 @@ const areas =  [
       "strArea": "Turkish",
       Image : "https://ihplb.b-cdn.net/wp-content/uploads/2021/11/izmir-750x430.jpg"
     },
-    {
-      "strArea": "Unknown",
-    },
+
     {
       "strArea": "Vietnamese",
-      Image : "https://www.tourmyindia.com/blog//wp-content/uploads/2018/02/Ho-Chi-Minh-City-1.jpg "
-    }
+      Image : "https://www.tourmyindia.com/blog//wp-content/uploads/2018/02/Ho-Chi-Minh-City-1.jpg"
+    }
   ]
   
 
@@ -204,5 +274,44 @@ const areas =  [
             "dateModified": null
           }
         ]
+
+        const categories = [
+            {
+              "strCategory": "Chicken",
+              "image": "https://www.licious.in/blog/wp-content/uploads/2020/12/Pan-Fried-Chicken.jpg"
+            },
+            {
+              "strCategory": "Breakfast",
+              "image": "https://www.foodandwine.com/thmb/OH220PwOZfcTiwuJzkvLANWHw1w=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/egg-bhurjee-FT-RECIPE0521-f9573d8c81bb4c9597a9621c0ac064ae.jpg"
+            },
+            {
+              "strCategory": "Dessert",
+              "image": "https://www.tasteofhome.com/wp-content/uploads/2019/05/Fried-Ice-Cream-Dessert-Bars-_EXPS_SDJJ19_232652_B02_06_1b_rms-2.jpg"
+            },
+            {
+              "strCategory": "Vegetarian",
+              "image": "https://images.immediate.co.uk/production/volatile/sites/2/2020/05/olive_GoldenOnionPilaf_preview-b26daf2.jpg?quality=90&resize=556,505"
+            },
+            {
+              "strCategory": "Goat",
+              "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhR11f2WMtmNa43BEwYhy6SsFOkaYhB96wEw&usqp=CAU"
+            },
+            {
+              "strCategory": "Pasta",
+              "image": "https://www.indianhealthyrecipes.com/wp-content/uploads/2023/05/red-sauce-pasta-recipe.jpg"
+            },
+            {
+              "strCategory": "Seafood",
+              "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVZ-ax79D4TLtXhH2J7UsOUhyIeF1otaNgiA&usqp=CAU"
+            },
+            {
+              "strCategory": "Beef",
+              "image": "https://mojo.generalmills.com/api/public/content/LASaPpVD5E6LGty8lf97zA_gmi_hi_res_jpeg.jpeg?v=7059e7bf&t=466b54bb264e48b199fc8e83ef1136b4"
+            },
+            {
+              "strCategory": "Starter",
+              "image": "https://drop.ndtv.com/albums/COOKS/these-5-yummy-s_637861425887413019/637861425905672423.jpeg"
+            },
+          ];
 
     
