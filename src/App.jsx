@@ -19,6 +19,7 @@ import { Toaster } from "react-hot-toast";
 import PageNotFound from "./pages/PageNotFound";
 import Profile from "./pages/Profile";
 import Recipes from "./pages/Recipes";
+import RecipePage from "./pages/RecipePage";
 
 const Root = () => {
   return (
@@ -37,6 +38,7 @@ const Router = createBrowserRouter(
       <Route path="/restaurants" element={<Restaurants />} />
       <Route path="/recipes" element={<Recipes/>} />
       <Route path="/restaurantmenu" element={<RestaurantMenu />} />
+      <Route path="/recipepage" element={<RecipePage/>} />
       <Route path="/about" element={<About />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="/contact" element={<ContactUs />} />
