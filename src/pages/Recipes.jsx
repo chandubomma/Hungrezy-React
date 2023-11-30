@@ -4,6 +4,7 @@ import RecipeBar from '../components/Recipes/RecipeBar';
 import CountryCards from '../components/Recipes/CountryCards';
 import Sidebar from '../components/Recipes/Sidebar';
 import RecipeGrid from '../components/Recipes/RecipeGrid';
+import RecipeCard from '../components/Recipes/RecipeCard';
 
 const Recipes = () => {
     const [allRecipes, setAllRecipes] = useState([]);
@@ -66,7 +67,7 @@ const Recipes = () => {
         const mealIds = randomizedRecipes.map((recipe) => recipe.idMeal);
   
         // Fetch full details for the randomized recipes
-        const fullDetails = await fetchMealDetails(mealIds.slice(0,13));
+        const fullDetails = await fetchMealDetails(mealIds.slice(0,16));
   
         setAllRecipes(fullDetails);
       };
@@ -89,7 +90,12 @@ const Recipes = () => {
                 <Sidebar recipes={meals}/>
             </div>
             <div>
-                <RecipeGrid recipes={allRecipes}/>
+                <RecipeGrid recipes={allRecipes.slice(0,8)}/>
+               {
+                allRecipes[9] &&  <RecipeCard recipe={allRecipes[9]}/>
+               }
+                <RecipeGrid recipes={allRecipes.slice(10,14)}/>
+              
             </div>
       </div>
     </div>
