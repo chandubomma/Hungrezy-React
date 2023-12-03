@@ -1,6 +1,6 @@
 
 
-const MobileField = ({signin,handleMobileNumber,handleSendOTP,setSignInWithOTP}) => {
+const MobileField = ({signin,handleMobileNumber,mobileNumber,handleSendOTP,setSignInWithOTP}) => {
   return (
     <div>
         <div className="form-floating  mt-3 w-80">
@@ -9,7 +9,7 @@ const MobileField = ({signin,handleMobileNumber,handleSendOTP,setSignInWithOTP})
               id="mobileNumber"
               placeholder="Enter Mobile Number"
               name="mobileNumber"
-              type="tel"
+              type="number"
               onChange = {(e)=>handleMobileNumber(e)}
               autoFocus
             />
@@ -30,7 +30,7 @@ const MobileField = ({signin,handleMobileNumber,handleSendOTP,setSignInWithOTP})
         }
           
         <div className="mb-10">
-            <button onClick={()=>handleSendOTP()} className="h-10 mt-6 w-full bg-amber-500 text-white text-md font-semibold hover:bg-amber-600 rounded-none">
+            <button onClick={()=>handleSendOTP(mobileNumber)} className="h-10 mt-6 w-full bg-amber-500 text-white text-md font-semibold hover:bg-amber-600 rounded-none">
               Send OTP
             </button>
         </div>

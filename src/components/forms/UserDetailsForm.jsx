@@ -1,4 +1,69 @@
+import { useState } from "react";
+import {useDispatch } from 'react-redux';
+import { setCurrentUser } from "../../redux/slices/userSlice";
+import { useNavigate } from "react-router-dom";
+
 const UserDetailsForm = ({ user, setUser }) => {
+  const [errors, setErrors] = useState({});
+  const dispatch = useDispatch();
+  const navigate = useNavigate()
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setUser((prevUser) => ({
+      ...prevUser,
+      [name]: value,
+    }));
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: '', // Clear the error message for the current field
+    }));
+  };
+
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Perform validation checks here
+    const validationErrors = {};
+  
+    if (!user.firstName) {
+      validationErrors.firstName = 'First Name is required';
+    }
+  
+    if (!user.lastName) {
+      validationErrors.lastName = 'Last Name is required';
+    }
+  
+    if (!user.email) {
+      validationErrors.email = 'Email is required';
+    } else if (!/\S+@\S+\.\S+/.test(user.email)) {
+      validationErrors.email = 'Invalid email address';
+    }
+  
+    if (!user.password) {
+      validationErrors.password = 'Password is required';
+    } else if (user.password.length < 8) {
+      validationErrors.password = 'Password must be at least 8 characters long';
+    }
+  
+    if (user.password !== user.confirmPassword) {
+      validationErrors.confirmPassword = 'Passwords do not match';
+    }
+  
+    if (Object.keys(validationErrors).length === 0) {
+      // If there are no validation errors, submit the form or perform further actions
+      dispatch(setCurrentUser(user));
+      console.log('Form submitted:', user);
+      navigate(-1);
+    } else {
+      // If there are validation errors, update the errors state
+      console.log(validationErrors)
+      setErrors(validationErrors);
+    
+    }
+  };
+  
+
   return (
     <div className="w-80 md:w-96">
       <div className="flex flex-col md:flex-row">
@@ -9,8 +74,8 @@ const UserDetailsForm = ({ user, setUser }) => {
             placeholder="Enter First Name"
             name="firstName"
             type="text"
-            // value={user.firstName}
-
+            value={user.firstName}
+            onChange={handleChange}
             autoFocus
           />
           <label htmlFor="firstName" className="text-gray-500">
@@ -24,7 +89,8 @@ const UserDetailsForm = ({ user, setUser }) => {
             placeholder="Enter Last Name"
             name="lastName"
             type="text"
-            // value={user.lastName}
+            value={user.lastName}
+            onChange={handleChange}
           />
           <label htmlFor="lastName" className="text-gray-500">
             Last Name
@@ -38,7 +104,8 @@ const UserDetailsForm = ({ user, setUser }) => {
           placeholder="Enter Email"
           name="email"
           type="email"
-          // value={user.firstName}
+          value={user.email}
+          onChange={handleChange}
         />
         <label htmlFor="firstName" className="text-gray-500">
           Email
@@ -51,6 +118,7 @@ const UserDetailsForm = ({ user, setUser }) => {
           placeholder="Enter Password"
           name="password"
           type="password"
+          onChange={handleChange}
         />
         <label htmlFor="password" className="text-gray-500">
           Password
@@ -63,13 +131,14 @@ const UserDetailsForm = ({ user, setUser }) => {
           placeholder="Enter Password"
           name="confirmPassword"
           type="password"
+          onChange={handleChange}
         />
         <label htmlFor="confirmPassword" className="text-gray-500">
           Confirm Password
         </label>
       </div>
       <div className="mt-6">
-        <button className="h-10 w-full bg-gradient-to-r from-amber-700 to-amber-300 text-white text-md font-semibold hover:bg-gradient-to-r hover:from-amber-600 hover:to-amber-300 ease-in-out duration-300 transition-colors rounded-md">
+        <button onClick={handleSubmit} className="h-10 w-full bg-amber-500 text-white text-md font-semibold hover:bg-amber-600 ease-in-out duration-300 transition-colors rounded-md">
           Sign Up
         </button>
       </div>

@@ -63,6 +63,17 @@ const OTPField = ({ handleVerifyOTP }) => {
     setOtp({ ...otp, [e.target.name]: e.target.value });
   };
 
+  const handleSubmit = () => {
+    if (!otp || !otp.d1 || !otp.d2 || !otp.d3 || !otp.d4 || !otp.d5 || !otp.d6) {
+      console.error('Error: OTP object is incomplete');
+      return;
+    }
+  
+    const otpString = `${otp.d1}${otp.d2}${otp.d3}${otp.d4}${otp.d5}${otp.d6}`;
+    handleVerifyOTP(otpString);
+  };
+  
+
   return (
     <div>
       <OTPMsg />
@@ -127,7 +138,7 @@ const OTPField = ({ handleVerifyOTP }) => {
         </div>
         <div>
           <button
-            onClick={() => handleVerifyOTP()}
+            onClick={() => handleSubmit()}
             className="h-10 mt-10 w-[21rem] bg-amber-500 text-white text-md font-semibold hover:bg-amber-600 rounded-none"
           >
             Verify OTP
