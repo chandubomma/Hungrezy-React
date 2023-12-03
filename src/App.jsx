@@ -20,11 +20,19 @@ import PageNotFound from "./pages/PageNotFound";
 import Profile from "./pages/Profile";
 import Recipes from "./pages/Recipes";
 import RecipePage from "./pages/RecipePage";
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const Root = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+   // Define an array of paths where you want to hide the Navbar
+   const pathsWithoutNavbar = ['/signin', '/signup'];
+
+   // Check if the current path is in the array
+   const hideNavbar = pathsWithoutNavbar.includes(location.pathname);
   return (
     <React.Fragment>
-      <Navbar />
+      {!hideNavbar && <Navbar />}
       <Outlet />
       <Toaster />
     </React.Fragment>
