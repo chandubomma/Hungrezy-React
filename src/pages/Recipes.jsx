@@ -75,7 +75,7 @@ const Recipes = () => {
         const allRecipes = [];
   
         for (const category of categories) {
-          const categoryRecipes = await fetchRecipesByCategory(category,'c');
+          const categoryRecipes = await fetchRecipesByCategory(category.strCategory,'c');
           allRecipes.push(...categoryRecipes);
         }
   
@@ -87,11 +87,14 @@ const Recipes = () => {
   
         // Fetch full details for the randomized recipes
         const fullDetails = await fetchMealDetails(mealIds.slice(0,16));
-  
+        
+       
         setAllRecipes(fullDetails);
+  
       };
 
     useEffect(()=>{
+      setShowSearchResults(false);
         fetchAllRecipes()
     },[])
 
