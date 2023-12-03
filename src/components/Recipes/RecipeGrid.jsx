@@ -1,6 +1,8 @@
 import React from 'react';
+import {useNavigate } from 'react-router-dom';
 
 const RecipeGrid = ({ recipes }) => {
+  const navigate = useNavigate()
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 p-4">
       {recipes.map((recipe) => (
@@ -14,7 +16,7 @@ const RecipeGrid = ({ recipes }) => {
               <p>{recipe.strCategory}</p>
               <p>{recipe.strArea}</p>
             </div>
-            <button className="bg-orange-500 text-white px-3 py-2 rounded-md hover:bg-orange-600 transition">View Recipe</button>
+            <button onClick={()=>navigate('/recipepage',{state:{recipe:recipe}})} className="bg-orange-500 text-white px-3 py-2 rounded-md hover:bg-orange-600 transition">View Recipe</button>
           </div>
         </div>
       ))}

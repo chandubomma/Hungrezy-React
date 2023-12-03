@@ -1,6 +1,6 @@
 import React from 'react';
 
-const RecipeCategories = () => {
+const RecipeCategories = ({handleCategorySearch}) => {
   const categories = [
     {
       "strCategory": "Chicken",
@@ -43,7 +43,7 @@ const RecipeCategories = () => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-4">
       {categories.map((category, index) => (
-        <div key={index} className={`relative group overflow-hidden bg-gray-200 rounded-lg hover:cursor-pointer ${category.strCategory === 'Chicken' ? 'md:row-span-2' : ''} ${category.strCategory === 'Breakfast' ? 'lg:col-span-2' : ''}`}>
+        <div onClick={()=>handleCategorySearch(category.strCategory,'c')} key={index} className={`relative group overflow-hidden bg-gray-200 rounded-lg hover:cursor-pointer ${category.strCategory === 'Chicken' ? 'md:row-span-2' : ''} ${category.strCategory === 'Breakfast' ? 'lg:col-span-2' : ''}`}>
           <img src={category.image} alt={category.strCategory} className={`w-full  ${category.strCategory === 'Chicken' ? 'h-80' : 'h-40'} object-cover rounded-t-lg filter blur-[1px] opacity-80`} />
           <div className="absolute inset-0 flex items-center justify-center group-hover:opacity-80 transition-opacity duration-300">
             <p className="text-white text-lg font-bold">{category.strCategory}</p>

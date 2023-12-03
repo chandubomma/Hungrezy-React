@@ -11,7 +11,7 @@ const text = [
     "Embark on a flavor-filled journey!"
 ]
 
-const RecipeBar = () => {
+const RecipeBar = ({searchText,setSearchText,handleSearch,handleCategorySearch}) => {
   const [isSticky, setSticky] = useState(false);
 
   useEffect(() => {
@@ -53,13 +53,15 @@ const RecipeBar = () => {
       <div className="relative mr-4">
         <div>
             <input
+            value={searchText}
+            onChange={(e)=>setSearchText(e.target.value)}
             type="text"
             placeholder="Search for recipes..."
             className={`w-[28rem] h-16 pl-16 pr-2 focus:outline-none ${isSticky? 'text-gray-500': 'border-orange-400 border-2 outline-orange-500  text-orange-500 border-r-0'}`}
             />
             {
                 isSticky==false &&
-                <button className='bg-orange-500 h-16 px-5 text-white  border-orange-500'>Search</button>
+                <button onClick={()=>handleSearch()} className='bg-orange-500 h-16 px-5 text-white  border-orange-500'>Search</button>
             }
         </div>
         <div className="absolute inset-y-0 left-0 flex items-center pl-3">
@@ -70,7 +72,7 @@ const RecipeBar = () => {
     {
         isSticky==false &&
         <div className=' w-1/2 h-96 mt-44 ml-2 overflow-auto'>
-            <RecipeCategories/>
+            <RecipeCategories handleCategorySearch={handleCategorySearch}/>
         </div>
     }
     </div>

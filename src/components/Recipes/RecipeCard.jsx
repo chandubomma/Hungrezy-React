@@ -1,6 +1,8 @@
 import React from 'react';
+import {useNavigate } from 'react-router-dom';
 
 const RecipeCard = ({ recipe }) => {
+  const navigate = useNavigate()
   const { strMeal, strCategory, strArea, strMealThumb, strInstructions } = recipe;
 
   return (
@@ -16,9 +18,9 @@ const RecipeCard = ({ recipe }) => {
 
       {/* Right half of the card - Recipe text and button */}
       <div className="w-1/2 p-4">
-        <h2 className="text-2xl font-semibold mb-4">{strMeal}</h2>
+        <h2 className="text-2xl font-semibold mb-4">{strMeal.slice(0,30)}</h2>
         <p className="text-gray-700 mb-4">{strInstructions.slice(0,500)}</p>
-        <button className="bg-orange-500 text-white py-2 px-4 rounded hover:bg-orange-700 focus:outline-none">
+        <button onClick={()=>navigate('/recipepage',{state:{recipe:recipe}})} className="bg-orange-500 text-white py-2 px-4 rounded hover:bg-orange-700 focus:outline-none">
           View Recipe
         </button>
       </div>

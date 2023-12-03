@@ -1,5 +1,5 @@
 // RecipesPage.js
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState,useRef } from 'react';
 import RecipeBar from '../components/Recipes/RecipeBar';
 import CountryCards from '../components/Recipes/CountryCards';
 import Sidebar from '../components/Recipes/Sidebar';
@@ -8,6 +8,25 @@ import RecipeCard from '../components/Recipes/RecipeCard';
 
 const Recipes = () => {
     const [allRecipes, setAllRecipes] = useState([]);
+    const [searchText,setSearchText] = useState('');
+    const [searchResuls,setSearchResults] = useState([]);
+    const [showSearchResults,setShowSearchResults] = useState(false);
+    const targetDivRef = useRef(null);
+
+    const fetchSearchResults = async ()=>{
+      const apiUrl = 'https://www.themealdb.com/api/json/v1/1/search.php?s='
+      try{
+        const response = await fetch(`${apiUrl}${searchText}`);
+        const data = await response.json();
+        if (data.meals && data.meals.length > 0) {
+          return data.meals;
+        }
+        return [];
+      } catch (error) {
+        console.error('Error fetching search results:', error);
+        return [];
+      }
+    }
 
 
     const fetchMealDetails = async (mealIds) => {
@@ -35,8 +54,8 @@ const Recipes = () => {
         }
       };
 
-    const fetchRecipesByCategory = async (category) => {
-        const apiUrl = `https://www.themealdb.com/api/json/v1/1/filter.php?c=${category.strCategory}`;
+    const fetchRecipesByCategory = async (category,type) => {
+        const apiUrl = `https://www.themealdb.com/api/json/v1/1/filter.php?${type}=${category}`;
         
         try {
           const response = await fetch(apiUrl);
@@ -46,7 +65,7 @@ const Recipes = () => {
             return data.meals;
           }
         } catch (error) {
-          console.error(`Error fetching recipes for category ${category.strCategory}:`, error);
+          console.error(`Error fetching recipes for category ${category}:`, error);
         }
   
         return [];
@@ -56,7 +75,7 @@ const Recipes = () => {
         const allRecipes = [];
   
         for (const category of categories) {
-          const categoryRecipes = await fetchRecipesByCategory(category);
+          const categoryRecipes = await fetchRecipesByCategory(category,'c');
           allRecipes.push(...categoryRecipes);
         }
   
@@ -76,27 +95,71 @@ const Recipes = () => {
         fetchAllRecipes()
     },[])
 
+    const handleSearch = async()=>{
+      const results = await fetchSearchResults();
+      // if (targetDivRef.current) {
+      //   targetDivRef.current.scrollIntoView({ behavior: 'smooth',block:'start' });
+      // }
+      window.scrollTo({
+        top: 350,
+        behavior: 'smooth'
+      });
+      setSearchResults(results);
+      setShowSearchResults(true);
+    }
+
+    const handleCategorySearch = async(category,type)=>{
+      const results = await fetchRecipesByCategory(category,type);
+      window.scrollTo({
+        top: 350,
+        behavior: 'smooth'
+      });
+      const mealIds = results.map((recipe) => recipe.idMeal);
+      console.log(mealIds)
+      // Fetch full details for the randomized recipes
+      const fullDetails = await fetchMealDetails(mealIds);
+      console.log(fullDetails)
+      setSearchResults(fullDetails);
+      setSearchText(category)
+      setShowSearchResults(true);
+    }
+
   return (
     <div className="w-screen min-h-screen">
       {/* Header */}
-     <RecipeBar/>
+     <RecipeBar searchText={searchText} setSearchText={setSearchText} handleSearch={handleSearch} handleCategorySearch={handleCategorySearch}/>
     
       {/* Main Content */}
       <div className=" mt-20 ">
-        <CountryCards countries={areas}/>
+        <CountryCards countries={areas} handleCategorySearch={handleCategorySearch}/>
       </div>
       <div className='flex mt-40'>
             <div >
                 <Sidebar recipes={meals}/>
             </div>
-            <div>
+            {
+              !showSearchResults && 
+              <div>
                 <RecipeGrid recipes={allRecipes.slice(0,8)}/>
-               {
-                allRecipes[9] &&  <RecipeCard recipe={allRecipes[9]}/>
-               }
+                {
+                  allRecipes[9] &&  <RecipeCard recipe={allRecipes[9]}/>
+                }
                 <RecipeGrid recipes={allRecipes.slice(10,14)}/>
+            
+              </div>
+            }
+            {
+              showSearchResults &&  
+              <div ref={targetDivRef}>
+                  <h1 className='text-lg font-semibold ml-10'>Your Search Results for {'"'+searchText+'"'}</h1>
+                  <RecipeGrid recipes={searchResuls.slice(0,4)}/>
+                  {
+                    searchResuls[5] &&  <RecipeCard recipe={searchResuls[5]}/>
+                  }
+                  <RecipeGrid recipes={searchResuls.slice(6,searchResuls.length)}/>
               
-            </div>
+              </div>
+            }
       </div>
     </div>
   );

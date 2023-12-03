@@ -1,8 +1,10 @@
 import React from 'react';
 import { useState,useEffect } from 'react';
+import {useNavigate } from 'react-router-dom';
 
 const Sidebar = () => {
     const [recipes, setRecipes] = useState([]);
+    const navigate = useNavigate()
 
     useEffect(() => {
         const fetchRecipes = async () => {
@@ -42,7 +44,7 @@ const Sidebar = () => {
                 <p><span className='w-1 h-1 mb-0.5 mx-1 rounded-full inline-block bg-orange-500'></span>{recipe.strArea}</p>
               </div>
               <div className="text-sm ">
-                  <p className='inline'>{recipe.strInstructions.slice(0, 55)+" "}<span className="text-blue-500 cursor-pointer">Read more...</span></p>
+                  <p className='inline'>{recipe.strInstructions.slice(0, 55)+" "}<span onClick={()=>navigate('/recipepage',{state:{recipe:recipe}})} className="text-blue-500 cursor-pointer">Read more...</span></p>
               </div>
             </div>
           </div>
