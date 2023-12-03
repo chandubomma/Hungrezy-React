@@ -5,13 +5,22 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialOrders = [
   {
     id: 1,
+    restaurant: 'FastFood Restaurant',
     items: [
         {
           itemName: 'Burger',
-          price: 5.99,
+          price: 60,
           count: 2,
           veg_or_non_veg: 'veg',
+          category: 'Fast Food',
         },
+        {
+            itemName: 'Pizza',
+            price: 90,
+            count: 1,
+            veg_or_non_veg: 'veg',
+            category: 'Fast Food',
+          },
         // Add more food items as needed
       ],
     user: {

@@ -7,6 +7,7 @@ import { MdRestaurantMenu } from "react-icons/md";
 import { FaUserCircle } from "react-icons/fa";
 import { FaAddressBook } from "react-icons/fa";
 import { RiCustomerService2Fill } from "react-icons/ri";
+import OrdersList from '../components/profile/OrdersList';
 
 const Profile = () => {
   const [scrolling, setScrolling] = useState(false);
@@ -31,7 +32,7 @@ const Profile = () => {
   const renderContent = () => {
     switch (activeTab) {
       case 'orders':
-        return <p>Your Orders content goes here.</p>;
+        return <OrdersList/>;
       case 'bookings':
         return <p>Table Bookings content goes here.</p>;
       case 'account':
