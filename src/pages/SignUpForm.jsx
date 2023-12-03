@@ -8,7 +8,7 @@ import OTPField from "../components/forms/OTPField";
 const SignUpForm = () => {
   const [currStep, setCurrStep] = useState(1);
   const [user, setUser] = useState({
-    mobileNumber : '+91',
+    mobileNumber : '',
     firstName : '',
     lastName : '',
     email : '',
