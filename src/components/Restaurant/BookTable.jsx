@@ -7,7 +7,7 @@ import { useDispatch } from 'react-redux';
 import { addBooking } from '../../redux/slices/tableBookingSlice';
 
 
-const BookTable = ({currentUser,restaurant}) => {
+const BookTable = ({currentUser,restaurant,setTableBooked}) => {
   const [guests, setGuests] = useState(1);
   const [selectedDate, setSelectedDate] = useState(new Date().toDateString());
   const [selectedTime, setSelectedTime] = useState(null);
@@ -98,6 +98,7 @@ const generateTimeCards = (selectedDate, start, end, interval) => {
 
     // Dispatch the action to add a new booking
     dispatch(addBooking(bookingDetails));
+    setTableBooked(true);
   };
 
   

@@ -98,6 +98,16 @@ const Navbar = () => {
             Recipes
           </Link>
           <Link
+            to="/profile"
+            className={`${
+              isLinkActive("/profile")
+                ? "text-black font-bold"
+                : "text-gray-500"
+            } hover:text-amber-500 transition-colors duration-300 hover:scale-110 hover:opacity-80`}
+          >
+            Account
+          </Link>
+          <Link
             to="/about"
             className={`${
               isLinkActive("/about") ? "text-black font-bold" : "text-gray-500"
@@ -105,16 +115,7 @@ const Navbar = () => {
           >
             About
           </Link>
-          <Link
-            to="/contact"
-            className={`${
-              isLinkActive("/contact")
-                ? "text-black font-bold"
-                : "text-gray-500"
-            } hover:text-amber-500 transition-colors duration-300 hover:scale-110 hover:opacity-80`}
-          >
-            Contact Us
-          </Link>
+         
         </div>
 
         <div className="relative flex lg:gap-4">

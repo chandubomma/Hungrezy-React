@@ -9,10 +9,12 @@ import { FaAddressBook } from "react-icons/fa";
 import { RiCustomerService2Fill } from "react-icons/ri";
 import OrdersList from '../components/profile/OrdersList';
 import TableBookings from '../components/profile/TableBookings';
+import { useNavigate } from 'react-router-dom';
 
 const Profile = () => {
   const [scrolling, setScrolling] = useState(false);
   const [activeTab, setActiveTab] = useState('orders'); // Default active tab
+  const navigate = useNavigate()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -114,11 +116,11 @@ const Profile = () => {
                  className={`mb-2 cursor-pointer w-full py-6 px-3 font-bold  text-lg ${
                     activeTab === 'help' ? 'bg-white' : ''
                   }`}
-                  onClick={() => handleTabClick('help')}
+                  onClick={() => navigate('/contact')}
                 >
                   <div className="flex items-center">
                     <RiCustomerService2Fill className="mr-3 text-3xl" />
-                    Help
+                    Contact Us
                   </div>
                 </li>
               </ul>

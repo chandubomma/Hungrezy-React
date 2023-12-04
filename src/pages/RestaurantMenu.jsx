@@ -21,6 +21,7 @@ const RestaurantMenu = () => {
   const [foodItems, setFoodItems] = useState(restaurant.menu);
   const [activeTab, setActiveTab] = useState("menu");
   const [isCategoryListVisible, setCategoryListVisible] = useState(false);
+  const [isTableBooked,setTableBooked] = useState(false);
   const cartItems = useSelector(selectCartItems);
   const currentUser = useSelector(selectUser);
 
@@ -223,7 +224,15 @@ const RestaurantMenu = () => {
 
       {activeTab == "booktable" && (
         <div>
-          <BookTable currentUser={currentUser} restaurant={restaurant}/>
+          {
+            isTableBooked? 
+            <div>
+              <h3 className="mt-5 text-lg text-green-500 font-semibold">Your table booking at {restaurant.name} is Successfull!</h3>
+              <h5 className="mt-2 text-gray-500">Go to Account/Table Bookings for Details.</h5>
+              <button onClick={()=>setTableBooked(false)} className="w-full py-2 mt-5 bg-orange-500 text-white font-bold rounded">Book another Table</button>
+            </div>:
+            <BookTable currentUser={currentUser} restaurant={restaurant} setTableBooked={setTableBooked}/>
+          }
         </div>
       )}
 
