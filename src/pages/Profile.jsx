@@ -8,6 +8,7 @@ import { FaUserCircle } from "react-icons/fa";
 import { FaAddressBook } from "react-icons/fa";
 import { RiCustomerService2Fill } from "react-icons/ri";
 import OrdersList from '../components/profile/OrdersList';
+import TableBookings from '../components/profile/TableBookings';
 
 const Profile = () => {
   const [scrolling, setScrolling] = useState(false);
@@ -34,7 +35,7 @@ const Profile = () => {
       case 'orders':
         return <OrdersList/>;
       case 'bookings':
-        return <p>Table Bookings content goes here.</p>;
+        return <TableBookings/>;
       case 'account':
         return <p>Account content goes here.</p>;
       case 'address':

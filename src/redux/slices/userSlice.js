@@ -3,8 +3,14 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  user: null, // Initially, no user is signed in
-  isAuthenticated: false, // Initially, user is not authenticated
+  user: {
+    mobileNumber : '6301581943',
+    firstName : 'Ravi Teja',
+    lastName : 'Abboju',
+    email : 'abbojuraviteja@gmail.com',
+    password : 'Teja@123'
+  }, // Initially, no user is signed in
+  isAuthenticated: true, // Initially, user is not authenticated
 };
 
 const userSlice = createSlice({

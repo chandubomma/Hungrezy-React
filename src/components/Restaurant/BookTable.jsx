@@ -3,12 +3,17 @@ import { FaMinus, FaPlus } from 'react-icons/fa';
 import { IoIosSunny } from "react-icons/io";
 import { IoMdMoon } from "react-icons/io";
 import { FaUserGroup } from "react-icons/fa6";
+import { useDispatch } from 'react-redux';
+import { addBooking } from '../../redux/slices/tableBookingSlice';
 
-const BookTable = () => {
+
+const BookTable = ({currentUser,restaurant}) => {
   const [guests, setGuests] = useState(1);
   const [selectedDate, setSelectedDate] = useState(new Date().toDateString());
   const [selectedTime, setSelectedTime] = useState(null);
   const [currentTime, setCurrentTime] = useState(new Date());
+  const dispatch = useDispatch();
+ 
 
   const handleGuestsChange = (increment) => {
     setGuests((prevGuests) => (increment ? prevGuests + 1 : Math.max(prevGuests - 1, 1)));
@@ -78,6 +83,23 @@ const generateTimeCards = (selectedDate, start, end, interval) => {
     }
     return timeCards;
   };
+
+
+  const handleProceedClick = () => {
+    // Assuming you have the necessary information for a booking
+    const bookingDetails = {
+      guests,
+      date: selectedDate,
+      time: selectedTime,
+      user : currentUser,
+      restaurantName : restaurant.name,
+      restaurantAddress : restaurant.address,
+    };
+
+    // Dispatch the action to add a new booking
+    dispatch(addBooking(bookingDetails));
+  };
+
   
 
   
@@ -161,6 +183,7 @@ const generateTimeCards = (selectedDate, start, end, interval) => {
           selectedDate && selectedTime ? 'cursor-pointer hover:bg-orange-600' : 'cursor-not-allowed bg-orange-200'
         }`}
         disabled={!selectedDate || !selectedTime}
+        onClick={handleProceedClick}
       >
         Proceed
       </button>

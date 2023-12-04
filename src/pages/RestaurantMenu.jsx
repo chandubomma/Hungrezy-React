@@ -7,6 +7,7 @@ import RestaurantReviews from "../components/Restaurant/RestaurantReviews";
 import BookTable from "../components/Restaurant/BookTable";
 import { useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { selectUser } from '../redux/slices/userSlice';
 import {
   addToCart,
   removeFromCart,
@@ -21,6 +22,7 @@ const RestaurantMenu = () => {
   const [activeTab, setActiveTab] = useState("menu");
   const [isCategoryListVisible, setCategoryListVisible] = useState(false);
   const cartItems = useSelector(selectCartItems);
+  const currentUser = useSelector(selectUser);
 
   const initialVisibility = Object.keys(foodItems).reduce(
     (acc, category, index) => {
@@ -221,7 +223,7 @@ const RestaurantMenu = () => {
 
       {activeTab == "booktable" && (
         <div>
-          <BookTable/>
+          <BookTable currentUser={currentUser} restaurant={restaurant}/>
         </div>
       )}
 
