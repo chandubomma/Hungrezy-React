@@ -4,14 +4,50 @@ import paypal from "./../../assets/paypal.png";
 import maestro from "./../../assets/maestro.png";
 import visa from "./../../assets/visa.png";
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { selectUser } from '../../redux/slices/userSlice';
+import {addOrder} from '../../redux/slices/ordersSlice'
+import {
+  selectCartItems,
+  clearCart
+} from "./../../redux/slices/cartSlice";
+import { useNavigate } from "react-router-dom";
 
 const CheckOutForm = () => {
+  const dispatch = useDispatch();
+  const cartItems = useSelector(selectCartItems);
+  const [Address,setAddress] = useState({
+    address : '',
+    city : '',
+    state:'',
+    zip :'',
+    country:'',
+  })
   const formVariants = {
     hidden: { opacity: 0, x: 0 },
     visible: { opacity: 1, x: 0, transition: { duration: 0.8 } },
   };
-
+  const currentUser = useSelector(selectUser);
   const [selectedTab, setSelectedTab] = useState("card");
+  const navigate = useNavigate()
+
+  const handlePlaceOrder = ()=>{
+    const order = {
+      items : cartItems,
+      address : Address,
+      user : {
+        name : currentUser.firstName+" "+currentUser.lastName,
+        email : currentUser.email,
+        mobileNumber : currentUser.mobileNumber
+      },
+      paymentMethod : selectedTab,
+      status : 'pending'
+    }
+    dispatch(addOrder(order));
+    dispatch(clearCart());
+    navigate('/profile');
+  }
+
   return (
     <div className="flex-1">
       <motion.div variants={formVariants}>
@@ -270,6 +306,7 @@ const CheckOutForm = () => {
             type="button"
             className="mx-auto py-3 px-8 bg-amber-500 hover:bg-amber-600 transition-colors duration-300 text-white rounded-full flex items-center"
             variants={formVariants}
+            onClick={handlePlaceOrder}
           >
             <FaShoppingBag className="align-baseline" />
             <span className="ml-2 align-baseline">Place Order</span>

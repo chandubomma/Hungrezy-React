@@ -5,7 +5,6 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialOrders = [
   {
     id: 1,
-    restaurant: 'FastFood Restaurant',
     items: [
         {
           itemName: 'Burger',
@@ -13,6 +12,7 @@ const initialOrders = [
           count: 2,
           veg_or_non_veg: 'veg',
           category: 'Fast Food',
+          restaurant: 'FastFood Restaurant',
         },
         {
             itemName: 'Pizza',
@@ -20,6 +20,7 @@ const initialOrders = [
             count: 1,
             veg_or_non_veg: 'veg',
             category: 'Fast Food',
+            restaurant: 'FastFood Restaurant',
           },
         // Add more food items as needed
       ],

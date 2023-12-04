@@ -8,7 +8,7 @@ const OrderCard = ({ order }) => {
   return (
     <div className="border border-gray-300 p-4 mb-4 rounded-lg shadow-md">
       <div className="flex items-center justify-between mb-2">
-        <h3 className="text-xl text-gray-600 font-semibold">{order.restaurant}</h3>
+        <h3 className="text-xl text-gray-600 font-semibold">{order.items[0].restaurant}</h3>
         <span className={`px-2 py-1 rounded ${
           order.status === 'delivered' ? 'bg-green-500 text-white' :
           order.status === 'not delivered' ? 'bg-yellow-500 text-black' :
