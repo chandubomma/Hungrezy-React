@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { FaSearch } from 'react-icons/fa';
 import LocationSearch from './LocationSearch';
 
-const RestaurantTopBar = ({location,setLocation}) => {
+const RestaurantTopBar = ({location,setLocation,searchText,setSearchText}) => {
   const [isSticky, setSticky] = useState(false);
 
   useEffect(() => {
@@ -35,7 +35,9 @@ const RestaurantTopBar = ({location,setLocation}) => {
         <input
           type="text"
           placeholder="Search for restaurants..."
+          value={searchText}
           className="w-[40rem] h-12 pl-16 pr-2 rounded  text-gray-500 focus:outline-none"
+          onChange={(e)=>setSearchText(e.target.value)}
         />
         <div className="absolute inset-y-0 left-0 flex items-center pl-3">
           <FaSearch className="h-6 w-6 text-gray-300" />

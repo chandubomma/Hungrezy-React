@@ -13,6 +13,8 @@ const Restaurants = () => {
   const [error, setError] = useState(null);
   const [location, setLocation] = useState('Hyderabad-Begumpet');
   const [visibleRestaurants, setVisibleRestaurants] = useState(0);
+  const [searchText,setSearchText] = useState('');
+  const [searchResults,setSearchResults] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -34,6 +36,7 @@ const Restaurants = () => {
           return restaurant
         })
         setData(restaurants);
+        console.log(restaurants);
         setVisibleRestaurants(0)
       } catch (error) {
         setError(error.message);
@@ -45,124 +48,68 @@ const Restaurants = () => {
     fetchData();
   }, [location]);
 
+  useEffect(()=>{
+    if(data!=null){
+      const temp = filterRestaurants(searchText,data);
+      setSearchResults(temp);
+    }
+  },[searchText])
+
   function getRandomInt(n) {
     return Math.floor(Math.random() * n) + 1;
   }
+
+
+  const filterRestaurants = (searchText, restaurants) => {
+    const normalizedSearchText = searchText.toLowerCase();
+  
+    return restaurants.filter(restaurant => {
+      // Check if search text matches restaurant name
+      if (restaurant.name.toLowerCase().includes(normalizedSearchText)) {
+        return true;
+      }
+  
+      // Check if search text matches cuisine
+      if (restaurant.cuisine.toLowerCase().includes(normalizedSearchText)) {
+        return true;
+      }
+  
+      // Check if search text matches any menu category
+      const menuCategories = Object.keys(restaurant.menu);
+      if (menuCategories.some(category => category.toLowerCase().includes(normalizedSearchText))) {
+        return true;
+      }
+  
+      // Check if search text matches any food item name
+      const menuItems = Object.values(restaurant.menu).reduce((acc, category) => {
+        return acc.concat(Object.keys(category));
+      }, []);
+      if (menuItems.some(item => item.toLowerCase().includes(normalizedSearchText))) {
+        return true;
+      }
+  
+      // Add more conditions as needed
+  
+      return false;
+    });
+  };
+  
  
-  const restaurants = [
-    {
-      name: 'Sample Restaurant',
-      cuisine: 'Italian',
-      image: 'https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/fartmcdlydc0soohkevd',
-      price: 20,
-      // Add more properties as needed
-    },
-    {
-      name: 'Sample Restaurant',
-      cuisine: 'Italian',
-      image: 'https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/fartmcdlydc0soohkevd',
-      price: 20,
-      // Add more properties as needed
-    },
-    {
-      name: 'Sample Restaurant',
-      cuisine: 'Italian',
-      image: 'https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/fartmcdlydc0soohkevd',
-      price: 20,
-      // Add more properties as needed
-    },
-    {
-      name: 'Sample Restaurant',
-      cuisine: 'Italian',
-      image: 'https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/fartmcdlydc0soohkevd',
-      price: 20,
-      // Add more properties as needed
-    },
-    {
-      name: 'Sample Restaurant',
-      cuisine: 'Italian',
-      image: 'https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/fartmcdlydc0soohkevd',
-      price: 20,
-      // Add more properties as needed
-    },
-    {
-      name: 'Sample Restaurant',
-      cuisine: 'Italian',
-      image: 'https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/fartmcdlydc0soohkevd',
-      price: 20,
-      // Add more properties as needed
-    },
-    {
-      name: 'Sample Restaurant',
-      cuisine: 'Italian',
-      image: 'https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/fartmcdlydc0soohkevd',
-      price: 20,
-      // Add more properties as needed
-    },
-    {
-      name: 'Sample Restaurant',
-      cuisine: 'Italian',
-      image: 'https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/fartmcdlydc0soohkevd',
-      price: 20,
-      // Add more properties as needed
-    },
-    {
-      name: 'Sample Restaurant',
-      cuisine: 'Italian',
-      image: 'https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/fartmcdlydc0soohkevd',
-      price: 20,
-      // Add more properties as needed
-    },
-    {
-      name: 'Sample Restaurant',
-      cuisine: 'Italian',
-      image: 'https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/fartmcdlydc0soohkevd',
-      price: 20,
-      // Add more properties as needed
-    },
-    {
-      name: 'Sample Restaurant',
-      cuisine: 'Italian',
-      image: 'https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/fartmcdlydc0soohkevd',
-      price: 20,
-      // Add more properties as needed
-    },
-    {
-      name: 'Sample Restaurant',
-      cuisine: 'Italian',
-      image: 'https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/fartmcdlydc0soohkevd',
-      price: 20,
-      // Add more properties as needed
-    },
-    {
-      name: 'Sample Restaurant',
-      cuisine: 'Italian',
-      image: 'https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/fartmcdlydc0soohkevd',
-      price: 20,
-      // Add more properties as needed
-    },
-    {
-      name: 'Sample Restaurant',
-      cuisine: 'Italian',
-      image: 'https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/fartmcdlydc0soohkevd',
-      price: 20,
-      // Add more properties as needed
-    },
-    {
-      name: 'Sample Restaurant',
-      cuisine: 'Italian',
-      image: 'https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/fartmcdlydc0soohkevd',
-      price: 20,
-      // Add more properties as needed
-    },
-  ];
+  
   return (
     <div className="mt-32">
-      <RestaurantTopBar location={location} setLocation={setLocation}/>
+      <RestaurantTopBar location={location} setLocation={setLocation} searchText={searchText} setSearchText={setSearchText}/>
       {
-        data!=null &&
+        data!=null && searchText=='' &&
          <div className="mt-6">
           <RestaurantGrid restaurants={data} visibleRestaurants={visibleRestaurants} setVisibleRestaurants={setVisibleRestaurants} /> 
+         </div>
+      }
+      {
+        data!=null && searchText!='' && searchResults.length>0 &&
+         <div className="mt-6">
+          <h3 className="text-lg text-gray-600 mb-2 ml-10 font-semibold">Your Search Results for '{searchText}'</h3>
+          <RestaurantGrid restaurants={searchResults} visibleRestaurants={visibleRestaurants} setVisibleRestaurants={setVisibleRestaurants} /> 
          </div>
       }
       {
