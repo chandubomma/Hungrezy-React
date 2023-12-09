@@ -1,11 +1,53 @@
 import { useState } from "react"
+import {useDispatch } from 'react-redux';
+import { setCurrentUser } from "../../redux/slices/userSlice";
+import { useNavigate } from "react-router-dom";
 
 const MobileAndPassword = ({setSignInWithOTP,mobileNumber,handleMobileNumber}) => {
   const [password,setPassword] = useState("");
+  const dispatch = useDispatch();
+  const navigate = useNavigate()
 
   const handlePasswordChange = (e)=>{
     setPassword(e.target.value)
   }
+
+  const handleSignIn = async (e) => {
+    e.preventDefault();
+
+    // Perform validation checks here
+    if (!mobileNumber || !password) {
+      setError("Mobile number and password are required.");
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:3000/auth/signin", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          mobileNumber,
+          password,
+        }),
+      });
+      const data = await response.json();
+      console.log(data);
+      if (response.ok) {
+        // Successful sign-in, handle the response accordingly
+        dispatch(setCurrentUser(data.user));
+        navigate(-1);
+        console.log("User successfully signed in:", data.user);
+      } else {
+        // Handle non-successful response, e.g., show an error message
+        setError(data.error || "Sign-in failed.");
+      }
+    } catch (error) {
+      console.error("Error during sign-in request:", error);
+      setError("Network error");
+    }
+  };
 
   return (
     <div className="w-80 ">
@@ -52,7 +94,7 @@ const MobileAndPassword = ({setSignInWithOTP,mobileNumber,handleMobileNumber}) =
           </h6>
         </div>
         <div className="mt-6">
-          <button className="h-10 w-full bg-amber-500 text-white text-md font-semibold hover:bg-amber-600 rounded-none">
+          <button onClick={handleSignIn} className="h-10 w-full bg-amber-500 text-white text-md font-semibold hover:bg-amber-600 rounded-none">
             Sign in
           </button>
         </div>

@@ -10,12 +10,15 @@ import { RiCustomerService2Fill } from "react-icons/ri";
 import OrdersList from '../components/profile/OrdersList';
 import TableBookings from '../components/profile/TableBookings';
 import { useNavigate } from 'react-router-dom';
+import { selectUser } from '../redux/slices/userSlice';
+import { useSelector } from 'react-redux';
 
 const Profile = () => {
   const [scrolling, setScrolling] = useState(false);
   const [activeTab, setActiveTab] = useState('orders'); // Default active tab
   const navigate = useNavigate()
-
+  const currentUser = useSelector(selectUser);
+  console.log(currentUser)
   useEffect(() => {
     const handleScroll = () => {
       setScrolling(window.scrollY > 0);
@@ -57,10 +60,10 @@ const Profile = () => {
     >
       <div className="container mx-auto p-4">
         <div className="flex items-center my-4">
-          <div className="text-4xl font-bold text-white">Ravi Teja Abboju</div>
+          <div className="text-4xl font-bold text-white">{currentUser.firstName+' '+currentUser.lastName}</div>
           <div className="ml-6 text-white">
-            <div className="font-bold">6301581943</div>
-            <div className=''>abbojuraviteja@gmail.com</div>
+            <div className="font-bold">{currentUser.mobileNumber}</div>
+            <div className=''>{currentUser.email}</div>
           </div>
         </div>
 
