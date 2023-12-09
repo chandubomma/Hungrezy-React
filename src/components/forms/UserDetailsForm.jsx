@@ -20,8 +20,7 @@ const UserDetailsForm = ({ user, setUser }) => {
     }));
   };
 
-
-  const handleSubmit = (e) => {
+const handleSubmit = async (e) => {
     e.preventDefault();
     // Perform validation checks here
     const validationErrors = {};
@@ -51,17 +50,38 @@ const UserDetailsForm = ({ user, setUser }) => {
     }
   
     if (Object.keys(validationErrors).length === 0) {
-      // If there are no validation errors, submit the form or perform further actions
-      dispatch(setCurrentUser(user));
-      console.log('Form submitted:', user);
-      navigate(-1);
+      try {
+        // If there are no validation errors, submit the form or perform further actions
+        const response = await fetch('http://localhost:3000/auth/signup', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(user),
+        });
+  
+        if (response.ok) {
+          // If the signup request is successful, you can handle the response accordingly
+          console.log('User successfully signed up:', user);
+          // You might want to redirect or update the UI in some way
+          // For now, just navigate back
+          dispatch(setCurrentUser(user));
+          navigate(-1);
+        } else {
+          // Handle non-successful response, e.g., show an error message
+          console.error('Signup request failed:', response.status);
+        }
+      } catch (error) {
+        console.error('Error during signup request:', error);
+      }
     } else {
       // If there are validation errors, update the errors state
-      console.log(validationErrors)
+      console.log(validationErrors);
       setErrors(validationErrors);
-    
     }
   };
+ 
+  
   
 
   return (
