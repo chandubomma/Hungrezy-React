@@ -9,6 +9,7 @@ import { FaAddressBook } from "react-icons/fa";
 import { RiCustomerService2Fill } from "react-icons/ri";
 import OrdersList from '../components/profile/OrdersList';
 import TableBookings from '../components/profile/TableBookings';
+import Account from '../components/profile/Account';
 import { useNavigate } from 'react-router-dom';
 import { selectUser } from '../redux/slices/userSlice';
 import { useSelector } from 'react-redux';
@@ -42,7 +43,7 @@ const Profile = () => {
       case 'bookings':
         return <TableBookings/>;
       case 'account':
-        return <p>Account content goes here.</p>;
+        return <Account user={currentUser}/>;
       case 'address':
         return <p>Address Book content goes here.</p>;
       case 'help':
