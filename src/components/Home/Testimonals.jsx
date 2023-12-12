@@ -1,6 +1,6 @@
 import { FaQuoteLeft, FaQuoteRight } from "react-icons/fa";
 import { motion, useAnimation } from "framer-motion";
-import testimonialsData from "./../../data/testimonals";
+import testimonialsData from "../../data/testimonals";
 import { useInView } from "react-intersection-observer";
 import { useEffect } from "react";
 
