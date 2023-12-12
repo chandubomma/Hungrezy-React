@@ -16,7 +16,7 @@ const Account = ({ user }) => {
   
     // Send updated user details to your backend API for saving
     // Replace this with your actual API endpoint
-    fetch("http://localhost:3000/user/updateDetails", {
+    fetch(`${import.meta.env.VITE_HUNGREZY_API}/user/updateDetails`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

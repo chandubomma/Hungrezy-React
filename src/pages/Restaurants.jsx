@@ -6,6 +6,7 @@ import NoDelivery from "../components/Restaurant/NoDelivery";
 
 
 
+
 const Restaurants = () => {
 
   const [data, setData] = useState(null);
@@ -15,6 +16,7 @@ const Restaurants = () => {
   const [visibleRestaurants, setVisibleRestaurants] = useState(0);
   const [searchText,setSearchText] = useState('');
   const [searchResults,setSearchResults] = useState([]);
+ 
 
   useEffect(() => {
     const fetchData = async () => {
@@ -23,7 +25,7 @@ const Restaurants = () => {
         const key1 = arr[0].trim(); // Replace with your key1
         const key2 = encodeURIComponent(arr[1].trim()); // Replace with your key2
         console.log(key1,key2)
-        const response = await fetch(`http://localhost:3000/Restaurants/getData?key1=${key1}&key2=${key2}`);
+        const response = await fetch(`${import.meta.env.VITE_HUNGREZY_API}/Restaurants/getData?key1=${key1}&key2=${key2}`);
         if (!response.ok) {
           setData(null);
           throw new Error(`HTTP error! Status: ${response.status}`);

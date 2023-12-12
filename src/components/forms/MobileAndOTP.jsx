@@ -14,7 +14,7 @@ const MobileAndOTP = ({mobileNumber,handleMobileNumber,setSignInWithOTP}) => {
 
   async function handleSendOTP() {
 
-    const url = 'http://localhost:3000/auth/sendOTP';
+    const url = `${import.meta.env.VITE_HUNGREZY_API}/auth/sendOTP`;
   
     try {
       const response = await fetch(url, {
@@ -46,7 +46,7 @@ const MobileAndOTP = ({mobileNumber,handleMobileNumber,setSignInWithOTP}) => {
   
   // Function to check if a user with the given mobile number exists
   async function checkUserExists(mobileNumber) {
-    const url = `http://localhost:3000/auth/checkUser/${mobileNumber}`;
+    const url = `${import.meta.env.VITE_HUNGREZY_API}/auth/checkUser/${mobileNumber}`;
   
     try {
       const response = await fetch(url, {
@@ -87,7 +87,7 @@ const MobileAndOTP = ({mobileNumber,handleMobileNumber,setSignInWithOTP}) => {
      }
      
      dispatch(setCurrentUser(userExists));
-    const url = 'http://localhost:3000/auth/verifyOTP';
+    const url = `${import.meta.env.VITE_HUNGREZY_API}/auth/verifyOTP`;
   
     try {
       const response = await fetch(url, {

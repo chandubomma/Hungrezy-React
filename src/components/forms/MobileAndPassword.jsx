@@ -22,7 +22,7 @@ const MobileAndPassword = ({setSignInWithOTP,mobileNumber,handleMobileNumber}) =
     }
 
     try {
-      const response = await fetch("http://localhost:3000/auth/signin", {
+      const response = await fetch(`${import.meta.env.VITE_HUNGREZY_API}/auth/signin`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

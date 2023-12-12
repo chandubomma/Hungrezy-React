@@ -36,7 +36,7 @@ const RecipeBar = ({searchText,setSearchText,handleSearch,handleCategorySearch})
         isSticky ? "bg-white text-white p-4 shadow-md flex justify-between h-24 z-50" : "h-fit flex"
       } sticky top-0 transition-colors duration-300 ease-in-out `}
     >
-      <div className={`${isSticky? 'flex justify-between w-full':'flex-col pt-60 pl-32 pr-10'}`}>
+      <div className={`w-1/2 ${isSticky? 'flex justify-between w-full':'flex-col pt-60 pl-32 pr-10'}`}>
             
         <div className="flex items-center space-x-4 font-semibold ">
             <h1 className={` font-extrabold  ${isSticky? 'text-3xl text-orange-400':'text-5xl text-orange-500/90 mb-2.5'}`}>Food Recipes</h1>
@@ -57,7 +57,7 @@ const RecipeBar = ({searchText,setSearchText,handleSearch,handleCategorySearch})
             onChange={(e)=>setSearchText(e.target.value)}
             type="text"
             placeholder="Search for recipes..."
-            className={`w-[28rem] h-16 pl-16 pr-2 focus:outline-none ${isSticky? 'text-gray-500': 'border-orange-400 border-2 outline-orange-500  text-orange-500 border-r-0'}`}
+            className={`w-[22rem] h-16 pl-16 pr-2 focus:outline-none ${isSticky? 'text-gray-500': 'border-orange-400 border-2 outline-orange-500  text-orange-500 border-r-0'}`}
             />
             {
                 isSticky==false &&

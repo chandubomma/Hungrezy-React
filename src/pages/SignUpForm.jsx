@@ -26,7 +26,7 @@ const SignUpForm = () => {
  
 
   async function handleSendOTP(mobileNumber) {
-    const url = 'http://localhost:3000/auth/sendOTP';
+    const url = `${import.meta.env.VITE_HUNGREZY_API}/auth/sendOTP`;
   
     try {
       const response = await fetch(url, {
@@ -59,7 +59,7 @@ const SignUpForm = () => {
     
 
   const handleVerifyOTP = async(OTP) => {
-    const url = 'http://localhost:3000/auth/verifyOTP';
+    const url = `${import.meta.env.VITE_HUNGREZY_API}/auth/verifyOTP`;
   
     try {
       const response = await fetch(url, {

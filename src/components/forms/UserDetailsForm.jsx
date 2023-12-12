@@ -52,7 +52,7 @@ const handleSubmit = async (e) => {
     if (Object.keys(validationErrors).length === 0) {
       try {
         // If there are no validation errors, submit the form or perform further actions
-        const response = await fetch('http://localhost:3000/auth/signup', {
+        const response = await fetch(`${import.meta.env.VITE_HUNGREZY_API}/auth/signup`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

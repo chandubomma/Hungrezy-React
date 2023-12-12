@@ -20,7 +20,7 @@ const LocationSearch = ({isSticky,searchText,setSearchText}) => {
 
   const fetchKeys = () => {
     // Fetch keys from the server using the /getAllKeys route
-    fetch(`http://localhost:3000/Restaurants/getAllKeys`)
+    fetch(`${import.meta.env.VITE_HUNGREZY_API}/Restaurants/getAllKeys`)
       .then(response => response.json())
       .then(data => {
         const { keysAtLevel1, keysAtLevel2 } = data;
