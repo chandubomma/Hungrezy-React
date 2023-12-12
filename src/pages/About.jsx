@@ -7,7 +7,7 @@ import placeOrder from "./../assets/placeOrder.png";
 import payment from "./../assets/payment.png";
 import orderSent from "./../assets/orderSent.png";
 import happyTummy from "./../assets/happy.png";
-import Footer from "../components/home/Footer";
+import Footer from "@/components/home/Footer";
 import aboutImage from "./../assets/aboutImage.png";
 import { useNavigate } from "react-router-dom";
 
