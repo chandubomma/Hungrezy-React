@@ -1,10 +1,10 @@
 // RecipesPage.js
 import React, { useEffect, useState,useRef } from 'react';
-import RecipeBar from '../components/Recipes/RecipeBar';
-import CountryCards from '../components/Recipes/CountryCards';
-import Sidebar from '../components/Recipes/Sidebar';
-import RecipeGrid from '../components/Recipes/RecipeGrid';
-import RecipeCard from '../components/Recipes/RecipeCard';
+import RecipeBar from '@/components/Recipes/RecipeBar';
+import CountryCards from '@/components/Recipes/CountryCards';
+import Sidebar from '@/components/Recipes/Sidebar';
+import RecipeGrid from '@/components/Recipes/RecipeGrid';
+import RecipeCard from '@/components/Recipes/RecipeCard';
 
 const Recipes = () => {
     const [allRecipes, setAllRecipes] = useState([]);

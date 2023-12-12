@@ -5,7 +5,7 @@ import overlayImage from "../assets/overlay.png";
 import { MdEmail } from "react-icons/md";
 import { FaLocationDot } from "react-icons/fa6";
 import { IoIosSend } from "react-icons/io";
-import Footer from "../components/home/Footer";
+import Footer from "@/components/home/Footer";
 import { useNavigate } from "react-router-dom";
 
 const ContactUs = () => {

@@ -1,10 +1,10 @@
 import { useState, useRef, useEffect } from "react";
-import RestaurantMenuCategory from "../components/Restaurant/RestaurantMenuCategory";
+import RestaurantMenuCategory from "@/components/Restaurant/RestaurantMenuCategory";
 import { FaCircleInfo } from "react-icons/fa6";
 import { FaStar } from "react-icons/fa6";
 import { MdRestaurantMenu } from "react-icons/md";
-import RestaurantReviews from "../components/Restaurant/RestaurantReviews";
-import BookTable from "../components/Restaurant/BookTable";
+import RestaurantReviews from "@/components/Restaurant/RestaurantReviews";
+import BookTable from "@/components/Restaurant/BookTable";
 import { useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from '../redux/slices/userSlice';

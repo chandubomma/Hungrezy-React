@@ -1,6 +1,6 @@
 import { useState } from "react";
-import MobileAndPassword from "../components/forms/MobileAndPassword";
-import MobileAndOTP from "../components/forms/MobileAndOTP";
+import MobileAndPassword from "@/components/forms/MobileAndPassword";
+import MobileAndOTP from "@/components/forms/MobileAndOTP";
 
 const SigninForm = () => {
   const [signInWithOTP, setSignInWithOTP] = useState(false);

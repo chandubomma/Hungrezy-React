@@ -1,8 +1,8 @@
 import { useState } from "react";
-import UserSignUpStepIndicator from "../components/forms/UserSignUpStepIndicator";
-import UserDetailsForm from "../components/forms/UserDetailsForm";
-import MobileField from "../components/forms/MobileField";
-import OTPField from "../components/forms/OTPField";
+import UserSignUpStepIndicator from "@/components/forms/UserSignUpStepIndicator";
+import UserDetailsForm from "@/components/forms/UserDetailsForm";
+import MobileField from "@/components/forms/MobileField";
+import OTPField from "@/components/forms/OTPField";
 
 
 const SignUpForm = () => {

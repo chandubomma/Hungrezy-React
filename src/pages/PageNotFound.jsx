@@ -3,7 +3,7 @@ import notFoundImage from "../assets/404Image.png";
 import { motion, useAnimation } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
-import Footer from "../components/home/Footer";
+import Footer from "@/components/home/Footer";
 
 const PageNotFound = () => {
   const navigate = useNavigate();

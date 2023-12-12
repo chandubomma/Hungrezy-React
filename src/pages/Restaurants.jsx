@@ -1,8 +1,8 @@
-import RestaurantTopBar from "../components/Restaurant/RestaurantTopBar";
-import RestaurantGrid from "../components/Restaurant/RestaurantGrid";
+import RestaurantTopBar from "@/components/Restaurant/RestaurantTopBar";
+import RestaurantGrid from "@/components/Restaurant/RestaurantGrid";
 import { useEffect,useState } from "react";
 import RestaurantMenu from "./RestaurantMenu";
-import NoDelivery from "../components/Restaurant/NoDelivery";
+import NoDelivery from "@/components/Restaurant/NoDelivery";
 
 
 

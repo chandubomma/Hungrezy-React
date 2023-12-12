@@ -4,8 +4,8 @@ import { motion } from "framer-motion";
 import { FaChevronRight } from "react-icons/fa";
 import checkout from "./../assets/checkout.png";
 import overlayImage from "./../assets/overlay.png";
-import CheckOutForm from "../components/checkout/CheckOutForm";
-import CheckOutCart from "../components/checkout/CheckOutCart";
+import CheckOutForm from "@/components/checkout/CheckOutForm";
+import CheckOutCart from "@/components/checkout/CheckOutCart";
 import { useNavigate } from "react-router-dom";
 
 const CheckOut = () => {

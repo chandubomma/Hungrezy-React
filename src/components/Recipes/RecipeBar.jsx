@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 import { FaSearch } from 'react-icons/fa';
-import AnimatedText from '../Home/AnimatedText';
+import AnimatedText from '@/components/home/AnimatedText';
 import RecipeCategories from './RecipeCategories';
 const text = [
     "Wanna try new recipes?",
