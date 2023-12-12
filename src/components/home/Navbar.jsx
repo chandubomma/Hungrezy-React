@@ -6,7 +6,7 @@ import { FaCartShopping, FaXmark } from "react-icons/fa6";
 import { motion } from "framer-motion";
 import { useSelector } from "react-redux";
 import { selectTotalItems } from "../../redux/slices/cartSlice";
-import CartDrawerContent from "@/components/cart/cartDrawerContent";
+import CartDrawerContent from "@/components/cart/CartDrawerContent";
 
 const Navbar = () => {
   const { pathname } = useLocation();
