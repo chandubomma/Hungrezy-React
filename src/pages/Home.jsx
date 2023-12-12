@@ -1,4 +1,4 @@
-import Footer from "../components/home/Footer";
+
 import Partners from "../components/home/Partners";
 import Testimonals from "../components/home/Testimonals";
 import Welcome from "../components/home/Welcome";
@@ -11,7 +11,7 @@ const Home = () => {
       <Working />
       <Testimonals />
       <Partners />
-      <Footer />
+      
     </div>
   );
 };
