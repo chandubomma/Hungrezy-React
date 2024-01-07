@@ -20,16 +20,15 @@ import PageNotFound from "./pages/PageNotFound";
 import Profile from "./pages/Profile";
 import Recipes from "./pages/Recipes";
 import RecipePage from "./pages/RecipePage";
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useLocation } from "react-router-dom";
 
 const Root = () => {
-  const navigate = useNavigate();
   const location = useLocation();
-   // Define an array of paths where you want to hide the Navbar
-   const pathsWithoutNavbar = ['/signin', '/signup'];
+  // Define an array of paths where you want to hide the Navbar
+  const pathsWithoutNavbar = ["/signin", "/signup"];
 
-   // Check if the current path is in the array
-   const hideNavbar = pathsWithoutNavbar.includes(location.pathname);
+  // Check if the current path is in the array
+  const hideNavbar = pathsWithoutNavbar.includes(location.pathname);
   return (
     <React.Fragment>
       {!hideNavbar && <Navbar />}
@@ -44,9 +43,9 @@ const Router = createBrowserRouter(
     <Route path="/" element={<Root />}>
       <Route index element={<Home />} />
       <Route path="/restaurants" element={<Restaurants />} />
-      <Route path="/recipes" element={<Recipes/>} />
+      <Route path="/recipes" element={<Recipes />} />
       <Route path="/restaurantmenu" element={<RestaurantMenu />} />
-      <Route path="/recipepage" element={<RecipePage/>} />
+      <Route path="/recipepage" element={<RecipePage />} />
       <Route path="/about" element={<About />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="/contact" element={<ContactUs />} />

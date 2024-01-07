@@ -115,7 +115,6 @@ const Navbar = () => {
           >
             About
           </Link>
-         
         </div>
 
         <div className="relative flex lg:gap-4">
@@ -269,6 +268,16 @@ const Navbar = () => {
                 } hover:text-amber-500 transition-colors duration-300`}
               >
                 Restaurants
+              </Link>
+              <Link
+                to="/profile"
+                className={`${
+                  isLinkActive("/profile")
+                    ? "text-black font-bold"
+                    : "text-gray-500"
+                } hover:text-amber-500 transition-colors duration-300`}
+              >
+                Account
               </Link>
               <Link
                 to="/about"
