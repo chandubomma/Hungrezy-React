@@ -73,23 +73,23 @@ const Profile = () => {
         )}
 
         <div className="flex flex-col lg:flex-row bg-white rounded-3xl">
-          <div className="w-[80%] lg:w-[30%] mx-5 my-5 bg-orange-300 rounded-3xl opacity-80 pt-4 pl-5 pr-2 lg:sticky lg:top-20 lg:h-[80vh]">
+          <div className="w-[80%] lg:w-[30%] ml-5 my-5 bg-orange-300 rounded-3xl opacity-80 pt-4 pl-5 lg:sticky lg:top-20 lg:h-[80vh]">
             <div>
               <ul className="">
                 <li
-                  className={`mb-2 cursor-pointer w-full py-4 px-3 font-bold text-lg ${
-                    activeTab === "orders" ? "bg-white rounded-3xl" : ""
+                  className={`mb-2 cursor-pointer w-full py-4 pl-3 font-bold text-lg ${
+                    activeTab === "orders" ? "bg-white rounded-l-3xl" : ""
                   }`}
                   onClick={() => handleTabClick("orders")}
                 >
-                  <div className="flex items-center">
+                  <div className="flex items-center w-full">
                     <BiSolidShoppingBags className="mr-3 text-2xl" />
                     Your Orders
                   </div>
                 </li>
                 <li
                   className={`mb-2 cursor-pointer w-full py-6 px-3 font-bold  text-lg ${
-                    activeTab === "bookings" ? "bg-white rounded-3xl" : ""
+                    activeTab === "bookings" ? "bg-white rounded-l-3xl" : ""
                   }`}
                   onClick={() => handleTabClick("bookings")}
                 >
@@ -100,7 +100,7 @@ const Profile = () => {
                 </li>
                 <li
                   className={`mb-2 cursor-pointer w-full py-6 px-3 font-bold  text-lg ${
-                    activeTab === "account" ? "bg-white rounded-3xl" : ""
+                    activeTab === "account" ? "bg-white rounded-l-3xl" : ""
                   }`}
                   onClick={() => handleTabClick("account")}
                 >
@@ -111,7 +111,7 @@ const Profile = () => {
                 </li>
                 <li
                   className={`mb-2 cursor-pointer w-full py-6 px-3 font-bold  text-lg ${
-                    activeTab === "address" ? "bg-white rounded-3xl" : ""
+                    activeTab === "address" ? "bg-white rounded-l-3xl" : ""
                   }`}
                   onClick={() => handleTabClick("address")}
                 >
@@ -122,7 +122,7 @@ const Profile = () => {
                 </li>
                 <li
                   className={`mb-2 cursor-pointer w-full py-6 px-3 font-bold  text-lg ${
-                    activeTab === "help" ? "bg-whit rounded-3xl" : ""
+                    activeTab === "help" ? "bg-whit rounded-l-3xl" : ""
                   }`}
                   onClick={() => navigate("/contact")}
                 >

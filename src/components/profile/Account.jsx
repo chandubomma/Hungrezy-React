@@ -1,6 +1,6 @@
 // AccountPage.js
 import React, { useState } from "react";
-import bcrypt from 'bcryptjs';
+import bcrypt from "bcryptjs";
 
 const Account = ({ user }) => {
   const [editing, setEditing] = useState(false);
@@ -13,7 +13,7 @@ const Account = ({ user }) => {
   const handleSaveClick = async () => {
     // Hash the password before sending it to the server
     const hashedPassword = await bcrypt.hash(editedUser.password, 10);
-  
+
     // Send updated user details to your backend API for saving
     // Replace this with your actual API endpoint
     fetch(`${import.meta.env.VITE_HUNGREZY_API}/user/updateDetails`, {
@@ -46,7 +46,7 @@ const Account = ({ user }) => {
   };
 
   return (
-    <div className="container mx-auto  p-8 bg-white shadow-lg rounded-md">
+    <div className="container p-8 bg-white border rounded-md mt-8">
       <h1 className="text-3xl font-semibold mb-6">Account Details</h1>
       <div className="grid grid-cols-2 gap-4">
         <div className="mb-4">
