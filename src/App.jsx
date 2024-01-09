@@ -21,11 +21,12 @@ import Profile from "./pages/Profile";
 import Recipes from "./pages/Recipes";
 import RecipePage from "./pages/RecipePage";
 import { useLocation } from "react-router-dom";
+import Admin from "./pages/RestaurantAdmin";
 
 const Root = () => {
   const location = useLocation();
   // Define an array of paths where you want to hide the Navbar
-  const pathsWithoutNavbar = ["/signin", "/signup"];
+  const pathsWithoutNavbar = ["/signin", "/signup", "/restaurant/dashboard"];
 
   // Check if the current path is in the array
   const hideNavbar = pathsWithoutNavbar.includes(location.pathname);
@@ -52,6 +53,7 @@ const Router = createBrowserRouter(
       <Route path="/checkout" element={<CheckOut />} />
       <Route path="/signin" element={<SigninForm />} />
       <Route path="/signup" element={<SignUpForm />} />
+      <Route path="/restaurant/dashboard" element={<Admin />} />
       <Route path="*" element={<PageNotFound />} />
     </Route>
   )
