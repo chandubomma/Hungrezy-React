@@ -21,7 +21,9 @@ import Profile from "./pages/Profile";
 import Recipes from "./pages/Recipes";
 import RecipePage from "./pages/RecipePage";
 import { useLocation } from "react-router-dom";
-import Admin from "./pages/RestaurantAdmin";
+import Dashboard from "./components/restaurantAdmin/Dashboard";
+import RestaurantNavbar from "./components/restaurantAdmin/RestaurantNavbar";
+import Sidebar from "./components/restaurantAdmin/Sidebar";
 
 const Root = () => {
   const location = useLocation();
@@ -39,21 +41,45 @@ const Root = () => {
   );
 };
 
+const RestaurantAdmin = () => {
+  return (
+    <div className="max-h-full m-0">
+      <RestaurantNavbar />
+      <div className="flex flex-row">
+        <div className="flex-[2]">
+          <Sidebar />
+        </div>
+        <div className="flex-[11] max-h-[88.5vh] overflow-y-scroll">
+          <Outlet />
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const Router = createBrowserRouter(
   createRoutesFromElements(
-    <Route path="/" element={<Root />}>
-      <Route index element={<Home />} />
-      <Route path="/restaurants" element={<Restaurants />} />
-      <Route path="/recipes" element={<Recipes />} />
-      <Route path="/restaurantmenu" element={<RestaurantMenu />} />
-      <Route path="/recipepage" element={<RecipePage />} />
-      <Route path="/about" element={<About />} />
-      <Route path="/profile" element={<Profile />} />
-      <Route path="/contact" element={<ContactUs />} />
-      <Route path="/checkout" element={<CheckOut />} />
-      <Route path="/signin" element={<SigninForm />} />
-      <Route path="/signup" element={<SignUpForm />} />
-      <Route path="/restaurant/dashboard" element={<Admin />} />
+    <Route path="/" element={<Outlet />}>
+      <Route element={<Root />}>
+        <Route index element={<Home />} />
+        <Route path="restaurants" element={<Restaurants />} />
+        <Route path="recipes" element={<Recipes />} />
+        <Route path="restaurantmenu" element={<RestaurantMenu />} />
+        <Route path="recipepage" element={<RecipePage />} />
+        <Route path="about" element={<About />} />
+        <Route path="profile" element={<Profile />} />
+        <Route path="contact" element={<ContactUs />} />
+        <Route path="checkout" element={<CheckOut />} />
+        <Route path="signin" element={<SigninForm />} />
+        <Route path="signup" element={<SignUpForm />} />
+      </Route>
+
+      <Route path="/restaurant" element={<RestaurantAdmin />}>
+        <Route path="dashboard" element={<Dashboard />} />
+        <Route path="orders" element={<div>Orders</div>} />
+        <Route path="menu" element={<div>Menu</div>} />
+      </Route>
+
       <Route path="*" element={<PageNotFound />} />
     </Route>
   )
