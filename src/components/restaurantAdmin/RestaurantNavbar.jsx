@@ -31,13 +31,13 @@ const RestaurantNavbar = () => {
   return (
     <div>
       <div className="hidden lg:flex px-14 w-full justify-between items-center border-b">
-        <div className="flex-[2]">
+        <div className="w-[14rem] border-r">
           <Link
             to="/"
-            className="flex align-middle items-center gap-2 transition-transform transform hover:opacity-80 border-r"
+            className="flex align-middle items-center gap-2 transition-transform transform hover:opacity-80"
           >
             <img src={logo} alt="logo" className="w-16 py-3" />
-            <h2 className="font-bold text-2xl pr-10">Hungrezy</h2>
+            <h2 className="font-bold text-2xl">Hungrezy</h2>
           </Link>
         </div>
         <div className="flex-[11] flex justify-between items-center w-full ml-10">
