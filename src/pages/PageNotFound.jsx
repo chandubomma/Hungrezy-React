@@ -19,7 +19,7 @@ const PageNotFound = () => {
   }, [controls]);
 
   return (
-    <div className="w-full flex flex-col justify-between items-center pt-28">
+    <div className="w-full flex flex-col justify-between items-center">
       <img className="w-[40%]" src={notFoundImage} alt="404" />
       <div className="w-full flex flex-col justify-between items-center gap-3">
         <h1 className="text-4xl font-bold">Page Not Found!</h1>

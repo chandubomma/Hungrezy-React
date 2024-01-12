@@ -25,6 +25,8 @@ import Dashboard from "./components/restaurantAdmin/Dashboard/Dashboard";
 import RestaurantNavbar from "./components/restaurantAdmin/Dashboard/RestaurantNavbar";
 import Sidebar from "./components/restaurantAdmin/Dashboard/Sidebar";
 import Orders from "./components/restaurantAdmin/Orders/Orders";
+import MenuList from "./components/restaurantAdmin/Menu/MenuList";
+import AddMenu from "./components/restaurantAdmin/Menu/AddMenu";
 
 const Root = () => {
   const location = useLocation();
@@ -47,7 +49,7 @@ const RestaurantAdmin = () => {
     <div className="max-h-full m-0">
       <RestaurantNavbar />
       <div className="flex flex-row">
-        <div className="flex-[2]">
+        <div className="lg:flex-[2]">
           <Sidebar />
         </div>
         <div className="flex-[11] max-h-[88.5vh] overflow-y-scroll">
@@ -75,10 +77,14 @@ const Router = createBrowserRouter(
         <Route path="signup" element={<SignUpForm />} />
       </Route>
 
-      <Route path="/restaurant" element={<RestaurantAdmin />}>
+      <Route path="restaurant" element={<PageNotFound />} />
+      <Route path="restaurant" element={<RestaurantAdmin />}>
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="orders" element={<Orders />} />
-        <Route path="menu" element={<div>Menu</div>} />
+        <Route path="menu" element={<MenuList />} />
+        <Route path="add-menu" element={<AddMenu />} />
+        <Route path="edit-menu" element={<div>Edit Menu</div>} />
+        <Route path="profile" element={<div>Profile</div>} />
       </Route>
 
       <Route path="*" element={<PageNotFound />} />

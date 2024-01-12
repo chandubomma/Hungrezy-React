@@ -19,56 +19,56 @@ import { FaChevronRight } from "react-icons/fa6";
 const ordersData = [
   {
     date: "2023-01-01",
-    orderId: "1",
+    orderId: "ORDER-001",
     customerName: "John Doe",
     total: "$200",
     status: "delivered",
   },
   {
     date: "2023-01-05",
-    orderId: "2",
+    orderId: "ORDER-002",
     customerName: "Jane Doe",
     total: "$150",
     status: "pending",
   },
   {
     date: "2024-01-10",
-    orderId: "3",
+    orderId: "ORDER-003",
     customerName: "Bob Smith",
     total: "$300",
     status: "delivered",
   },
   {
     date: "2023-12-15",
-    orderId: "4",
+    orderId: "ORDER-004",
     customerName: "Alice Johnson",
     total: "$250",
     status: "pending",
   },
   {
     date: "2024-01-10",
-    orderId: "5",
+    orderId: "ORDER-005",
     customerName: "Charlie Brown",
     total: "$180",
     status: "delivered",
   },
   {
     date: "2024-01-12",
-    orderId: "6",
+    orderId: "ORDER-006",
     customerName: "Eve Williams",
     total: "$220",
     status: "cancelled",
   },
   {
     date: "2023-10-30",
-    orderId: "7",
+    orderId: "ORDER-007",
     customerName: "David Lee",
     total: "$190",
     status: "delivered",
   },
   {
     date: "2024-01-01",
-    orderId: "8",
+    orderId: "ORDER-008",
     customerName: "Grace Miller",
     total: "$210",
     status: "cancelled",
@@ -117,7 +117,7 @@ const Orders = () => {
   });
 
   return (
-    <div className="p-3">
+    <div className="px-4">
       <div className="flex justify-between items-center">
         <h1 className="text-xl font-medium">Orders</h1>
         <div className="flex items-center py-3 gap-2 mx-5">
@@ -128,7 +128,7 @@ const Orders = () => {
           <p className="text-orange-500 underline">Orders</p>
         </div>
       </div>
-      <div className="flex items-center mt-2 gap-x-5">
+      <div className="flex sm:flex-row flex-col gap-y-5 items-center mt-2 sm:gap-x-5">
         <div className="flex items-center">
           <p className="text-sm font-semibold text-gray-500">Status: &nbsp;</p>
           <Select

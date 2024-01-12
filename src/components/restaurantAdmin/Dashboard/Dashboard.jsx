@@ -4,7 +4,7 @@ import Graphs from "./Graphs";
 
 const Dashboard = () => {
   return (
-    <div className="w-full p-3">
+    <div className="w-full px-4">
       <div className="flex justify-between items-center">
         <h1 className="text-xl font-medium">Dashboard</h1>
         <div className="flex items-center py-3 gap-2 mx-5">

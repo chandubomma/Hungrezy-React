@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import logo from "./../../../assets/logoAsset.png";
-import { FaBars, FaSearch } from "react-icons/fa";
+import { FaBars, FaChevronUp, FaSearch } from "react-icons/fa";
 import {
   Icon,
   IconButton,
@@ -12,9 +12,15 @@ import {
   MenuList,
 } from "@chakra-ui/react";
 import { FaUser, FaXmark } from "react-icons/fa6";
-import { LuUser2 } from "react-icons/lu";
+import { LuLayoutDashboard, LuUser2 } from "react-icons/lu";
 import { IoLogOutOutline } from "react-icons/io5";
 import { IoMdNotificationsOutline } from "react-icons/io";
+import MenuLink from "./MenuLink";
+import { BiDish } from "react-icons/bi";
+import { GrOrderedList } from "react-icons/gr";
+import { CiViewList } from "react-icons/ci";
+import { RiPlayListAddFill } from "react-icons/ri";
+import { MdOutlineEditNote } from "react-icons/md";
 
 const RestaurantNavbar = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -28,10 +34,16 @@ const RestaurantNavbar = () => {
     setIsDrawerOpen(!isDrawerOpen);
   };
 
+  const [isMenuOpen, setMenuOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setMenuOpen(!isMenuOpen);
+  };
+
   return (
     <div>
       <div className="hidden lg:flex px-4 w-full justify-between items-center border-b">
-        <div className="w-[16rem] border-r">
+        <div className="w-[16rem] border-r pl-3">
           <Link
             to="/"
             className="flex items-center gap-2 transition-transform transform hover:opacity-80"
@@ -96,26 +108,28 @@ const RestaurantNavbar = () => {
         </div>
       </div>
 
-      <div className="lg:hidden px-10 py-10 flex justify-between items-center">
+      <div className="lg:hidden px-4 md:px-10 py-10 flex justify-between items-center sm:gap-x-6">
         <Link
           to="/"
           className="flex align-middle items-center gap-2 transition-transform transform hover:scale-110 hover:opacity-80"
         >
-          <img src={logo} alt="logo" className="w-16" />
-          <h2 className="font-bold text-2xl">Hungrezy</h2>
+          <img src={logo} alt="logo" className="sm:w-16 w-8" />
+          <h2 className="font-bold sm:text-2xl text-base">Hungrezy</h2>
         </Link>
 
         <div className="flex items-center justify-between gap-3">
-          <div className="relative flex gap-x-3">
+          <div className="relative flex gap-x-3 items-center">
             <Menu>
               <MenuButton
                 as={IconButton}
                 aria-label="Options"
-                icon={<IoMdNotificationsOutline className="w-6 h-6" />}
+                icon={
+                  <IoMdNotificationsOutline className="sm:w-6 sm:h-6 w-4 h-4" />
+                }
                 variant="outline"
                 className="bg-gray-200"
                 borderRadius={"50%"}
-                size={"lg"}
+                color="gray"
               />
               <MenuList>
                 <MenuItem>Notification</MenuItem>
@@ -125,11 +139,11 @@ const RestaurantNavbar = () => {
               <MenuButton
                 as={IconButton}
                 aria-label="Options"
-                icon={<FaUser className="w-6 h-6" />}
+                icon={<FaUser className="sm:w-5 sm:h-5 w-4 h-4" />}
                 variant="outline"
                 className="bg-gray-200"
                 borderRadius={"50%"}
-                size={"lg"}
+                color="gray"
               />
               <MenuList>
                 <MenuItem icon={<LuUser2 className="w-[18px] h-[18px]" />}>
@@ -147,7 +161,7 @@ const RestaurantNavbar = () => {
           </div>
           <FaBars
             onClick={handleDrawerToggle}
-            className="text-3xl cursor-pointer"
+            className="sm:text-3xl text-base cursor-pointer"
           />
         </div>
       </div>
@@ -161,7 +175,7 @@ const RestaurantNavbar = () => {
           transition={{ duration: 0.5 }}
         >
           <motion.div
-            className="bg-white h-full w-72 p-4 fixed top-0 left-0"
+            className="bg-white h-full w-80 p-4 fixed top-0 left-0"
             initial={{ x: "-100%" }}
             animate={{ x: 0 }}
             transition={{ duration: 0.5 }}
@@ -173,59 +187,88 @@ const RestaurantNavbar = () => {
               />
             </div>
             <motion.div
-              className="flex flex-col gap-4"
-              initial={{ opacity: 0, y: -50 }}
+              className="flex flex-col gap-4 my-4"
+              initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1 }}
             >
-              <Link
-                to="/"
-                className={`${
-                  isLinkActive("/") ? "text-black font-bold" : "text-gray-500"
-                } hover:text-amber-500 transition-colors duration-300`}
-              >
-                Home
+              <Link to="dashboard" onClick={handleDrawerToggle}>
+                <div
+                  className={`${
+                    isLinkActive("/restaurant/dashboard")
+                      ? "text-orange-500 bg-orange-50"
+                      : "text-gray-500"
+                  } hover:bg-gray-100 w-full px-4 transition-colors duration-300 hover:opacity-80 flex items-center gap-x-4 py-[10px] rounded-md cursor-pointer`}
+                >
+                  <LuLayoutDashboard size={24} />
+                  <span className="text-base">Dashboard</span>
+                </div>
               </Link>
-              <Link
-                to="/restaurants"
-                className={`${
-                  isLinkActive("/restaurants")
-                    ? "text-black font-bold"
-                    : "text-gray-500"
-                } hover:text-amber-500 transition-colors duration-300`}
-              >
-                Restaurants
+
+              <Link to="orders" onClick={handleDrawerToggle}>
+                <div
+                  className={`${
+                    isLinkActive("/restaurant/orders")
+                      ? "text-orange-500 bg-orange-50"
+                      : "text-gray-500"
+                  } hover:bg-gray-100 w-full px-4 transition-colors duration-300 hover:opacity-80 flex items-center gap-x-4 py-[10px] rounded-md cursor-pointer`}
+                >
+                  <GrOrderedList size={24} />
+                  <span className="text-base">Orders</span>
+                </div>
               </Link>
-              <Link
-                to="/profile"
-                className={`${
-                  isLinkActive("/profile")
-                    ? "text-black font-bold"
-                    : "text-gray-500"
-                } hover:text-amber-500 transition-colors duration-300`}
-              >
-                Account
-              </Link>
-              <Link
-                to="/about"
-                className={`${
-                  isLinkActive("/about")
-                    ? "text-black font-bold"
-                    : "text-gray-500"
-                } hover:text-amber-500 transition-colors duration-300`}
-              >
-                About
-              </Link>
-              <Link
-                to="/contact"
-                className={`${
-                  isLinkActive("/contact")
-                    ? "text-black font-bold"
-                    : "text-gray-500"
-                } hover:text-amber-500 transition-colors duration-300`}
-              >
-                Contact Us
-              </Link>
+
+              <div onClick={toggleMenu}>
+                <div
+                  className={`${
+                    isMenuOpen ? "text-gray-500 bg-gray-50" : "text-gray-500"
+                  } hover:bg-gray-100 w-full px-4 transition-colors duration-300 hover:opacity-80 flex items-center gap-x-4 py-[10px] rounded-md cursor-pointer`}
+                >
+                  <BiDish size={24} />
+                  <span className="text-base">Menu</span>
+                  {isMenuOpen ? (
+                    <FaChevronUp
+                      className="ml-auto text-lg transition duration-300"
+                      color={isMenuOpen ? "#f97316" : "#9ca3af"}
+                      size={12}
+                    />
+                  ) : (
+                    <FaChevronUp
+                      color={isMenuOpen ? "#f97316" : "#9ca3af"}
+                      size={12}
+                      className="ml-auto text-lg transform rotate-180 transition duration-300"
+                    />
+                  )}
+                </div>
+              </div>
+
+              {isMenuOpen && (
+                <>
+                  <div className="ml-8 transition duration-300 transform">
+                    <MenuLink
+                      onClick={handleDrawerToggle}
+                      isMenuOpen={isLinkActive("/restaurant/menu")}
+                      to="menu"
+                      icon={<CiViewList size={20} />}
+                      text="Menu List"
+                    />
+                    <MenuLink
+                      onClick={handleDrawerToggle}
+                      to="add-menu"
+                      isMenuOpen={isLinkActive("/restaurant/add-menu")}
+                      icon={<RiPlayListAddFill size={20} />}
+                      text="Add Menu"
+                    />
+                    <MenuLink
+                      onClick={handleDrawerToggle}
+                      to="edit-menu"
+                      isMenuOpen={isLinkActive("/restaurant/edit-menu")}
+                      icon={<MdOutlineEditNote size={20} />}
+                      text="Edit Menu"
+                    />
+                  </div>
+                </>
+              )}
             </motion.div>
           </motion.div>
         </motion.div>

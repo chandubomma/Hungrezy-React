@@ -13,7 +13,7 @@ const Welcome = () => {
   const navigate = useNavigate();
 
   const variants = {
-    hidden: { opacity: 0, y: 50 },
+    hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0, transition: { duration: 1.5 } },
   };
 
@@ -23,7 +23,7 @@ const Welcome = () => {
 
   return (
     <motion.div
-      className="lg:px-48 min-[100px]:px-16 px-16 pt-56 flex flex-col md:flex-row justify-between items-center"
+      className="lg:px-48 min-[100px]:px-16 px-16 pt-44 flex flex-col md:flex-row justify-between items-center"
       initial="hidden"
       animate={controls}
       variants={variants}
@@ -52,12 +52,12 @@ const Welcome = () => {
           covered.
         </motion.p>
         <motion.div
-          className="flex items-center mt-8 justify-between w-[80%] gap-5"
+          className="flex items-center mt-8 justify-between w-[90%] gap-5"
           variants={variants}
         >
           <motion.button
             type="button"
-            className="py-3 px-8 bg-amber-500 hover:bg-amber-600 transition-colors duration-300 text-white rounded-full flex items-center"
+            className="py-3 px-4 bg-amber-500 hover:bg-amber-600 transition-colors duration-300 text-white rounded-full flex items-center"
             whileHover={{ scale: 1.05 }}
             variants={variants}
             onClick={() => navigate("/restaurants")}
