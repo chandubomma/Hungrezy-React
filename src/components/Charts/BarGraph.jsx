@@ -29,7 +29,7 @@ export default function BarGraph() {
       data={chartdata}
       index="name"
       categories={["Number of orders"]}
-      colors={["#fb923c"]}
+      colors={["orange-300"]}
       valueFormatter={valueFormatter}
       yAxisWidth={48}
     />

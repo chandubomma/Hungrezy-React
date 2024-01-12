@@ -1,53 +1,53 @@
 import { LineChart } from "@tremor/react";
 
-const userData = [
+const ratingData = [
   {
     date: "Jan",
-    Users: 167,
+    Rating: 4.5,
   },
   {
     date: "Feb",
-    Users: 125,
+    Rating: 3,
   },
   {
     date: "Mar",
-    Users: 156,
+    Rating: 4.2,
   },
   {
     date: "Apr",
-    Users: 165,
+    Rating: 3.4,
   },
   {
     date: "May",
-    Users: 153,
+    Rating: 4,
   },
   {
     date: "Jun",
-    Users: 124,
+    Rating: 5,
   },
   {
     date: "Jul",
-    Users: 164,
+    Rating: 4.8,
   },
   {
     date: "Aug",
-    Users: 123,
+    Rating: 4.9,
   },
   {
     date: "Sep",
-    Users: 132,
+    Rating: 4.5,
   },
   {
     date: "Oct",
-    Users: 132,
+    Rating: 3.9,
   },
   {
     date: "Nov",
-    Users: 132,
+    Rating: 4.6,
   },
   {
     date: "Dec",
-    Users: 132,
+    Rating: 4.3,
   },
 ];
 
@@ -63,7 +63,7 @@ const customTooltip = ({ payload, active }) => {
           <div className="space-y-1">
             <p className="text-tremor-content">{category.dataKey}</p>
             <p className="font-medium text-tremor-content-emphasis">
-              {category.value} Users
+              {category.value} Rating
             </p>
           </div>
         </div>
@@ -76,12 +76,13 @@ export const AreaGraph = () => {
   return (
     <LineChart
       className="h-72 mt-4"
-      data={userData}
+      data={ratingData}
       index="date"
-      categories={["Users"]}
-      colors={["sky"]}
+      categories={["Rating"]}
+      colors={["orange-400"]}
       yAxisWidth={30}
       customTooltip={customTooltip}
+      tickGap={2}
     />
   );
 };

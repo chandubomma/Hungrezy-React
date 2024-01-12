@@ -21,9 +21,10 @@ import Profile from "./pages/Profile";
 import Recipes from "./pages/Recipes";
 import RecipePage from "./pages/RecipePage";
 import { useLocation } from "react-router-dom";
-import Dashboard from "./components/restaurantAdmin/Dashboard";
-import RestaurantNavbar from "./components/restaurantAdmin/RestaurantNavbar";
-import Sidebar from "./components/restaurantAdmin/Sidebar";
+import Dashboard from "./components/restaurantAdmin/Dashboard/Dashboard";
+import RestaurantNavbar from "./components/restaurantAdmin/Dashboard/RestaurantNavbar";
+import Sidebar from "./components/restaurantAdmin/Dashboard/Sidebar";
+import Orders from "./components/restaurantAdmin/Orders/Orders";
 
 const Root = () => {
   const location = useLocation();
@@ -76,7 +77,7 @@ const Router = createBrowserRouter(
 
       <Route path="/restaurant" element={<RestaurantAdmin />}>
         <Route path="dashboard" element={<Dashboard />} />
-        <Route path="orders" element={<div>Orders</div>} />
+        <Route path="orders" element={<Orders />} />
         <Route path="menu" element={<div>Menu</div>} />
       </Route>
 

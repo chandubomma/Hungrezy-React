@@ -1,5 +1,5 @@
-import { AreaGraph } from "../Charts/AreaGraph";
-import BarGraph from "../Charts/BarGraph";
+import { AreaGraph } from "../../Charts/AreaGraph";
+import BarGraph from "../../Charts/BarGraph";
 
 export default function Graphs() {
   return (

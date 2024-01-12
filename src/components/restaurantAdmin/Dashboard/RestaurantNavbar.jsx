@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import logo from "./../../assets/logoAsset.png";
+import logo from "./../../../assets/logoAsset.png";
 import { FaBars, FaSearch } from "react-icons/fa";
 import {
   Icon,
@@ -30,11 +30,11 @@ const RestaurantNavbar = () => {
 
   return (
     <div>
-      <div className="hidden lg:flex px-14 w-full justify-between items-center border-b">
-        <div className="w-[14rem] border-r">
+      <div className="hidden lg:flex px-4 w-full justify-between items-center border-b">
+        <div className="w-[16rem] border-r">
           <Link
             to="/"
-            className="flex align-middle items-center gap-2 transition-transform transform hover:opacity-80"
+            className="flex items-center gap-2 transition-transform transform hover:opacity-80"
           >
             <img src={logo} alt="logo" className="w-16 py-3" />
             <h2 className="font-bold text-2xl">Hungrezy</h2>
@@ -53,7 +53,9 @@ const RestaurantNavbar = () => {
               <MenuButton
                 as={IconButton}
                 aria-label="Options"
-                icon={<IoMdNotificationsOutline className="w-6 h-6" />}
+                icon={
+                  <IoMdNotificationsOutline color="gray" className="w-6 h-6" />
+                }
                 variant="outline"
                 className="bg-gray-200"
                 borderRadius={"50%"}
@@ -67,7 +69,7 @@ const RestaurantNavbar = () => {
               <MenuButton
                 as={IconButton}
                 aria-label="Options"
-                icon={<FaUser className="w-6 h-6" />}
+                icon={<FaUser color="gray" className="w-6 h-6" />}
                 variant="outline"
                 className="bg-gray-200"
                 borderRadius={"50%"}
