@@ -2,7 +2,7 @@ import { useState } from "react";
 import EmailAndPassword from "@/components/forms/EmailAndPassword";
 import EmailAndOTP from "@/components/forms/EmailAndOTP";
 
-const RestaurantSigninForm = () => {
+const EmailSigninForm = () => {
   const [signInWithOTP, setSignInWithOTP] = useState(false);
   const [email, setEmail] = useState("");
   const handleEmail = (e) => {
@@ -28,4 +28,4 @@ const RestaurantSigninForm = () => {
 };
 
 
-export default RestaurantSigninForm;
+export default EmailSigninForm;
