@@ -90,25 +90,25 @@ const Router = createBrowserRouter(
         <Route path="signup" element={<SignUpForm />} />
       </Route>
 
-      <Route path="restaurant" element={<Outlet/>}>
+      <Route path="restaurant" element={<Outlet />}>
         <Route path="" element={<PageNotFound />} />
         <Route path="" element={<RestaurantAdmin />}>
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="orders" element={<Orders />} />
-        <Route path="orders/:id" element={<Order />} />
+          <Route path="orders/:id" element={<Order />} />
           <Route path="menu" element={<MenuList />} />
           <Route path="add-menu" element={<AddMenu />} />
           <Route path="edit-menu/:id" element={<EditMenu />} />
-        <Route path="reviews" element={<Reviews />} />
+          <Route path="reviews" element={<Reviews />} />
           <Route path="profile" element={<RestaurantProfile />} />
         </Route>
         <Route path="signin" element={<EmailSigninForm />} />
       </Route>
 
-      <Route path="admin" element={<Outlet/>}>
+      <Route path="admin" element={<Outlet />}>
         <Route path="" element={<PageNotFound />} />
         <Route path="" element={<Admin />}>
-         {/* todo : admin routes */}
+          {/* todo : admin routes */}
         </Route>
         <Route path="signin" element={<EmailSigninForm />} />
       </Route>

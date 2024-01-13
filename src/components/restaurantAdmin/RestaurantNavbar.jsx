@@ -274,6 +274,7 @@ const RestaurantNavbar = () => {
 
               <Link to="reviews">
                 <div
+                  onClick={handleDrawerToggle}
                   className={`${
                     isLinkActive("/restaurant/reviews")
                       ? "text-orange-500 bg-orange-50"

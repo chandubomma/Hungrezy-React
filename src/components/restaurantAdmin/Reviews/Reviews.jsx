@@ -142,7 +142,7 @@ const Reviews = () => {
       <div className="flex justify-between items-center">
         <h1 className="text-xl font-medium">Reviews</h1>
         <div className="flex items-center py-3 gap-2 mx-5">
-          <p>Admin</p>
+          <p>Restaurant</p>
           <span>
             <FaChevronRight className="text-gray-500" />
           </span>
@@ -205,7 +205,7 @@ const Reviews = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-6 pb-4">
         {filteredReviews.map((review) => (
           <div key={review.id} className="bg-white p-6 rounded-lg shadow-md">
             <ReviewCard review={review} />

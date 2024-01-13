@@ -48,7 +48,7 @@ const MenuList = () => {
       <div className="flex justify-between items-center">
         <h1 className="text-xl font-medium">Menu Items</h1>
         <div className="flex items-center py-3 gap-2 mx-5">
-          <p>Admin</p>
+          <p>Restaurant</p>
           <span>
             <FaChevronRight className="text-gray-500" />
           </span>
