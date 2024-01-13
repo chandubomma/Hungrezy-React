@@ -27,6 +27,7 @@ import Sidebar from "./components/restaurantAdmin/Dashboard/Sidebar";
 import Orders from "./components/restaurantAdmin/Orders/Orders";
 import MenuList from "./components/restaurantAdmin/Menu/MenuList";
 import AddMenu from "./components/restaurantAdmin/Menu/AddMenu";
+import RestaurantSigninForm from "./pages/RestaurantSigninForm";
 
 const Root = () => {
   const location = useLocation();
@@ -77,14 +78,17 @@ const Router = createBrowserRouter(
         <Route path="signup" element={<SignUpForm />} />
       </Route>
 
-      <Route path="restaurant" element={<PageNotFound />} />
-      <Route path="restaurant" element={<RestaurantAdmin />}>
-        <Route path="dashboard" element={<Dashboard />} />
-        <Route path="orders" element={<Orders />} />
-        <Route path="menu" element={<MenuList />} />
-        <Route path="add-menu" element={<AddMenu />} />
-        <Route path="edit-menu" element={<div>Edit Menu</div>} />
-        <Route path="profile" element={<div>Profile</div>} />
+      <Route path="restaurant" element={<Outlet/>}>
+        <Route path="" element={<PageNotFound />} />
+        <Route path="" element={<RestaurantAdmin />}>
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="orders" element={<Orders />} />
+          <Route path="menu" element={<MenuList />} />
+          <Route path="add-menu" element={<AddMenu />} />
+          <Route path="edit-menu" element={<div>Edit Menu</div>} />
+          <Route path="profile" element={<div>Profile</div>} />
+        </Route>
+        <Route path="signin" element={<RestaurantSigninForm />} />
       </Route>
 
       <Route path="*" element={<PageNotFound />} />
