@@ -12,72 +12,32 @@ import {
 } from "@tremor/react";
 import { BadgeCheckIcon } from "@heroicons/react/outline";
 import { MdOutlinePending } from "react-icons/md";
+import { MdFoodBank } from "react-icons/md";
 import { RxCross2 } from "react-icons/rx";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaChevronRight } from "react-icons/fa6";
-
-const ordersData = [
-  {
-    date: "2023-01-01",
-    orderId: "ORDER-001",
-    customerName: "John Doe",
-    total: "$200",
-    status: "delivered",
-  },
-  {
-    date: "2023-01-05",
-    orderId: "ORDER-002",
-    customerName: "Jane Doe",
-    total: "$150",
-    status: "pending",
-  },
-  {
-    date: "2024-01-10",
-    orderId: "ORDER-003",
-    customerName: "Bob Smith",
-    total: "$300",
-    status: "delivered",
-  },
-  {
-    date: "2023-12-15",
-    orderId: "ORDER-004",
-    customerName: "Alice Johnson",
-    total: "$250",
-    status: "pending",
-  },
-  {
-    date: "2024-01-10",
-    orderId: "ORDER-005",
-    customerName: "Charlie Brown",
-    total: "$180",
-    status: "delivered",
-  },
-  {
-    date: "2024-01-12",
-    orderId: "ORDER-006",
-    customerName: "Eve Williams",
-    total: "$220",
-    status: "cancelled",
-  },
-  {
-    date: "2023-10-30",
-    orderId: "ORDER-007",
-    customerName: "David Lee",
-    total: "$190",
-    status: "delivered",
-  },
-  {
-    date: "2024-01-01",
-    orderId: "ORDER-008",
-    customerName: "Grace Miller",
-    total: "$210",
-    status: "cancelled",
-  },
-];
+import { ordersData } from "../../../data/orderItems";
+import { Link } from "react-router-dom";
+import { IoEye } from "react-icons/io5";
+import { HiMiniBolt } from "react-icons/hi2";
 
 const Orders = () => {
-  const [statusFilter, setStatusFilter] = useState("all");
-  const [dateFilter, setDateFilter] = useState("all");
+  const [statusFilter, setStatusFilter] = useState("new");
+  const [dateFilter, setDateFilter] = useState("today");
+  const [orders, setOrders] = useState(ordersData);
+
+  const handleAccept = (orderId) => {
+    const orderIndex = ordersData.findIndex(
+      (order) => order.orderId === orderId
+    );
+    const newOrders = [...ordersData];
+    newOrders[orderIndex].status = "pending";
+    setOrders(newOrders);
+  };
+
+  useEffect(() => {
+    setOrders(ordersData);
+  }, [statusFilter, dateFilter, orders]);
 
   const filteredOrders = ordersData.filter((order) => {
     if (
@@ -87,7 +47,8 @@ const Orders = () => {
       return true;
     }
 
-    const statusCondition = !statusFilter || statusFilter === order.status;
+    const statusCondition =
+      !statusFilter || statusFilter === order.status || statusFilter === "all";
     const orderDate = new Date(order.date);
     const today = new Date();
     let lastWeek = new Date(today);
@@ -141,6 +102,9 @@ const Orders = () => {
             <SelectItem value="all" className="cursor-pointer" defaultChecked>
               All
             </SelectItem>
+            <SelectItem value="new" className="cursor-pointer">
+              New
+            </SelectItem>
             <SelectItem value="delivered" className="cursor-pointer">
               Delivered
             </SelectItem>
@@ -187,6 +151,7 @@ const Orders = () => {
             <TableHeaderCell>Customer Name</TableHeaderCell>
             <TableHeaderCell>Total</TableHeaderCell>
             <TableHeaderCell>Status</TableHeaderCell>
+            <TableHeaderCell>Actions</TableHeaderCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -195,7 +160,7 @@ const Orders = () => {
               <TableCell>{order.date}</TableCell>
               <TableCell>{order.orderId}</TableCell>
               <TableCell>{order.customerName}</TableCell>
-              <TableCell>{order.total}</TableCell>
+              <TableCell>&#8377;{order.total}</TableCell>
               <TableCell>
                 <Badge
                   className="px-3 py-1 flex items-center w-28"
@@ -204,6 +169,8 @@ const Orders = () => {
                       ? "green"
                       : order.status === "pending"
                       ? "yellow"
+                      : order.status === "new"
+                      ? "blue"
                       : "red"
                   }
                   icon={
@@ -211,6 +178,8 @@ const Orders = () => {
                       ? BadgeCheckIcon
                       : order.status === "pending"
                       ? MdOutlinePending
+                      : order.status === "new"
+                      ? MdFoodBank
                       : RxCross2
                   }
                 >
@@ -220,6 +189,26 @@ const Orders = () => {
                   </Text>
                 </Badge>
               </TableCell>
+              {order.status === "new" && (
+                <TableCell className="flex items-center justify-center lg:-ml-14 md:-ml-10">
+                  <div className="flex w-fit gap-3">
+                    <Link
+                      to={`/restaurant/orders/${order.orderId}`}
+                      className="flex items-center justify-center rounded-md cursor-pointer underline"
+                    >
+                      <IoEye className="w-5 h-5 text-gray-500" />
+                    </Link>
+                    <Badge
+                      onClick={() => handleAccept(order.orderId)}
+                      className="px-3 py-1 flex items-center w-28 cursor-pointer hover:scale-105 transition-all"
+                      color={"green"}
+                      icon={HiMiniBolt}
+                    >
+                      <Text>Accept</Text>
+                    </Badge>
+                  </div>
+                </TableCell>
+              )}
             </TableRow>
           ))}
         </TableBody>

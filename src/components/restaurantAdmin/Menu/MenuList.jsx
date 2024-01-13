@@ -1,6 +1,5 @@
 import {
   Badge,
-  Card,
   Select,
   SelectItem,
   Table,
@@ -12,228 +11,16 @@ import {
   Text,
 } from "@tremor/react";
 import { BadgeCheckIcon } from "@heroicons/react/outline";
-import { RxCross2 } from "react-icons/rx";
 import { FaChevronRight } from "react-icons/fa6";
+import { RiDraftLine } from "react-icons/ri";
 import { useState } from "react";
 import { MdDeleteOutline } from "react-icons/md";
 import { CiEdit } from "react-icons/ci";
 import { Link } from "react-router-dom";
-
-const menuItems = [
-  {
-    id: "MENU-001",
-    name: "Burger",
-    price: 10,
-    category: "Main Course",
-    available: true,
-  },
-  {
-    id: "MENU-002",
-    name: "Pizza",
-    price: 20,
-    category: "Main Course",
-    available: true,
-  },
-  {
-    id: "MENU-003",
-    name: "Pasta",
-    price: 15,
-    category: "Main Course",
-    available: true,
-  },
-  {
-    id: "MENU-004",
-    name: "Coke",
-    price: 5,
-    category: "Drinks",
-    available: true,
-  },
-  {
-    id: "MENU-005",
-    name: "Fries",
-    price: 5,
-    category: "Appetizer",
-    available: true,
-  },
-  {
-    id: "MENU-006",
-    name: "Salad",
-    price: 5,
-    category: "Appetizer",
-    available: true,
-  },
-  {
-    id: "MENU-007",
-    name: "Ice Cream",
-    price: 5,
-    category: "Dessert",
-    available: false,
-  },
-  {
-    id: "MENU-008",
-    name: "Cake",
-    price: 5,
-    category: "Dessert",
-    available: true,
-  },
-  {
-    id: "MENU-009",
-    name: "Coffee",
-    price: 5,
-    category: "Drinks",
-    available: true,
-  },
-  {
-    id: "MENU-010",
-    name: "Tea",
-    price: 5,
-    category: "Drinks",
-    available: false,
-  },
-  {
-    id: "MENU-011",
-    name: "Sandwich",
-    price: 5,
-    category: "Main Course",
-    available: true,
-  },
-  {
-    id: "MENU-012",
-    name: "Bread",
-    price: 5,
-    category: "Appetizer",
-    available: true,
-  },
-  {
-    id: "MENU-013",
-    name: "Milkshake",
-    price: 5,
-    category: "Drinks",
-    available: true,
-  },
-  {
-    id: "MENU-014",
-    name: "Fruit Salad",
-    price: 5,
-    category: "Dessert",
-    available: false,
-  },
-  {
-    id: "MENU-015",
-    name: "Noodles",
-    price: 5,
-    category: "Main Course",
-    available: true,
-  },
-  {
-    id: "MENU-016",
-    name: "Soup",
-    price: 5,
-    category: "Appetizer",
-    available: false,
-  },
-  {
-    id: "MENU-017",
-    name: "Muffin",
-    price: 5,
-    category: "Dessert",
-    available: true,
-  },
-  {
-    id: "MENU-018",
-    name: "Pancake",
-    price: 5,
-    category: "Dessert",
-    available: true,
-  },
-  {
-    id: "MENU-019",
-    name: "Juice",
-    price: 5,
-    category: "Drinks",
-    available: true,
-  },
-  {
-    id: "MENU-020",
-    name: "Eggs",
-    price: 5,
-    category: "Main Course",
-    available: false,
-  },
-  {
-    id: "MENU-021",
-    name: "Bacon",
-    price: 5,
-    category: "Main Course",
-    available: true,
-  },
-  {
-    id: "MENU-022",
-    name: "Sausage",
-    price: 5,
-    category: "Main Course",
-    available: true,
-  },
-  {
-    id: "MENU-023",
-    name: "Steak",
-    price: 5,
-    category: "Main Course",
-    available: true,
-  },
-  {
-    id: "MENU-024",
-    name: "Chicken",
-    price: 5,
-    category: "Main Course",
-    available: true,
-  },
-  {
-    id: "MENU-025",
-    name: "Turkey",
-    price: 5,
-    category: "Main Course",
-    available: true,
-  },
-  {
-    id: "MENU-026",
-    name: "Fish",
-    price: 5,
-    category: "Main Course",
-    available: false,
-  },
-  {
-    id: "MENU-027",
-    name: "Lobster",
-    price: 5,
-    category: "Main Course",
-    available: true,
-  },
-  {
-    id: "MENU-028",
-    name: "Crab",
-    price: 5,
-    category: "Main Course",
-    available: true,
-  },
-  {
-    id: "MENU-029",
-    name: "Shrimp",
-    price: 5,
-    category: "Main Course",
-    available: true,
-  },
-  {
-    id: "MENU-030",
-    name: "Clam",
-    price: 5,
-    category: "Main Course",
-    available: false,
-  },
-];
+import { menuItems } from "../../../data/menuItems";
 
 const MenuList = () => {
-  const [statusFilter, setStatusFilter] = useState("all");
+  const [statusFilter, setStatusFilter] = useState("published");
   const [categoryFilter, setCategoryFilter] = useState("all");
   const filteredMenuItems = menuItems.filter((menuItem) => {
     if (
@@ -303,7 +90,7 @@ const MenuList = () => {
             <SelectItem value="all" className="cursor-pointer">
               All
             </SelectItem>
-            <SelectItem value="main-course" className="cursor-pointer">
+            <SelectItem value="main course" className="cursor-pointer">
               Main Course
             </SelectItem>
             <SelectItem value="appetizer" className="cursor-pointer">
@@ -335,13 +122,15 @@ const MenuList = () => {
             <TableRow key={menuItem.id}>
               <TableCell>{menuItem.id}</TableCell>
               <TableCell>{menuItem.name}</TableCell>
-              <TableCell>{menuItem.price}</TableCell>
+              <TableCell>&#8377;{menuItem.price}</TableCell>
               <TableCell>{menuItem.category}</TableCell>
               <TableCell>
                 <Badge
                   className="px-3 py-1 flex items-center w-28 justify-center"
-                  color={menuItem.available === true ? "green" : "pink"}
-                  icon={menuItem.available === true ? BadgeCheckIcon : RxCross2}
+                  color={menuItem.available === true ? "green" : "gray"}
+                  icon={
+                    menuItem.available === true ? BadgeCheckIcon : RiDraftLine
+                  }
                 >
                   <Text>
                     {menuItem.available === true ? "Published" : "Draft"}
@@ -351,7 +140,7 @@ const MenuList = () => {
               <TableCell className="flex items-center justify-center lg:-ml-14 md:-ml-10">
                 <div className="flex w-fit gap-3">
                   <Link
-                    to={`/restaurant/edit-menu?id=${menuItem.id}`}
+                    to={`/restaurant/edit-menu/${menuItem.id}`}
                     className="flex items-center justify-center rounded-md cursor-pointer"
                   >
                     <CiEdit className="w-5 h-5 text-gray-500" />

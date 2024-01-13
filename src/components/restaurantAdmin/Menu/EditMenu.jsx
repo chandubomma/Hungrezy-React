@@ -1,39 +1,33 @@
 import { motion } from "framer-motion";
-import { FaArrowRight, FaChevronRight } from "react-icons/fa6";
-import { useRef, useState } from "react";
+import { FaChevronRight } from "react-icons/fa6";
+import { useRef } from "react";
 import { LuUploadCloud } from "react-icons/lu";
+import { useParams } from "react-router-dom";
+import { menuItems } from "../../../data/menuItems";
+import { FiSave } from "react-icons/fi";
 import { TiArrowBackOutline } from "react-icons/ti";
+import { MdOutlinePublic } from "react-icons/md";
 import { RiDraftLine } from "react-icons/ri";
 
-const AddMenu = () => {
+const EditMenu = () => {
   const formVariants = {
     hidden: { opacity: 0, x: 0 },
     visible: { opacity: 1, x: 0, transition: { duration: 0.8 } },
   };
   const image = useRef(null);
-  const [imageSrc, setImageSrc] = useState(null);
-
-  const handleImageChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setImageSrc(e.target.result);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
+  const { id } = useParams();
+  const menuItem = menuItems.find((item) => item.id === id);
 
   return (
     <div className="px-4">
       <div className="flex justify-between items-center">
-        <h1 className="text-xl font-medium">Add Menu</h1>
+        <h1 className="text-xl font-medium">Edit Menu</h1>
         <div className="flex items-center py-3 gap-2 mx-5">
           <p>Admin</p>
           <span>
             <FaChevronRight className="text-gray-500" />
           </span>
-          <p className="text-orange-500 underline">Add Menu</p>
+          <p className="text-orange-500 underline">Edit Menu</p>
         </div>
       </div>
       <div className="h-fit flex flex-row w-full gap-x-10">
@@ -43,25 +37,16 @@ const AddMenu = () => {
           whileHover={{ scale: 1.05 }}
         >
           <input
-            onChange={handleImageChange}
             type="file"
             name="file"
             id="file"
             className="hidden"
             ref={image}
           />
-          {imageSrc ? (
-            <img
-              src={imageSrc}
-              alt="Uploaded"
-              className="w-full h-full object-cover rounded-full"
-            />
-          ) : (
-            <p className="text-center text-orange-500 text-sm mt-2 flex flex-col justify-center items-center gap-y-3">
-              <LuUploadCloud className="w-10 h-10" />
-              <span className="block">Upload Image</span>
-            </p>
-          )}
+          <p className="text-center text-orange-500 text-sm mt-2 flex flex-col justify-center items-center gap-y-3">
+            <LuUploadCloud className="w-10 h-10" />
+            <span className="block">Upload Image</span>
+          </p>
         </motion.div>
         <form className="flex flex-col w-[50rem] gap-4 pb-20">
           <motion.div
@@ -71,11 +56,14 @@ const AddMenu = () => {
             <div className="grid grid-cols-2 gap-4">
               <div className="form-floating">
                 <input
-                  className="form-control focus:shadow-none focus:border-amber-600 rounded-md w-full h-full"
+                  className={`form-control focus:shadow-none focus:border-amber-600 rounded-md w-full h-full ${
+                    menuItem.name ? "border-amber-600" : ""
+                  }`}
                   id="menuItemName"
                   placeholder="Menu Item Name"
                   name="menuItemName"
                   type="text"
+                  value={menuItem.name}
                 />
                 <label htmlFor="menuItemName" className="text-gray-500">
                   Menu Item Name
@@ -84,11 +72,14 @@ const AddMenu = () => {
 
               <div className="form-floating">
                 <input
-                  className="form-control focus:shadow-none focus:border-amber-600 rounded-md w-full h-full"
+                  className={`form-control focus:shadow-none focus:border-amber-600 rounded-md w-full h-full ${
+                    menuItem.price ? "border-amber-600" : ""
+                  }`}
                   id="menuItemPrice"
                   placeholder="Menu Item Price"
                   name="menuItemPrice"
                   type="number"
+                  value={menuItem.price}
                 />
                 <label htmlFor="menuItemPrice" className="text-gray-500">
                   Menu Item Price
@@ -99,7 +90,9 @@ const AddMenu = () => {
             {/* TEXTAREA DESCRIPTION */}
             <div className="form-floating">
               <textarea
-                className="form-control focus:shadow-none focus:border-amber-600 rounded-md w-full resize-none h-96"
+                className={`form-control focus:shadow-none focus:border-amber-600 rounded-md w-full h-full ${
+                  menuItem.description ? "border-amber-600" : ""
+                }`}
                 id="menuItemDescription"
                 placeholder="Menu Item Description"
                 name="menuItemDescription"
@@ -112,8 +105,11 @@ const AddMenu = () => {
 
             <div className="form-floating">
               <select
-                className="form-select focus:shadow-none focus:border-amber-600 rounded-md w-full h-full cursor-pointer"
+                className={`form-select focus:shadow-none focus:border-amber-600 rounded-md w-full h-full cursor-pointer ${
+                  menuItem.category ? "border-amber-600" : ""
+                }`}
                 id="menuItemCategory"
+                value={menuItem.category}
               >
                 <option value="main-course">Main Course</option>
                 <option value="appetizer">Appetizer</option>
@@ -126,7 +122,10 @@ const AddMenu = () => {
             <div className="grid grid-cols-2 gap-4">
               <div className="form-floating">
                 <input
-                  className="form-control focus:shadow-none focus:border-amber-600 rounded-md w-full h-full"
+                  value={menuItem.quantity}
+                  className={`form-control focus:shadow-none focus:border-amber-600 rounded-md w-full h-full ${
+                    menuItem.quantity ? "border-amber-600" : ""
+                  }`}
                   id="menuItemQuantity"
                   placeholder="Menu Item Quantity"
                   name="menuItemQuantity"
@@ -139,7 +138,10 @@ const AddMenu = () => {
 
               <div className="form-floating">
                 <input
-                  className="form-control focus:shadow-none focus:border-amber-600 rounded-md w-full h-full"
+                  value={menuItem.discount}
+                  className={`form-control focus:shadow-none focus:border-amber-600 rounded-md w-full h-full ${
+                    menuItem.discount ? "border-amber-600" : ""
+                  }`}
                   id="menuItemDiscount"
                   placeholder="Menu Item Discount"
                   name="menuItemDiscount"
@@ -166,18 +168,29 @@ const AddMenu = () => {
               className="py-2 px-4 bg-amber-500 w-fit self-center hover:bg-amber-600 justify-center transition-colors duration-300 text-white rounded-md flex items-center"
               whileHover={{ scale: 1.005 }}
             >
-              <span className="align-baseline text-center">Add</span>
-              <FaArrowRight className="ml-2 align-baseline" />
+              <span className="align-baseline text-center">Save</span>
+              <FiSave className="ml-2 align-baseline" />
             </motion.button>
 
-            <motion.button
-              type="button"
-              className="py-2 px-4 bg-gray-200 w-fit self-center justify-center hover:bg-gray-300 transition-colors duration-300 text-gray-800 rounded-md flex items-center"
-              whileHover={{ scale: 1.005 }}
-            >
-              <span className="align-baseline text-center">Draft</span>
-              <RiDraftLine className="ml-2 align-baseline" />
-            </motion.button>
+            {menuItem.available === false ? (
+              <motion.button
+                type="button"
+                className="py-2 px-4 bg-green-700 w-fit self-center hover:bg-green-600 justify-center transition-colors duration-300 text-white rounded-md flex items-center"
+                whileHover={{ scale: 1.005 }}
+              >
+                <span className="align-baseline text-center">Publish</span>
+                <MdOutlinePublic className="ml-2 align-baseline" />
+              </motion.button>
+            ) : (
+              <motion.button
+                type="button"
+                className="py-2 px-4 bg-gray-200 w-fit self-center justify-center hover:bg-gray-300 transition-colors duration-300 text-gray-800 rounded-md flex items-center"
+                whileHover={{ scale: 1.005 }}
+              >
+                <span className="align-baseline text-center">Draft</span>
+                <RiDraftLine className="ml-2 align-baseline" />
+              </motion.button>
+            )}
           </div>
         </form>
       </div>
@@ -185,4 +198,4 @@ const AddMenu = () => {
   );
 };
 
-export default AddMenu;
+export default EditMenu;

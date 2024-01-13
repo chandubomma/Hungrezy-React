@@ -1,25 +1,36 @@
 import { LuLayoutDashboard } from "react-icons/lu";
 import { Link, useLocation } from "react-router-dom";
-import { BiDish } from "react-icons/bi";
 import { FaChevronUp, FaRegUser } from "react-icons/fa";
 import { IoLogOutOutline } from "react-icons/io5";
-import { useState } from "react";
-import MenuLink from "./MenuLink";
+import { useEffect, useState } from "react";
+import MenuLink from "./Dashboard/MenuLink";
 import { GrOrderedList } from "react-icons/gr";
 import { CiViewList } from "react-icons/ci";
 import { RiPlayListAddFill } from "react-icons/ri";
-import { MdOutlineEditNote } from "react-icons/md";
+import {
+  MdOutlineEditNote,
+  MdOutlineMenuBook,
+  MdReviews,
+} from "react-icons/md";
+import { ordersData } from "../../data/orderItems";
+import BlinkingDot from "./BlinkingDot";
 
 const Sidebar = () => {
+  const [newOrders, setNewOrders] = useState(0);
   const { pathname } = useLocation();
   const isLinkActive = (path) => {
-    return pathname === path;
+    return pathname.startsWith(path);
   };
   const [isMenuOpen, setMenuOpen] = useState(false);
 
   const toggleMenu = () => {
     setMenuOpen(!isMenuOpen);
   };
+
+  useEffect(() => {
+    const newOrders = ordersData.filter((order) => order.status === "new");
+    setNewOrders(newOrders.length);
+  }, []);
 
   return (
     <>
@@ -47,6 +58,7 @@ const Sidebar = () => {
           >
             <GrOrderedList size={24} />
             <span className="text-base">Orders</span>
+            {newOrders > 0 && <BlinkingDot newOrders={newOrders} />}
           </div>
         </Link>
 
@@ -56,7 +68,7 @@ const Sidebar = () => {
               isMenuOpen ? "text-gray-500 bg-gray-50" : "text-gray-500"
             } hover:bg-gray-100 w-full px-4 transition-colors duration-300 hover:opacity-80 flex items-center gap-x-4 py-[10px] rounded-md cursor-pointer`}
           >
-            <BiDish size={24} />
+            <MdOutlineMenuBook size={24} />
             <span className="text-base">Menu</span>
             {isMenuOpen ? (
               <FaChevronUp
@@ -89,15 +101,30 @@ const Sidebar = () => {
                 icon={<RiPlayListAddFill size={20} />}
                 text="Add Menu"
               />
-              <MenuLink
-                to="edit-menu"
-                isMenuOpen={isLinkActive("/restaurant/edit-menu")}
-                icon={<MdOutlineEditNote size={20} />}
-                text="Edit Menu"
-              />
+              {isLinkActive("/restaurant/edit-menu") && (
+                <MenuLink
+                  to="edit-menu"
+                  isMenuOpen={isLinkActive("/restaurant/edit-menu")}
+                  icon={<MdOutlineEditNote size={20} />}
+                  text="Edit Menu"
+                />
+              )}
             </div>
           </>
         )}
+
+        <Link to="reviews">
+          <div
+            className={`${
+              isLinkActive("/restaurant/reviews")
+                ? "text-orange-500 bg-orange-50"
+                : "text-gray-500"
+            } hover:bg-gray-100 w-full px-4 transition-colors duration-300 hover:opacity-80 flex items-center gap-x-4 py-[10px] rounded-md cursor-pointer`}
+          >
+            <MdReviews size={24} />
+            <span className="text-base">Reviews</span>
+          </div>
+        </Link>
       </div>
 
       <div className="border-r left-0 w-[17.5rem] h-[16vh] p-3 lg:flex flex-col gap-y-2 hidden">

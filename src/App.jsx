@@ -22,11 +22,15 @@ import Recipes from "./pages/Recipes";
 import RecipePage from "./pages/RecipePage";
 import { useLocation } from "react-router-dom";
 import Dashboard from "./components/restaurantAdmin/Dashboard/Dashboard";
-import RestaurantNavbar from "./components/restaurantAdmin/Dashboard/RestaurantNavbar";
-import Sidebar from "./components/restaurantAdmin/Dashboard/Sidebar";
+import RestaurantNavbar from "./components/restaurantAdmin/RestaurantNavbar";
+import Sidebar from "./components/restaurantAdmin/Sidebar";
 import Orders from "./components/restaurantAdmin/Orders/Orders";
 import MenuList from "./components/restaurantAdmin/Menu/MenuList";
 import AddMenu from "./components/restaurantAdmin/Menu/AddMenu";
+import EditMenu from "./components/restaurantAdmin/Menu/EditMenu";
+import Order from "./components/restaurantAdmin/Orders/Order";
+import Reviews from "./components/restaurantAdmin/Reviews/Reviews";
+import RestaurantProfile from "./components/restaurantAdmin/Profile/RestaurantProfile";
 
 const Root = () => {
   const location = useLocation();
@@ -81,10 +85,12 @@ const Router = createBrowserRouter(
       <Route path="restaurant" element={<RestaurantAdmin />}>
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="orders" element={<Orders />} />
+        <Route path="orders/:id" element={<Order />} />
         <Route path="menu" element={<MenuList />} />
         <Route path="add-menu" element={<AddMenu />} />
-        <Route path="edit-menu" element={<div>Edit Menu</div>} />
-        <Route path="profile" element={<div>Profile</div>} />
+        <Route path="edit-menu/:id" element={<EditMenu />} />
+        <Route path="reviews" element={<Reviews />} />
+        <Route path="profile" element={<RestaurantProfile />} />
       </Route>
 
       <Route path="*" element={<PageNotFound />} />

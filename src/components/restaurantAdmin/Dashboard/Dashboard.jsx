@@ -1,8 +1,39 @@
 import { FaChevronRight } from "react-icons/fa";
 import Counter from "./Counter";
 import Graphs from "./Graphs";
+import { ordersData } from "../../../data/orderItems";
+import { useEffect, useState } from "react";
 
 const Dashboard = () => {
+  const [totalRevenue, setTotalRevenue] = useState(0);
+  const [newOrders, setNewOrders] = useState(0);
+  const [pendingOrders, setPendingOrders] = useState(0);
+  const [receivedOrders, setReceivedOrders] = useState(0);
+  const [successfulOrders, setSuccessfulOrders] = useState(0);
+  useEffect(() => {
+    let totalRevenue = 0;
+    ordersData.forEach((order) => {
+      if (order.status === "delivered") {
+        totalRevenue += order.total;
+      }
+    });
+    setTotalRevenue(totalRevenue);
+
+    const newOrders = ordersData.filter((order) => order.status === "new");
+    setNewOrders(newOrders.length);
+
+    const pendingOrders = ordersData.filter(
+      (order) => order.status === "pending"
+    );
+    setPendingOrders(pendingOrders.length);
+    const receivedOrders = ordersData.length;
+    setReceivedOrders(receivedOrders);
+
+    const successfulOrders = ordersData.filter(
+      (order) => order.status === "delivered"
+    );
+    setSuccessfulOrders(successfulOrders.length);
+  }, []);
   return (
     <div className="w-full px-4">
       <div className="flex justify-between items-center">
@@ -17,15 +48,15 @@ const Dashboard = () => {
       </div>
       <div className="grid md:grid-cols-3 gap-6 grid-cols-1">
         <div className="border-1 rounded-md items-center justify-center gap-y-3 p-3 flex flex-col hover:border-orange-500">
-          <Counter to={357200} />
+          <Counter to={totalRevenue} />
           <p className="text-lg font-medium">Total Revenue</p>
         </div>
         <div className="border-1 rounded-md items-center justify-center gap-y-3 p-3 flex flex-col hover:border-orange-500">
-          <Counter to={3200} />
+          <Counter to={newOrders} />
           <p className="text-lg font-medium">New Orders</p>
         </div>
         <div className="border-1 rounded-md items-center justify-center gap-y-3 p-3 flex flex-col hover:border-orange-500">
-          <Counter to={521} />
+          <Counter to={receivedOrders} />
           <p className="text-lg font-medium">Received Orders</p>
         </div>
         <div className="border-1 rounded-md items-center justify-center gap-y-3 p-3 flex flex-col hover:border-orange-500">
@@ -33,11 +64,11 @@ const Dashboard = () => {
           <p className="text-lg font-medium">Reviews</p>
         </div>
         <div className="border-1 rounded-md items-center justify-center gap-y-3 p-3 flex flex-col hover:border-orange-500">
-          <Counter to={190} />
-          <p className="text-lg font-medium">New Reach</p>
+          <Counter to={pendingOrders} />
+          <p className="text-lg font-medium">Pending Orders</p>
         </div>
         <div className="border-1 rounded-md items-center justify-center gap-y-3 p-3 flex flex-col hover:border-orange-500">
-          <Counter to={19048} />
+          <Counter to={successfulOrders} />
           <p className="text-lg font-medium">Successful Orders</p>
         </div>
       </div>

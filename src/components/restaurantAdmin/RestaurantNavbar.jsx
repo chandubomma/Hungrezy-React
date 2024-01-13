@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import logo from "./../../../assets/logoAsset.png";
+import logo from "./../../assets/logoAsset.png";
 import { FaBars, FaChevronUp, FaSearch } from "react-icons/fa";
 import {
   Icon,
@@ -15,29 +15,29 @@ import { FaUser, FaXmark } from "react-icons/fa6";
 import { LuLayoutDashboard, LuUser2 } from "react-icons/lu";
 import { IoLogOutOutline } from "react-icons/io5";
 import { IoMdNotificationsOutline } from "react-icons/io";
-import MenuLink from "./MenuLink";
+import MenuLink from "./Dashboard/MenuLink";
 import { BiDish } from "react-icons/bi";
 import { GrOrderedList } from "react-icons/gr";
 import { CiViewList } from "react-icons/ci";
 import { RiPlayListAddFill } from "react-icons/ri";
-import { MdOutlineEditNote } from "react-icons/md";
+import { MdOutlineEditNote, MdReviews } from "react-icons/md";
 
 const RestaurantNavbar = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const { pathname } = useLocation();
 
   const isLinkActive = (path) => {
-    return pathname === path;
+    return pathname.startsWith(path);
   };
 
   const handleDrawerToggle = () => {
-    setIsDrawerOpen(!isDrawerOpen);
+    setIsDrawerOpen((prev) => !prev);
   };
 
   const [isMenuOpen, setMenuOpen] = useState(false);
 
   const toggleMenu = () => {
-    setMenuOpen(!isMenuOpen);
+    setMenuOpen((prev) => !prev);
   };
 
   return (
@@ -259,16 +259,31 @@ const RestaurantNavbar = () => {
                       icon={<RiPlayListAddFill size={20} />}
                       text="Add Menu"
                     />
-                    <MenuLink
-                      onClick={handleDrawerToggle}
-                      to="edit-menu"
-                      isMenuOpen={isLinkActive("/restaurant/edit-menu")}
-                      icon={<MdOutlineEditNote size={20} />}
-                      text="Edit Menu"
-                    />
+                    {isLinkActive("/restaurant/edit-menu") && (
+                      <MenuLink
+                        onClick={handleDrawerToggle}
+                        to="edit-menu"
+                        isMenuOpen={isLinkActive("/restaurant/edit-menu")}
+                        icon={<MdOutlineEditNote size={20} />}
+                        text="Edit Menu"
+                      />
+                    )}
                   </div>
                 </>
               )}
+
+              <Link to="reviews">
+                <div
+                  className={`${
+                    isLinkActive("/restaurant/reviews")
+                      ? "text-orange-500 bg-orange-50"
+                      : "text-gray-500"
+                  } hover:bg-gray-100 w-full px-4 transition-colors duration-300 hover:opacity-80 flex items-center gap-x-4 py-[10px] rounded-md cursor-pointer`}
+                >
+                  <MdReviews size={24} />
+                  <span className="text-base">Reviews</span>
+                </div>
+              </Link>
             </motion.div>
           </motion.div>
         </motion.div>
