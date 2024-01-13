@@ -13,7 +13,7 @@ import {
   removeFromCart,
   selectCartItems,
 } from "../redux/slices/cartSlice";
-import toast from "react-hot-toast";
+import {toast} from "sonner";
 
 const RestaurantMenu = () => {
   const location = useLocation();

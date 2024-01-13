@@ -1,10 +1,54 @@
 import { useState } from "react"
+import { toast } from 'sonner'
 
 const EmailAndPassword = ({setSignInWithOTP,email,handleEmail}) => {
     const [password,setPassword] = useState("");
+    
+
+    const validateEmail = (enteredEmail) => {
+      if (!enteredEmail.trim()) {
+        // If email is empty or contains only spaces
+        toast.error("Email is required");
+        return false;
+      }
+    
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const isValidFormat = emailRegex.test(enteredEmail);
+    
+      if (!isValidFormat) {
+        // If email format is invalid
+        toast.error("Invalid email format");
+        return false;
+      }
+    
+      // If email is valid
+      return true;
+    };
+
+    const validatePassword = (enteredPassword) => {
+      if (!enteredPassword.trim()) {
+        // If password is empty or contains only spaces
+        toast.error("Password is required");
+        return false;
+      }
+    
+      const isValidLength = enteredPassword.length >= 6; // Customize the criteria as needed
+    
+      if (!isValidLength) {
+        // If password length is less than the required minimum
+        toast.error("Password must be at least 6 characters");
+        return false;
+      }
+      // If password is valid
+      return true;
+    };
+    
+    
 
     const handleSignIn = ()=>{
-        
+      if(!validateEmail(email))return;
+      if(!validatePassword(password))return;
+      // todo handle api call
     }
 
     const handlePasswordChange = (e)=>{

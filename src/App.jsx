@@ -1,5 +1,6 @@
 import SignUpForm from "./pages/SignUpForm";
 import SigninForm from "./pages/SigninForm";
+import { Toaster, toast } from 'sonner'
 import {
   Outlet,
   Route,
@@ -15,7 +16,7 @@ import About from "./pages/About";
 import ContactUs from "./pages/ContactUs";
 import Navbar from "./components/home/Navbar";
 import CheckOut from "./pages/CheckOut";
-import { Toaster } from "react-hot-toast";
+//import { Toaster } from "react-hot-toast";
 import PageNotFound from "./pages/PageNotFound";
 import Profile from "./pages/Profile";
 import Recipes from "./pages/Recipes";
@@ -44,7 +45,7 @@ const Root = () => {
     <React.Fragment>
       {!hideNavbar && <Navbar />}
       <Outlet />
-      <Toaster />
+      <Toaster position="bottom-center"  richColors/>
     </React.Fragment>
   );
 };
@@ -73,6 +74,15 @@ const Admin = () => {
   );
 };
 
+const EmptyOutletWithToaster = ()=>{
+  return(
+    <div>
+        <Outlet/>
+        <Toaster position="top-right"  richColors/>
+    </div>
+  )
+}
+
 const Router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Outlet />}>
@@ -90,7 +100,7 @@ const Router = createBrowserRouter(
         <Route path="signup" element={<SignUpForm />} />
       </Route>
 
-      <Route path="restaurant" element={<Outlet/>}>
+      <Route path="restaurant" element={<EmptyOutletWithToaster/>}>
         <Route path="" element={<PageNotFound />} />
         <Route path="" element={<RestaurantAdmin />}>
           <Route path="dashboard" element={<Dashboard />} />
