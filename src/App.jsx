@@ -27,6 +27,7 @@ import Sidebar from "./components/restaurantAdmin/Sidebar";
 import Orders from "./components/restaurantAdmin/Orders/Orders";
 import MenuList from "./components/restaurantAdmin/Menu/MenuList";
 import AddMenu from "./components/restaurantAdmin/Menu/AddMenu";
+import EmailSigninForm from "./pages/EmailSigninForm";
 import EditMenu from "./components/restaurantAdmin/Menu/EditMenu";
 import Order from "./components/restaurantAdmin/Orders/Order";
 import Reviews from "./components/restaurantAdmin/Reviews/Reviews";
@@ -64,6 +65,14 @@ const RestaurantAdmin = () => {
   );
 };
 
+const Admin = () => {
+  return (
+    <div className="max-h-full m-0">
+      <Outlet />
+    </div>
+  );
+};
+
 const Router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Outlet />}>
@@ -81,16 +90,27 @@ const Router = createBrowserRouter(
         <Route path="signup" element={<SignUpForm />} />
       </Route>
 
-      <Route path="restaurant" element={<PageNotFound />} />
-      <Route path="restaurant" element={<RestaurantAdmin />}>
-        <Route path="dashboard" element={<Dashboard />} />
-        <Route path="orders" element={<Orders />} />
+      <Route path="restaurant" element={<Outlet/>}>
+        <Route path="" element={<PageNotFound />} />
+        <Route path="" element={<RestaurantAdmin />}>
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="orders" element={<Orders />} />
         <Route path="orders/:id" element={<Order />} />
-        <Route path="menu" element={<MenuList />} />
-        <Route path="add-menu" element={<AddMenu />} />
-        <Route path="edit-menu/:id" element={<EditMenu />} />
+          <Route path="menu" element={<MenuList />} />
+          <Route path="add-menu" element={<AddMenu />} />
+          <Route path="edit-menu/:id" element={<EditMenu />} />
         <Route path="reviews" element={<Reviews />} />
-        <Route path="profile" element={<RestaurantProfile />} />
+          <Route path="profile" element={<RestaurantProfile />} />
+        </Route>
+        <Route path="signin" element={<EmailSigninForm />} />
+      </Route>
+
+      <Route path="admin" element={<Outlet/>}>
+        <Route path="" element={<PageNotFound />} />
+        <Route path="" element={<Admin />}>
+         {/* todo : admin routes */}
+        </Route>
+        <Route path="signin" element={<EmailSigninForm />} />
       </Route>
 
       <Route path="*" element={<PageNotFound />} />
