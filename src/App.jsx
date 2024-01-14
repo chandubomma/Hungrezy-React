@@ -33,6 +33,7 @@ import EditMenu from "./components/restaurantAdmin/Menu/EditMenu";
 import Order from "./components/restaurantAdmin/Orders/Order";
 import Reviews from "./components/restaurantAdmin/Reviews/Reviews";
 import RestaurantProfile from "./components/restaurantAdmin/Profile/RestaurantProfile";
+import RestaurantSignUpForm from "./pages/ResataurantSignupForm";
 
 const Root = () => {
   const location = useLocation();
@@ -113,6 +114,7 @@ const Router = createBrowserRouter(
           <Route path="profile" element={<RestaurantProfile />} />
         </Route>
         <Route path="signin" element={<EmailSigninForm />} />
+        <Route path="signup" element={<RestaurantSignUpForm />} />
       </Route>
 
       <Route path="admin" element={<Outlet/>}>
