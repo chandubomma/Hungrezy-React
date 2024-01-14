@@ -1,5 +1,6 @@
 import { useState, useRef } from "react";
 import { TiTick } from "react-icons/ti";
+import {toast} from 'sonner'
 
 const OTPField = ({ handleVerifyOTP }) => {
   const [otp, setOtp] = useState({});
@@ -65,7 +66,7 @@ const OTPField = ({ handleVerifyOTP }) => {
 
   const handleSubmit = () => {
     if (!otp || !otp.d1 || !otp.d2 || !otp.d3 || !otp.d4 || !otp.d5 || !otp.d6) {
-      console.error('Error: OTP object is incomplete');
+      toast.warning('Please enter the verification code !');
       return;
     }
   

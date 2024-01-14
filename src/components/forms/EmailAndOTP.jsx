@@ -1,16 +1,31 @@
 import { useState} from "react"
 import OTPField from "./OTPField"
 import EmailField from "./EmailField"
+import { useLocation ,useNavigate } from 'react-router-dom';
 
-const EmailAndOTP = ({email,handleEmail,setSignInWithOTP}) => {
-    const [showOTP,setShowOTP] = useState(false)
+const EmailAndOTP = ({email,handleEmail,setSignInWithOTP,validateEmail}) => {
+    const [showOTP,setShowOTP] = useState(false);
+    const location = useLocation();
+    const navigate = useNavigate();
 
     const handleVerifyOTP = ()=>{
-
+      if(location.pathname=='/admin/signin'){
+        //todo : handle api call fo admin authentication
+        navigate('/admin/dashboard');
+        return;
+      }
+      if(location.pathname=='/restaurant/signin'){
+        //todo : handle api call fo restaurant authentication
+        navigate('/restaurant/dashboard');
+        return;
+      }
     }
 
     const handleSendOTP = ()=>{
-        setShowOTP(true)
+      if(!validateEmail(email))return;
+      //todo : need to check email in user base before sending otp;
+      //todo : handle api class for sending otp
+      setShowOTP(true)
     }
   return (
     <div className="w-80">
@@ -20,7 +35,13 @@ const EmailAndOTP = ({email,handleEmail,setSignInWithOTP}) => {
         <OTPField handleVerifyOTP={handleVerifyOTP}/>:
         <div>
           <Heading/>
-          <EmailField handleEmail={handleEmail} signin={true} handleSendOTP={handleSendOTP} setSignInWithOTP={setSignInWithOTP}/>
+          <EmailField
+           handleEmail={handleEmail}
+           signin={true}
+           handleSendOTP={handleSendOTP} 
+           setSignInWithOTP={setSignInWithOTP}
+           validateEmail={validateEmail}
+           />
         </div>
       }
         

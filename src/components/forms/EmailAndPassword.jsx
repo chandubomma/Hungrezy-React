@@ -1,39 +1,19 @@
 import { useState } from "react"
 import { toast } from 'sonner'
+import { useLocation ,useNavigate } from 'react-router-dom';
 
-const EmailAndPassword = ({setSignInWithOTP,email,handleEmail}) => {
+const EmailAndPassword = ({setSignInWithOTP,email,handleEmail,validateEmail}) => {
     const [password,setPassword] = useState("");
+    const location = useLocation();
+    const navigate = useNavigate();
     
-
-    const validateEmail = (enteredEmail) => {
-      if (!enteredEmail.trim()) {
-        // If email is empty or contains only spaces
-        toast.error("Email is required");
-        return false;
-      }
-    
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      const isValidFormat = emailRegex.test(enteredEmail);
-    
-      if (!isValidFormat) {
-        // If email format is invalid
-        toast.error("Invalid email format");
-        return false;
-      }
-    
-      // If email is valid
-      return true;
-    };
-
     const validatePassword = (enteredPassword) => {
       if (!enteredPassword.trim()) {
         // If password is empty or contains only spaces
-        toast.error("Password is required");
+        toast.warning("Please enter your password");
         return false;
       }
-    
       const isValidLength = enteredPassword.length >= 6; // Customize the criteria as needed
-    
       if (!isValidLength) {
         // If password length is less than the required minimum
         toast.error("Password must be at least 6 characters");
@@ -43,12 +23,20 @@ const EmailAndPassword = ({setSignInWithOTP,email,handleEmail}) => {
       return true;
     };
     
-    
-
     const handleSignIn = ()=>{
+      console.log('Current page location:', location.pathname);
       if(!validateEmail(email))return;
       if(!validatePassword(password))return;
-      // todo handle api call
+      if(location.pathname=='/admin/signin'){
+        //todo : handle api call fo admin authentication
+        navigate('/admin/dashboard');
+        return;
+      }
+      if(location.pathname=='/restaurant/signin'){
+        //todo : handle api call fo restaurant authentication
+        navigate('/restaurant/dashboard');
+        return;
+      }
     }
 
     const handlePasswordChange = (e)=>{
