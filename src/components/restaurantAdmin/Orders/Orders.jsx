@@ -82,7 +82,7 @@ const Orders = () => {
       <div className="flex justify-between items-center">
         <h1 className="text-xl font-medium">Orders</h1>
         <div className="flex items-center py-3 gap-2 mx-5">
-          <p>Admin</p>
+          <p>Restaurant</p>
           <span>
             <FaChevronRight className="text-gray-500" />
           </span>
@@ -189,15 +189,16 @@ const Orders = () => {
                   </Text>
                 </Badge>
               </TableCell>
-              {order.status === "new" && (
-                <TableCell className="flex items-center justify-center lg:-ml-14 md:-ml-10">
-                  <div className="flex w-fit gap-3">
-                    <Link
-                      to={`/restaurant/orders/${order.orderId}`}
-                      className="flex items-center justify-center rounded-md cursor-pointer underline"
-                    >
-                      <IoEye className="w-5 h-5 text-gray-500" />
-                    </Link>
+
+              <TableCell className="flex items-center justify-center lg:-ml-14 md:-ml-10">
+                <div className="flex w-fit gap-3">
+                  <Link
+                    to={`/restaurant/orders/${order.orderId}`}
+                    className="flex items-center justify-center rounded-md cursor-pointer underline"
+                  >
+                    <IoEye className="w-5 h-5 text-gray-500" />
+                  </Link>
+                  {order.status === "new" && (
                     <Badge
                       onClick={() => handleAccept(order.orderId)}
                       className="px-3 py-1 flex items-center w-28 cursor-pointer hover:scale-105 transition-all"
@@ -206,9 +207,9 @@ const Orders = () => {
                     >
                       <Text>Accept</Text>
                     </Badge>
-                  </div>
-                </TableCell>
-              )}
+                  )}
+                </div>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
