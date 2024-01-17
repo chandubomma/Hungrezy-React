@@ -41,15 +41,74 @@ const RestaurantSignUpForm = () => {
  
 
   async function handleSendOTP() {
-    if(!validateEmail(restaurant.email))return;
+    const email = restaurant.email;
+    if(!validateEmail(email))return;
       //todo : need to check email in user base before sending otp;
-      //todo : handle api class for sending otp
-    setCurrStep(2);
+    const url = `${import.meta.env.VITE_HUNGREZY_API}/api/auth/send-verification-code`;
+  
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          // You may need to include additional headers based on your server requirements
+        },
+        body: JSON.stringify({email}),
+      });
+  
+      if (!response.ok) {
+        // Handle non-successful responses here
+        console.error('Error:', response.status, response.statusText);
+        return null;
+      }
+  
+      // Parse and return the response JSON
+      const data = await response.json();
+      console.log('Response:', data);
+      toast.info('Please check you email for verification code.')
+      setCurrStep(2);
+      return data;
+    } catch (error) {
+      // Handle network errors or other exceptions
+      toast.error('Please try again later!')
+      console.error('Error:', error.message);
+      return null;
+    }
   }
     
 
-  const handleVerifyOTP = async(OTP) => {
-    setCurrStep(3);
+  const handleVerifyOTP = async(verificationCode) => {
+    const url = `${import.meta.env.VITE_HUNGREZY_API}/api/auth/verify-code`;
+    const email = restaurant.email;
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          // You may need to include additional headers based on your server requirements
+        },
+        body: JSON.stringify({verificationCode,email}),
+      });
+  
+      if (!response.ok) {
+        // Handle non-successful responses here
+        console.error('Error:', response.status, response.statusText);
+        toast.error('Verification failed! Please try again.');
+        setCurrStep(1);
+        return null;
+      }
+  
+      // Parse and return the response JSON
+      const data = await response.json();
+      console.log('Response:', data);
+      toast.success('Email verification successfull!');
+      setCurrStep(3);
+      return data;
+    } catch (error) {
+      // Handle network errors or other exceptions
+      console.error('Error:', error.message);
+      return null;
+    }
   }
 
   if (currStep == 1)
