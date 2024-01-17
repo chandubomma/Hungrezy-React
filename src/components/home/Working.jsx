@@ -26,7 +26,7 @@ const Working = () => {
 
   return (
     <motion.div
-      className="lg:px-48 min-[100px]:px-16 lg:mt-64 mt-32 flex flex-col justify-between items-center bg-yellow-50 py-20"
+      className="lg:px-48 min-[100px]:px-16 lg:mt-64 mt-32 flex flex-col justify-between items-center bg-yellow-50 py-20 mx-auto"
       variants={containerVariants}
       initial="hidden"
       animate={controls}
@@ -45,7 +45,7 @@ const Working = () => {
       </p>
 
       <motion.div
-        className="flex flex-col md:flex-row justify-between items-center w-full mt-10"
+        className="flex flex-col md:flex-row gap-x-5 justify-between items-center w-full mt-10"
         variants={containerVariants}
       >
         <motion.div

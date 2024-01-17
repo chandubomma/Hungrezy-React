@@ -6,6 +6,8 @@ import uliana from "../../assets/ulianaAsset.png";
 import jonathan from "../../assets/jonathanAsset.png";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
+import { ordersData } from "../../data/orderItems";
+import Counter from "../restaurantAdmin/Dashboard/Counter";
 
 const Welcome = () => {
   const [count, setCount] = useState(0);
@@ -19,6 +21,7 @@ const Welcome = () => {
 
   useEffect(() => {
     controls.start("visible");
+    setCount(ordersData.length);
   }, [controls]);
 
   return (
@@ -30,13 +33,13 @@ const Welcome = () => {
     >
       <motion.div className="w-full md:w-[42%] mb-8 md:mb-0">
         <motion.h2
-          className="text-orange-500/90 font-semibold text-2xl min-[1100px]:text-4xl py-4"
+          className="text-orange-500/90 font-semibold text-2xl min-[1100px]:text-3xl py-4"
           variants={variants}
         >
           WELCOME TO HUNGREZY
         </motion.h2>
         <motion.p
-          className="text-3xl min-[1100px]:text-5xl font-medium"
+          className="text-3xl min-[1100px]:text-4xl font-medium"
           style={{ lineHeight: "1.2" }}
           variants={variants}
         >
@@ -57,13 +60,13 @@ const Welcome = () => {
         >
           <motion.button
             type="button"
-            className="py-3 px-4 bg-amber-500 hover:bg-amber-600 transition-colors duration-300 text-white rounded-full flex items-center"
+            className="md:py-3 md:px-4 py-3 px-2.5 w-40 bg-amber-500 hover:bg-amber-600 transition-colors duration-300 text-white rounded-full flex items-center justify-center"
             whileHover={{ scale: 1.05 }}
             variants={variants}
             onClick={() => navigate("/restaurants")}
           >
             <span className="align-baseline">Order Now</span>
-            <FaArrowRight className="ml-2 align-baseline" />
+            <FaArrowRight className="ml-2 align-baseline mt-1" />
           </motion.button>
           <motion.div
             className="text-md font-semibold text-gray-700 flex items-center gap-2"
@@ -71,8 +74,11 @@ const Welcome = () => {
             variants={variants}
           >
             <CiDeliveryTruck className="w-10 h-10" />
-            <p>
-              Orders delivered <span className="font-boldd">{count || 0}</span>
+            <p className="flex flex-row text-sm items-center gap-x-2">
+              Orders delivered{" "}
+              <span className="font-bold">
+                <Counter to={count} />
+              </span>
             </p>
           </motion.div>
         </motion.div>

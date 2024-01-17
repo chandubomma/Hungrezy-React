@@ -88,7 +88,7 @@ export const ordersData = [
     orderId: "ORDER-008",
     customerName: "Grace Miller",
     total: 210,
-    status: "new",
+    status: "pending",
     items: [
       { itemName: "Penne Alla Vodka", quantity: 1, price: 100 },
       { itemName: "Garlic Breadsticks", quantity: 2, price: 30 },
@@ -160,7 +160,7 @@ export const ordersData = [
     orderId: "ORDER-014",
     customerName: "Eve Williams",
     total: 220,
-    status: "new",
+    status: "pending",
     items: [
       { itemName: "Sushi Combo", quantity: 1, price: 150 },
       { itemName: "Edamame", quantity: 1, price: 10 },
@@ -196,7 +196,7 @@ export const ordersData = [
     orderId: "ORDER-017",
     customerName: "John Doe",
     total: 200,
-    status: "new",
+    status: "pending",
     items: [
       { itemName: "Margherita Pizza", quantity: 2, price: 80 },
       { itemName: "Garlic Knots", quantity: 1, price: 20 },
@@ -220,7 +220,7 @@ export const ordersData = [
     orderId: "ORDER-019",
     customerName: "Bob Smith",
     total: 300,
-    status: "new",
+    status: "pending",
     items: [
       { itemName: "Grilled Salmon", quantity: 1, price: 200 },
       { itemName: "Quinoa Salad", quantity: 2, price: 50 },

@@ -5,7 +5,7 @@ export const reviewsData = [
     rating: 4,
     date: "2023-08-01",
     comment:
-      "The food was delicious! Highly recommended. I will review again. Thank you!",
+      "The food was delicious! Highly recommended."
   },
   {
     id: 2,

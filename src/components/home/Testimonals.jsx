@@ -26,7 +26,7 @@ const Testimonials = () => {
 
   return (
     <motion.div
-      className="lg:px-48 min-[100px]:px-16 pt-16 flex flex-col justify-between items-center"
+      className="lg:px-48 min-[100px]:px-10 pt-16 flex flex-col justify-between items-center"
       variants={containerVariants}
       initial="hidden"
       animate={controls}
@@ -35,14 +35,14 @@ const Testimonials = () => {
       <h2 className="mx-auto font-semibold text-lg text-orange-500">
         TESTIMONIALS
       </h2>
-      <p className="lg:mx-auto font-normal text-7xl my-3">
+      <p className="mx-auto font-normal text-4xl md:text-7xl my-3">
         What our customers say
       </p>
-      <div className="flex flex-wrap justify-center">
+      <div className="grid md:grid-cols-2 grid-cols-1 gap-x-10 justify-center mx-auto">
         {testimonialsData.map((testimonial) => (
           <motion.div
             key={testimonial.id}
-            className="w-[450px] h-fit bg-white rounded-lg shadow-md p-5 m-5 relative"
+            className="md:w-[450px] w-[400px] bg-white rounded-lg shadow-md p-5 my-5 relative"
             variants={itemVariants}
             whileHover={{ scale: 1.05 }}
           >

@@ -28,7 +28,7 @@ const Footer = () => {
 
   return (
     <motion.footer
-      className="bg-gray-800 text-white py-24 mt-4 w-full"
+      className="bg-gray-800 text-white py-24 pl-6 md:pl-0 mt-4 w-full"
       variants={containerVariants}
       initial="hidden"
       animate={inView ? "visible" : "hidden"}

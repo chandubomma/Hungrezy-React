@@ -42,11 +42,11 @@ const Partners = () => {
       <p className="text-gray-600 text-3xl text-center font-light mb-4">
         Join us and grow your business
       </p>
-      <div className="flex flex-wrap justify-center">
+      <div className="flex flex-wrap flex-row justify-center">
         {/* Restaurant Partner Card */}
         <motion.div
           key="restaurant"
-          className="w-[450px] h-fit bg-white rounded-lg shadow-md p-5 m-5 relative"
+          className="w-[425px] h-fit bg-white rounded-lg shadow-md p-5 m-5 relative"
           variants={itemVariants}
         >
           <FaUtensils className="absolute -left-4 -top-4 text-amber-500 w-8 h-8" />
@@ -69,7 +69,7 @@ const Partners = () => {
         {/* Organization Partner Card */}
         <motion.div
           key="organization"
-          className="w-[450px] h-fit bg-white rounded-lg shadow-md p-5 m-5 relative"
+          className="w-[425px] h-fit bg-white rounded-lg shadow-md p-5 m-5 relative"
           variants={itemVariants}
         >
           <FaHandshake className="absolute -left-4 -top-4 text-amber-500 w-8 h-8" />
@@ -92,7 +92,7 @@ const Partners = () => {
         {/* Driver Partner Card */}
         <motion.div
           key="driver"
-          className="w-[450px] h-fit bg-white rounded-lg shadow-md p-5 m-5 relative"
+          className="w-[425px] h-fit bg-white rounded-lg shadow-md p-5 m-5 relative"
           variants={itemVariants}
         >
           <FaMotorcycle className="absolute -left-4 -top-4 text-amber-500 w-8 h-8" />
