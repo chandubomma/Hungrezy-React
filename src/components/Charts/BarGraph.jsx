@@ -46,7 +46,7 @@ const valueFormatter = (number) =>
 export default function BarGraph() {
   return (
     <BarChart
-      className="mt-6"
+      className="mt-2"
       data={chartdata}
       index="name"
       categories={["Number of orders"]}

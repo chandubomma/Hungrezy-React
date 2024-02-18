@@ -28,7 +28,10 @@ const Sidebar = () => {
   };
 
   useEffect(() => {
-    const newOrders = ordersData.filter((order) => order.status === "new");
+    const newOrders = ordersData.filter(
+      (order) =>
+        order.status === "new" && new Date(order.date).getDate() === new Date().getDate()
+    );
     setNewOrders(newOrders.length);
   }, []);
 

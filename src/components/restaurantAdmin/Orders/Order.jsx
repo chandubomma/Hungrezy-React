@@ -29,7 +29,7 @@ const Order = () => {
           <p className="text-orange-500 underline">Order</p>
         </div>
       </div>
-      <div className="border rounded p-4 max-w-4xl items-center mx-auto justify-center">
+      <div className="border rounded p-4 max-w-4xl items-center mx-auto my-4 justify-center">
         <div className="grid grid-cols-1 gap-4 mb-4">
           <div className="flex flex-col">
             <div className="flex justify-between mb-2">
