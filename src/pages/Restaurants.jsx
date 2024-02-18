@@ -8,7 +8,7 @@ const Restaurants = () => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [location, setLocation] = useState("Hyderabad-Kompally");
+  const [location, setLocation] = useState("Hyderabad-Jubilee Hills");
   const [visibleRestaurants, setVisibleRestaurants] = useState(0);
   const [searchText, setSearchText] = useState("");
   const [searchResults, setSearchResults] = useState([]);

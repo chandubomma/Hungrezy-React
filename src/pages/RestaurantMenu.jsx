@@ -18,25 +18,43 @@ import {toast} from "sonner";
 const RestaurantMenu = () => {
   const location = useLocation();
   const restaurant = location.state?.restaurant;
-  const [foodItems, setFoodItems] = useState(restaurant.menu);
+  const [foodItems, setFoodItems] = useState({});
   const [activeTab, setActiveTab] = useState("menu");
   const [isCategoryListVisible, setCategoryListVisible] = useState(false);
   const [isTableBooked,setTableBooked] = useState(false);
   const cartItems = useSelector(selectCartItems);
   const currentUser = useSelector(selectUser);
 
-  const initialVisibility = Object.keys(foodItems).reduce(
-    (acc, category, index) => {
-      acc[category] = index < 4;
-      return acc;
-    },
-    {}
-  );
+  // const initialVisibility = Object.keys(foodItems).reduce(
+  //   (acc, category, index) => {
+  //     acc[category] = index < 4;
+  //     return acc;
+  //   },
+  //   {}
+  // );
   const dispatch = useDispatch();
 
   const [categoryVisibility, setCategoryVisibility] =
-    useState(initialVisibility);
+    useState();
   const categoryRefs = useRef({});
+
+  useEffect(() => {
+    fetchMenu(restaurant.menu_id)
+      .then((menuItems) => {
+        setFoodItems(menuItems);
+        const initialVisibility = Object.keys(menuItems).reduce(
+          (acc, category, index) => {
+            acc[category] = index < 4;
+            return acc;
+          },
+          {}
+        );
+        setCategoryVisibility(initialVisibility);
+      })
+      .catch((error) => {
+        console.error('Error fetching menu items:', error);
+      });
+  }, []);
 
   const toggleCategoryVisibility = (category) => {
     setCategoryVisibility((prevVisibility) => ({
@@ -44,6 +62,25 @@ const RestaurantMenu = () => {
       [category]: !prevVisibility[category],
     }));
   };
+
+  const fetchMenu = async (menuId) => {
+    try {
+      const response = await fetch(`${
+        import.meta.env.VITE_HUNGREZY_API
+      }/api/restaurant/menu/${menuId}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch menu items');
+      }
+      const result = await response.json();
+      const data = result.data;
+      delete data._id;
+      return data; 
+    } catch (error) {
+      console.error('Error fetching menu items:', error);
+      throw error;
+    }
+  };
+  
 
   const handleIncrement = (category, itemName, price, veg_or_non_veg) => {
     dispatch(
