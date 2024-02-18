@@ -8,7 +8,7 @@ const Restaurants = () => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [location, setLocation] = useState("Hyderabad-Begumpet");
+  const [location, setLocation] = useState("Hyderabad-Kompally");
   const [visibleRestaurants, setVisibleRestaurants] = useState(0);
   const [searchText, setSearchText] = useState("");
   const [searchResults, setSearchResults] = useState([]);
@@ -23,7 +23,7 @@ const Restaurants = () => {
         const response = await fetch(
           `${
             import.meta.env.VITE_HUNGREZY_API
-          }/Restaurants/getData?key1=${key1}&key2=${key2}`
+          }/api/restaurant?city=${key1}&area=${key2}`
         );
         if (!response.ok) {
           setData(null);
@@ -31,11 +31,8 @@ const Restaurants = () => {
         }
 
         const result = await response.json();
-        const restaurantsArray = Object.values(result.value.restaurants);
-        const restaurants = restaurantsArray.map((restaurant) => {
-          restaurant.image = imageArray[getRandomInt(100)];
-          return restaurant;
-        });
+        console.log(result)
+        const restaurants = result.data
         setData(restaurants);
         console.log(restaurants);
         setVisibleRestaurants(0);
@@ -74,30 +71,30 @@ const Restaurants = () => {
         return true;
       }
 
-      // Check if search text matches any menu category
-      const menuCategories = Object.keys(restaurant.menu);
-      if (
-        menuCategories.some((category) =>
-          category.toLowerCase().includes(normalizedSearchText)
-        )
-      ) {
-        return true;
-      }
+      // // Check if search text matches any menu category
+      // const menuCategories = Object.keys(restaurant.menu);
+      // if (
+      //   menuCategories.some((category) =>
+      //     category.toLowerCase().includes(normalizedSearchText)
+      //   )
+      // ) {
+      //   return true;
+      // }
 
-      // Check if search text matches any food item name
-      const menuItems = Object.values(restaurant.menu).reduce(
-        (acc, category) => {
-          return acc.concat(Object.keys(category));
-        },
-        []
-      );
-      if (
-        menuItems.some((item) =>
-          item.toLowerCase().includes(normalizedSearchText)
-        )
-      ) {
-        return true;
-      }
+      // // Check if search text matches any food item name
+      // const menuItems = Object.values(restaurant.menu).reduce(
+      //   (acc, category) => {
+      //     return acc.concat(Object.keys(category));
+      //   },
+      //   []
+      // );
+      // if (
+      //   menuItems.some((item) =>
+      //     item.toLowerCase().includes(normalizedSearchText)
+      //   )
+      // ) {
+      //   return true;
+      // }
 
       // Add more conditions as needed
 
