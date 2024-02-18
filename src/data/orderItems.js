@@ -156,11 +156,11 @@ export const ordersData = [
     ],
   },
   {
-    date: "2024-01-13",
+    date: "2024-01-19",
     orderId: "ORDER-014",
     customerName: "Eve Williams",
     total: 220,
-    status: "pending",
+    status: "new",
     items: [
       { itemName: "Sushi Combo", quantity: 1, price: 150 },
       { itemName: "Edamame", quantity: 1, price: 10 },
@@ -216,11 +216,11 @@ export const ordersData = [
     ],
   },
   {
-    date: "2024-01-13",
+    date: "2024-01-19",
     orderId: "ORDER-019",
     customerName: "Bob Smith",
     total: 300,
-    status: "pending",
+    status: "new",
     items: [
       { itemName: "Grilled Salmon", quantity: 1, price: 200 },
       { itemName: "Quinoa Salad", quantity: 2, price: 50 },

@@ -88,9 +88,12 @@ const RestaurantNavbar = () => {
                 size={"lg"}
               />
               <MenuList>
-                <MenuItem icon={<LuUser2 className="w-[18px] h-[18px]" />}>
-                  My Profile
-                </MenuItem>
+                <Link to="profile">
+                  <MenuItem icon={<LuUser2 className="w-[18px] h-[18px]" />}>
+                    My Profile
+                  </MenuItem>
+                </Link>
+
                 <MenuItem
                   className="flex gap-[10px] items-center"
                   _hover={{ backgroundColor: "red.50" }}
@@ -146,9 +149,11 @@ const RestaurantNavbar = () => {
                 color="gray"
               />
               <MenuList>
-                <MenuItem icon={<LuUser2 className="w-[18px] h-[18px]" />}>
-                  My Profile
-                </MenuItem>
+                <Link to="profile">
+                  <MenuItem icon={<LuUser2 className="w-[18px] h-[18px]" />}>
+                    My Profile
+                  </MenuItem>
+                </Link>
                 <MenuItem
                   className="flex gap-[10px] items-center"
                   _hover={{ backgroundColor: "red.50" }}

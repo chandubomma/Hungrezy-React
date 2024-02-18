@@ -1,6 +1,6 @@
 import SignUpForm from "./pages/SignUpForm";
 import SigninForm from "./pages/SigninForm";
-import { Toaster, toast } from 'sonner'
+import { Toaster } from "sonner";
 import {
   Outlet,
   Route,
@@ -46,7 +46,7 @@ const Root = () => {
     <React.Fragment>
       {!hideNavbar && <Navbar />}
       <Outlet />
-      <Toaster position="bottom-center"  richColors/>
+      <Toaster position="bottom-center" richColors />
     </React.Fragment>
   );
 };
@@ -59,7 +59,7 @@ const RestaurantAdmin = () => {
         <div className="lg:flex-[2]">
           <Sidebar />
         </div>
-        <div className="flex-[11] max-h-[88.5vh] overflow-y-scroll">
+        <div className="flex-[11] max-h-[88vh] overflow-y-scroll">
           <Outlet />
         </div>
       </div>
@@ -75,14 +75,14 @@ const Admin = () => {
   );
 };
 
-const EmptyOutletWithToaster = ()=>{
-  return(
+const EmptyOutletWithToaster = () => {
+  return (
     <div>
-        <Outlet/>
-        <Toaster position="top-right"  richColors/>
+      <Outlet />
+      <Toaster position="top-right" richColors />
     </div>
-  )
-}
+  );
+};
 
 const Router = createBrowserRouter(
   createRoutesFromElements(
@@ -101,7 +101,7 @@ const Router = createBrowserRouter(
         <Route path="signup" element={<SignUpForm />} />
       </Route>
 
-      <Route path="restaurant" element={<EmptyOutletWithToaster/>}>
+      <Route path="restaurant" element={<EmptyOutletWithToaster />}>
         <Route path="" element={<PageNotFound />} />
         <Route path="" element={<RestaurantAdmin />}>
           <Route path="dashboard" element={<Dashboard />} />
@@ -139,4 +139,3 @@ const App = () => {
 };
 
 export default App;
-

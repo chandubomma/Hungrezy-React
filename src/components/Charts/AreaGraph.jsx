@@ -75,7 +75,7 @@ const customTooltip = ({ payload, active }) => {
 export const AreaGraph = () => {
   return (
     <LineChart
-      className="h-72 mt-4"
+      className="mt-2"
       data={ratingData}
       index="date"
       categories={["Rating"]}

@@ -28,7 +28,7 @@ const AddMenu = () => {
     <div className="px-4">
       <div className="flex justify-between items-center">
         <h1 className="text-xl font-medium">Add Menu</h1>
-        <div className="flex items-center py-3 gap-2 mx-5">
+        <div className="flex items-center py-2.5 gap-2 mx-5">
           <p>Restaurant</p>
           <span>
             <FaChevronRight className="text-gray-500" />
@@ -36,10 +36,10 @@ const AddMenu = () => {
           <p className="text-orange-500 underline">Add Menu</p>
         </div>
       </div>
-      <div className="h-fit flex flex-row w-full gap-x-10">
+      <div className="h-fit flex md:flex-row flex-col w-full gap-x-10">
         <motion.div
           onClick={() => image.current.click()}
-          className="w-[17rem] cursor-pointer h-[17rem] my-20 object-cover rounded-full bg-orange-100 border-dotted border-2 border-orange-500 flex items-center justify-center"
+          className="w-[17rem] cursor-pointer h-[17rem] my-20 mx-auto object-cover rounded-full bg-orange-100 border-dotted border-2 border-orange-500 flex items-center justify-center"
           whileHover={{ scale: 1.05 }}
         >
           <input
@@ -63,12 +63,13 @@ const AddMenu = () => {
             </p>
           )}
         </motion.div>
+
         <form className="flex flex-col w-[50rem] gap-4 pb-20">
           <motion.div
             variants={formVariants}
             className="flex flex-col form-floating mt-2 gap-4"
           >
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid md:grid-cols-2 grid-cols-1 gap-4">
               <div className="form-floating">
                 <input
                   className="form-control focus:shadow-none focus:border-amber-600 rounded-md w-full h-full"
@@ -123,7 +124,7 @@ const AddMenu = () => {
               <label htmlFor="menuItemCategory">Menu Item Category</label>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid md:grid-cols-2 grid-cols-1 gap-4">
               <div className="form-floating">
                 <input
                   className="form-control focus:shadow-none focus:border-amber-600 rounded-md w-full h-full"

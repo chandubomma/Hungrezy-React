@@ -78,16 +78,16 @@ const Footer = () => {
         >
           <div className="mb-4">Quick Links:</div>
           <motion.ul className="list-none" variants={containerVariants}>
-            <li className="mb-2">
+            <li className="mb-2 hover:underline">
               <a href="/">Home</a>
             </li>
-            <li className="mb-2">
+            <li className="mb-2 hover:underline">
               <a href="/restaurants">Menu</a>
             </li>
-            <li className="mb-2">
+            <li className="mb-2 hover:underline">
               <a href="/about">About Us</a>
             </li>
-            <li className="mb-2">
+            <li className="mb-2 hover:underline">
               <a href="/contact">Contact</a>
             </li>
           </motion.ul>
