@@ -7,10 +7,12 @@ import {
 import { motion, useAnimation } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Partners = () => {
   const controls = useAnimation();
   const [ref, inView] = useInView({ triggerOnce: true });
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (inView) {
@@ -58,6 +60,7 @@ const Partners = () => {
           </p>
           <motion.button
             whileHover={{ scale: 1.05 }}
+            onClick={() => navigate("/restaurant/signup")}
             type="button"
             className="mx-auto py-3 px-8 bg-amber-500 hover:bg-amber-600 transition-colors duration-300 text-white rounded-full flex items-center mt-4"
           >
