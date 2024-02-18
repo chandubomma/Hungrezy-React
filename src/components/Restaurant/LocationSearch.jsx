@@ -18,19 +18,46 @@ const LocationSearch = ({isSticky,searchText,setSearchText}) => {
     fetchKeys();
   }, []);
 
+  // const fetchKeys = () => {
+  //   // Fetch keys from the server using the /getAllKeys route
+  //   fetch(`${import.meta.env.VITE_HUNGREZY_API}/restaurant/locations`)
+  //     .then(response => response.json())
+  //     .then(data => {
+  //       const { keysAtLevel1, keysAtLevel2 } = data;
+  //       setKeysAtLevel1(keysAtLevel1);
+  //       setKeysAtLevel2(keysAtLevel2);
+  //     })
+  //     .catch(error => {
+  //       console.error('Error fetching keys:', error);
+  //     });
+  // };
+
   const fetchKeys = () => {
-    // Fetch keys from the server using the /getAllKeys route
-    fetch(`${import.meta.env.VITE_HUNGREZY_API}/Restaurants/getAllKeys`)
+    fetch(`${import.meta.env.VITE_HUNGREZY_API}/api/restaurant/locations`)
       .then(response => response.json())
       .then(data => {
-        const { keysAtLevel1, keysAtLevel2 } = data;
-        setKeysAtLevel1(keysAtLevel1);
-        setKeysAtLevel2(keysAtLevel2);
+        const { data: locations } = data; // Assuming the locations are nested under the 'data' key
+        setKeysAtLevel1(Object.keys(locations));
+        setKeysAtLevel2(locations);
       })
       .catch(error => {
         console.error('Error fetching keys:', error);
       });
   };
+  
+
+  // useEffect(() => {
+  //   // Arrange key1s alphabetically
+  //   const sortedKey1s = keysAtLevel1.slice().sort();
+  
+  //   // Arrange key2s alphabetically within each key1
+  //   const sortedResults = sortedKey1s.map(key1 => ({
+  //     key1,
+  //     key2s: keysAtLevel2[key1].slice().sort(),
+  //   }));
+  
+  //   setInitialResult(sortedResults);
+  // }, [keysAtLevel1, keysAtLevel2]);
 
   useEffect(() => {
     // Arrange key1s alphabetically
@@ -44,6 +71,7 @@ const LocationSearch = ({isSticky,searchText,setSearchText}) => {
   
     setInitialResult(sortedResults);
   }, [keysAtLevel1, keysAtLevel2]);
+  
   
 
   useEffect(() => {
@@ -68,24 +96,46 @@ const LocationSearch = ({isSticky,searchText,setSearchText}) => {
   }, [searchText, keysAtLevel1, keysAtLevel2]);
 
 
+// const filterResults = (searchText) => {
+//     searchText = searchText.toLowerCase();
+//     return keysAtLevel1.reduce((filteredResults, key1) => {
+//       const matchingKey2s = keysAtLevel2[key1].filter(key2 =>
+//         key2.toLowerCase().includes(searchText)
+//       );
+  
+//       if (matchingKey2s.length > 0) {
+//         // Include key1 and matching key2s in the results
+//         filteredResults.push({
+//           key1,
+//           key2s: matchingKey2s,
+//         });
+//       }
+  
+//       return filteredResults;
+//     }, []);
+//   };
+
+
 const filterResults = (searchText) => {
-    searchText = searchText.toLowerCase();
-    return keysAtLevel1.reduce((filteredResults, key1) => {
-      const matchingKey2s = keysAtLevel2[key1].filter(key2 =>
-        key2.toLowerCase().includes(searchText)
-      );
-  
-      if (matchingKey2s.length > 0) {
-        // Include key1 and matching key2s in the results
-        filteredResults.push({
-          key1,
-          key2s: matchingKey2s,
-        });
-      }
-  
-      return filteredResults;
-    }, []);
-  };
+  searchText = searchText.toLowerCase();
+  return keysAtLevel1.reduce((filteredResults, key1) => {
+    const matchingKey2s = keysAtLevel2[key1].filter(key2 =>
+      key2.toLowerCase().includes(searchText)
+    );
+
+    if (matchingKey2s.length > 0) {
+      // Include key1 and matching key2s in the results
+      filteredResults.push({
+        key1,
+        key2s: matchingKey2s,
+      });
+    }
+
+    return filteredResults;
+  }, []);
+};
+
+
 
   useEffect(() => {
     // Arrange key1s alphabetically
