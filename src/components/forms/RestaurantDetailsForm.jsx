@@ -1,10 +1,11 @@
 import { useState } from "react";
 import {toast} from 'sonner';
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../AuthContext";
 
 const RestaurantDetailsForm = ({ restaurant, setRestaurant }) => {
   const navigate = useNavigate()
-
+  const {signin} = useAuth();
  
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -46,11 +47,29 @@ const RestaurantDetailsForm = ({ restaurant, setRestaurant }) => {
     e.preventDefault();
 
     if (validateName() && validatePassword() && validateConfirmPassword()) {
-      // Your form submission logic goes here
-      // For now, let's just show a success message
-      toast.success('Account created successfully!');
-      // Optionally, navigate to a different page
-      navigate('/restaurant/dashboard');
+      const token = restaurant.accessToken;
+      const {email,password}=restaurant;
+      const name = restaurant.restaurantName
+      try{
+        const response = await fetch(`${import.meta.env.VITE_HUNGREZY_API}/api/auth/restaurant/signup`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name,email, password,accessToken:token }),
+        });
+        const result = await response.json()
+        if(!response.ok){
+          const error = result.message;
+          toast.error(error);
+          return;
+        }
+        const {user,accessToken} = result.data
+        signin(user,accessToken);
+        toast.success('Account created successfully!');
+        navigate('/restaurant/dashboard');
+      }catch(error){
+        console.log(error)
+        toast.error("Something went wrong.Please try again!")
+      }
     }
   };
 

@@ -12,10 +12,11 @@ const RestaurantSignUpForm = () => {
     email : '',
     restaurantName : '',
     address : '',
-    password : ''
+    password : '',
+    accessToken : '',
   });
  
-
+ const user_role = "restaurant";
   const handleEmail = (e)=>{
     setRestaurant({
       ...restaurant,
@@ -45,7 +46,7 @@ const RestaurantSignUpForm = () => {
     if(!validateEmail(email))return;
       //todo : need to check email in user base before sending otp;
     const url = `${import.meta.env.VITE_HUNGREZY_API}/api/auth/send-verification-code`;
-  
+    
     try {
       const response = await fetch(url, {
         method: 'POST',
@@ -53,26 +54,22 @@ const RestaurantSignUpForm = () => {
           'Content-Type': 'application/json',
           // You may need to include additional headers based on your server requirements
         },
-        body: JSON.stringify({email}),
+        body: JSON.stringify({email,user_role}),
       });
-  
+      const result = await response.json();
       if (!response.ok) {
         // Handle non-successful responses here
-        console.error('Error:', response.status, response.statusText);
-        return null;
+        toast.error(result.message)
+        return ;
       }
-  
-      // Parse and return the response JSON
-      const data = await response.json();
-      console.log('Response:', data);
       toast.info('Please check you email for verification code.')
       setCurrStep(2);
-      return data;
+    
     } catch (error) {
       // Handle network errors or other exceptions
       toast.error('Please try again later!')
-      console.error('Error:', error.message);
-      return null;
+      console.error('Error:', error);
+      return ;
     }
   }
     
@@ -100,7 +97,10 @@ const RestaurantSignUpForm = () => {
   
       // Parse and return the response JSON
       const data = await response.json();
-      console.log('Response:', data);
+      setRestaurant({
+        ...restaurant,
+        accessToken : data.token
+      })
       toast.success('Email verification successfull!');
       setCurrStep(3);
       return data;
