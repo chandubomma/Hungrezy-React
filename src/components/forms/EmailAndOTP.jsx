@@ -1,32 +1,67 @@
 import { useState} from "react"
 import OTPField from "./OTPField"
 import EmailField from "./EmailField"
+import { toast } from 'sonner'
 import { useLocation ,useNavigate } from 'react-router-dom';
+import { useAuth } from "../../AuthContext";
 
 const EmailAndOTP = ({email,handleEmail,setSignInWithOTP,validateEmail}) => {
     const [showOTP,setShowOTP] = useState(false);
     const location = useLocation();
     const navigate = useNavigate();
+    const {signin} = useAuth();
+    let user_role;
+    if(location.pathname=='/admin/signin')user_role="admin"
+    if(location.pathname=='/restaurant/signin')user_role="restaurant"
+    else user_role="user"
 
-    const handleVerifyOTP = ()=>{
-      if(location.pathname=='/admin/signin'){
-        //todo : handle api call fo admin authentication
-        navigate('/admin/dashboard');
-        return;
-      }
-      if(location.pathname=='/restaurant/signin'){
-        //todo : handle api call fo restaurant authentication
-        navigate('/restaurant/dashboard');
-        return;
+    const handleVerifyOTP = async(verificationCode)=>{
+      try{
+        const response = await fetch(`${import.meta.env.VITE_HUNGREZY_API}/api/auth//signin-otp/verify-code`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, user_role,verificationCode }),
+        });
+        const result = await response.json()
+        if(!response.ok){
+          const error = result.message;
+          toast.error(error);
+          return;
+        }
+        const {user,accessToken} = result.data
+        signin(user,accessToken);
+        if(user_role=='admin')navigate('/admin/dashboard');
+        if(user_role=='restaurant')navigate('/restaurant/dashboard');
+        if(user_role=='user')navigate(-1);
+      }catch(error){
+        console.log(error);
+        toast.error("Something went wrong.Please try again!");
       }
     }
 
-    const handleSendOTP = ()=>{
+    const handleSendOTP = async()=>{
       if(!validateEmail(email))return;
-      //todo : need to check email in user base before sending otp;
-      //todo : handle api class for sending otp
-      setShowOTP(true)
+      try{
+        const response = await fetch(`${import.meta.env.VITE_HUNGREZY_API}/api/auth//signin-otp/send-verification-code`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, user_role }),
+        });
+        const result = await response.json()
+        if(!response.ok){
+          const error = result.message;
+          toast.error(error);
+          return;
+        }
+        setShowOTP(true)
+      }catch(error){
+        console.log(error);
+        toast.error("Something went wrong.Please try again!");
+      }
+      
     }
+
+
   return (
     <div className="w-80">
       
