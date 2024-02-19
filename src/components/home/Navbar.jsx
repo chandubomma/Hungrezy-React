@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import { useSelector } from "react-redux";
 import { selectTotalItems } from "../../redux/slices/cartSlice";
 import CartDrawerContent from "@/components/cart/CartDrawerContent";
+import { useAuth } from "../../AuthContext";
 
 const Navbar = () => {
   const { pathname } = useLocation();
@@ -16,6 +17,7 @@ const Navbar = () => {
   const [prevScrollPos, setPrevScrollPos] = useState(0);
   const [visible, setVisible] = useState(true);
   const totalItems = useSelector(selectTotalItems);
+  const {signout,user} = useAuth()
 
   const isLinkActive = (path) => {
     return pathname === path;
@@ -26,7 +28,10 @@ const Navbar = () => {
   };
 
   const handleLogout = () => {
+    signout();
     setShowDropdown(false);
+    window.location.reload();
+
     // Implement your logout logic here
   };
 
@@ -137,27 +142,40 @@ const Navbar = () => {
           </div>
           {showDropdown && (
             <div className="absolute top-12 right-0 bg-white border border-gray-400 p-2 w-36 rounded shadow-md flex flex-col items-center">
-              <Link
+              {
+                !user &&
+                <Link
                 to="/signup"
                 className="block py-1 px-4 hover:bg-gray-50 hover:font-semibold text-gray-800 border-b border-gray-300 w-full text-center"
               >
                 Sign Up
               </Link>
-              <Link
+              }
+              {
+                !user &&
+                <Link
                 to="/signin"
                 className="block py-1 px-4 hover:font-semibold text-gray-800 border-b hover:bg-gray-50 border-gray-300 w-full text-center"
               >
                 Sign In
               </Link>
-              <button
+              }
+              {
+                user && 
+                <button
                 onClick={handleLogout}
                 className="block py-1 px-4 hover:font-semibold hover:bg-gray-50 text-gray-800 border-gray-300 w-full text-center"
               >
                 Logout
               </button>
+              }
             </div>
           )}
+          {
+          user && <h2 className="mt-1.5 text-lg font-semibold text-gray-500">{(user.firstName+" "+user.lastName).replace(/\b\w/g, (char) => char.toUpperCase())}</h2>
+          }
         </div>
+        
       </div>
 
       <div className="lg:hidden px-10 py-10 flex justify-between items-center">

@@ -11,19 +11,22 @@ import Account from "@/components/profile/Account";
 import { useNavigate } from "react-router-dom";
 import { selectUser } from "../redux/slices/userSlice";
 import { useSelector } from "react-redux";
+import { useAuth } from "../AuthContext";
 
 const Profile = () => {
   const [scrolling, setScrolling] = useState(false);
   const [activeTab, setActiveTab] = useState("orders"); // Default active tab
   const navigate = useNavigate();
-  const currentUser = useSelector(selectUser);
-
+  //const currentUser = useSelector(selectUser);
+  const {user} = useAuth()
+  console.log(user);
   useEffect(() => {
     const handleScroll = () => {
       setScrolling(window.scrollY > 0);
     };
 
     window.addEventListener("scroll", handleScroll);
+    if(!user)navigate('/signin')
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
@@ -41,7 +44,7 @@ const Profile = () => {
       case "bookings":
         return <TableBookings />;
       case "account":
-        return <Account user={currentUser} />;
+        return <Account user={user} />;
       case "address":
         return <p>Address Book content goes here.</p>;
       case "help":
@@ -58,16 +61,16 @@ const Profile = () => {
       } transition-all duration-300 mt-32`}
     >
       <div className="container mx-auto p-4">
-        {!scrolling && (
+        {!scrolling && user && (
           <div className="flex flex-col items-center my-4 lg:flex-row">
             <div className="text-3xl font-bold text-white mb-4 lg:mb-0 lg:mr-6">
-              {currentUser.firstName + " " + currentUser.lastName}
+              {user.firstName + " " + user.lastName}
             </div>
             <div className="text-white">
               <div className="font-bold text-base">
-                {currentUser.mobileNumber}
+                {user.mobileNumber}
               </div>
-              <div className="text-lg">{currentUser.email}</div>
+              <div className="text-lg">{user.email}</div>
             </div>
           </div>
         )}

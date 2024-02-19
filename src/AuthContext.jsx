@@ -13,7 +13,7 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  const signin = async (accessToken,user) => {
+  const signin = async (user,accessToken) => {
       setAccessToken(accessToken);
       setUser(user);
       localStorage.setItem('accessToken', accessToken);
