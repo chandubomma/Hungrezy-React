@@ -56,8 +56,8 @@ const MenuList = () => {
         </div>
       </div>
       <div className="flex sm:flex-row flex-col gap-y-5 items-center mt-2 sm:gap-x-5">
-        <div className="flex items-center">
-          <p className="text-sm font-semibold text-gray-500">Status: &nbsp;</p>
+        <div className="flex items-center gap-2">
+          <p className="text-sm font-semibold text-gray-500 pt-3">Status: &nbsp;</p>
           <Select
             className="w-[10rem]"
             placeholder="Status"
@@ -76,8 +76,8 @@ const MenuList = () => {
             </SelectItem>
           </Select>
         </div>
-        <div className="flex items-center">
-          <p className="text-sm font-semibold text-gray-500">
+        <div className="flex items-center gap-2">
+          <p className="text-sm font-semibold text-gray-500 pt-3">
             Category: &nbsp;
           </p>
           <Select
