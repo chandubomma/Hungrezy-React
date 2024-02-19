@@ -97,7 +97,7 @@ const Router = createBrowserRouter(
         <Route path="profile" element={<Profile />} />
         <Route path="contact" element={<ContactUs />} />
         <Route path="checkout" element={<CheckOut />} />
-        <Route path="signin" element={<SigninForm />} />
+        <Route path="signin" element={<EmailSigninForm />} />
         <Route path="signup" element={<SignUpForm />} />
       </Route>
 

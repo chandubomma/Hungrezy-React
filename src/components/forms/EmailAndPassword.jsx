@@ -1,11 +1,13 @@
 import { useState } from "react"
 import { toast } from 'sonner'
 import { useLocation ,useNavigate } from 'react-router-dom';
+import { useAuth } from "../../AuthContext";
 
 const EmailAndPassword = ({setSignInWithOTP,email,handleEmail,validateEmail}) => {
     const [password,setPassword] = useState("");
     const location = useLocation();
     const navigate = useNavigate();
+    const {signin} = useAuth();
     
     const validatePassword = (enteredPassword) => {
       if (!enteredPassword.trim()) {
@@ -23,20 +25,36 @@ const EmailAndPassword = ({setSignInWithOTP,email,handleEmail,validateEmail}) =>
       return true;
     };
     
-    const handleSignIn = ()=>{
+    const handleSignIn = async()=>{
       console.log('Current page location:', location.pathname);
       if(!validateEmail(email))return;
       if(!validatePassword(password))return;
-      if(location.pathname=='/admin/signin'){
-        //todo : handle api call fo admin authentication
-        navigate('/admin/dashboard');
-        return;
+      let user_role;
+      if(location.pathname=='/admin/signin')user_role="admin"
+      if(location.pathname=='/restaurant/signin')user_role="restaurant"
+      else user_role="user"
+      try{
+        const response = await fetch(`${import.meta.env.VITE_HUNGREZY_API}/api/auth/${user_role}/signin`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password }),
+        });
+        const result = await response.json()
+        if(!response.ok){
+          const error = result.message;
+          toast.error(error);
+          return;
+        }
+        const {user,accessToken} = result.data
+        signin(user,accessToken);
+        if(user_role=='admin')navigate('/admin/dashboard');
+        if(user_role=='restaurant')navigate('/restaurant/dashboard');
+        if(user_role=='user')navigate(-1);
+      }catch(error){
+        console.log(error);
+        toast.error('Something went wrong.Please try again!')
       }
-      if(location.pathname=='/restaurant/signin'){
-        //todo : handle api call fo restaurant authentication
-        navigate('/restaurant/dashboard');
-        return;
-      }
+      
     }
 
     const handlePasswordChange = (e)=>{
