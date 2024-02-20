@@ -7,6 +7,7 @@ import {
   RouterProvider,
   createBrowserRouter,
   createRoutesFromElements,
+  Navigate
 } from "react-router-dom";
 import React from "react";
 import Home from "./pages/Home";
@@ -36,6 +37,7 @@ import RestaurantProfile from "./components/restaurantAdmin/Profile/RestaurantPr
 import RestaurantSignUpForm from "./pages/ResataurantSignupForm";
 import AdminSidebar from "./components/Admin/AdminSidebar";
 import AdminNavbar from "./components/Admin/AdminNavbar";
+import { useAuth } from "./AuthContext";
 
 const Root = () => {
   const location = useLocation();
@@ -51,6 +53,21 @@ const Root = () => {
       <Toaster position="bottom-center" richColors />
     </React.Fragment>
   );
+};
+
+
+const ProtectedRestaurantAdminRoute = ({ element }) => {
+  const { user } = useAuth();
+  console.log(user);
+  // Check if user is authenticated and has the correct role
+  const isAuthenticated = user !== null;
+  const hasCorrectRole = user && user.user_role === 'restaurant';
+
+  if (!isAuthenticated || !hasCorrectRole) {
+    return <Navigate to="/restaurant/signin" replace />;
+  }
+
+  return element;
 };
 
 const RestaurantAdmin = () => {
@@ -113,8 +130,8 @@ const Router = createBrowserRouter(
 
       <Route path="restaurant" element={<EmptyOutletWithToaster />}>
         <Route path="" element={<PageNotFound />} />
-        <Route path="" element={<RestaurantAdmin />}>
-          <Route path="dashboard" element={<Dashboard />} />
+        <Route path=""  element={<ProtectedRestaurantAdminRoute element={<RestaurantAdmin />} />}>
+          <Route path="dashboard"  element={<Dashboard />}/>
           <Route path="orders" element={<Orders />} />
           <Route path="orders/:id" element={<Order />} />
           <Route path="menu" element={<MenuList />} />
