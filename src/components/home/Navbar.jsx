@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 import { selectTotalItems } from "../../redux/slices/cartSlice";
 import CartDrawerContent from "@/components/cart/CartDrawerContent";
 import { useAuth } from "../../AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const { pathname } = useLocation();
@@ -18,6 +19,11 @@ const Navbar = () => {
   const [visible, setVisible] = useState(true);
   const totalItems = useSelector(selectTotalItems);
   const {signout,user} = useAuth()
+  const navigate = useNavigate();
+
+  if(user && user.user_role){
+    if(user.user_role=='restaurant')navigate('/restaurant/dashboard')
+  }
 
   const isLinkActive = (path) => {
     return pathname === path;
