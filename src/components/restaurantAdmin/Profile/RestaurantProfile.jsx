@@ -4,6 +4,8 @@ import { useRef, useState } from "react";
 import { LuUploadCloud } from "react-icons/lu";
 import { FiSave } from "react-icons/fi";
 import { MdOutlineDelete } from "react-icons/md";
+import { useAuth } from "../../../AuthContext";
+import {toast} from 'sonner';
 
 const EditMenu = () => {
   const formVariants = {
@@ -21,15 +23,63 @@ const EditMenu = () => {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [password, setPassword] = useState("");
+  const {user,accessToken,signin} = useAuth()
+  
 
-  const handleProfileSubmit = (e) => {
+  const handleProfileSubmit = async(e) => {
     e.preventDefault();
     console.log({ area, city, address, pincode });
+    try{
+      const url = `${import.meta.env.VITE_HUNGREZY_API}/api/restaurant/${user._id}`;
+      const response = await fetch(url, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({area,city,address}),
+      });
+      const result = await response.json();
+      if (!response.ok) {
+        toast.error(result.message)
+        return ;
+      }
+      toast.success(result.message)
+      signin(result.data,accessToken)
+    }catch(error){
+      toast.error('Please try again later!')
+      console.error('Error:', error);
+    }
   };
 
-  const handleImageChange = (e) => {
+  const handleImageUpdate = async (e) => {
+   
+  };
+
+  const handleImageChange = async(e) => {
+    e.preventDefault();
     setSelectedFile(e.target.files[0]);
-    console.log(e.target.files[0]);
+    const formData = new FormData();
+    formData.append('image', e.target.files[0]);
+    const url = `${import.meta.env.VITE_HUNGREZY_API}/api/restaurant/${user._id}/upload/image`;
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${accessToken}`, // Include authorization token if needed
+        },
+        body: formData, // Set the FormData object as the body
+      });
+      if (!response.ok) {
+        toast.error('Failed to upload image');
+        return;
+      }
+      toast.success('Image uploaded successfully');
+      // Handle success
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      toast.error('Please try again later!');
+    }
   };
 
   const handlePasswordChange = (e) => {
@@ -61,8 +111,7 @@ const EditMenu = () => {
         >
           <input
             type="file"
-            name="file"
-            id="file"
+            name="image"
             accept="image/*"
             className="hidden"
             ref={image}
@@ -95,7 +144,7 @@ const EditMenu = () => {
                   placeholder="Restaurant Name"
                   name="restaurantName"
                   type="text"
-                  value={restaurantName}
+                  value={user && user.name}
                   disabled
                 />
                 <label htmlFor="restaurantName" className="text-gray-500">
@@ -110,7 +159,7 @@ const EditMenu = () => {
                   placeholder="Restaurant Email"
                   name="restaurantEmail"
                   type="email"
-                  value={restaurantEmail}
+                  value={user && user.email}
                   disabled
                 />
                 <label htmlFor="restaurantEmail" className="text-gray-500">

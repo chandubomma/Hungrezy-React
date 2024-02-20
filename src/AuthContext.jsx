@@ -26,9 +26,16 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const signin = async (user,accessToken) => {
-      setAccessToken(accessToken);
-      setUser(user);
-      localStorage.setItem('accessToken', accessToken);
+    const tokenData=await isTokenValid(accessToken)
+    if(tokenData){
+            const temp  = tokenData.user;
+            temp.user_role = tokenData.user_role;
+            console.log(2)
+            setUser(temp);
+            setAccessToken(accessToken);
+            localStorage.setItem('accessToken', accessToken);
+    }
+      
   };
 
   const signout = () => {

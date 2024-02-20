@@ -2,12 +2,18 @@ import { useState } from "react"
 import { toast } from 'sonner'
 import { useLocation ,useNavigate } from 'react-router-dom';
 import { useAuth } from "../../AuthContext";
+import { Link } from "react-router-dom";
+import { FaArrowAltCircleLeft } from "react-icons/fa";
 
 const EmailAndPassword = ({setSignInWithOTP,email,handleEmail,validateEmail}) => {
     const [password,setPassword] = useState("");
     const location = useLocation();
     const navigate = useNavigate();
     const {signin} = useAuth();
+    let user_role;
+    if(location.pathname=='/admin/signin')user_role="admin"
+    if(location.pathname=='/restaurant/signin')user_role="restaurant"
+    else user_role="user"
     
     const validatePassword = (enteredPassword) => {
       if (!enteredPassword.trim()) {
@@ -29,10 +35,7 @@ const EmailAndPassword = ({setSignInWithOTP,email,handleEmail,validateEmail}) =>
       console.log('Current page location:', location.pathname);
       if(!validateEmail(email))return;
       if(!validatePassword(password))return;
-      let user_role;
-      if(location.pathname=='/admin/signin')user_role="admin"
-      if(location.pathname=='/restaurant/signin')user_role="restaurant"
-      else user_role="user"
+    
       try{
         const response = await fetch(`${import.meta.env.VITE_HUNGREZY_API}/api/auth/${user_role}/signin`, {
           method: 'POST',
@@ -111,9 +114,14 @@ const EmailAndPassword = ({setSignInWithOTP,email,handleEmail,validateEmail}) =>
           </button>
         </div>
         <div className="mt-16 flex flex-row ">
-          <h6 className="text-gray-500 font-medium text-sm w-fit hover:cursor-pointer hover:text-gray-400">
+          <Link to="/signup" className="text-gray-500 font-medium text-sm w-fit hover:cursor-pointer hover:text-gray-400">
             New to Hungrezy? Register Here
-          </h6>
+          </Link>
+        </div>
+        <div className="mt-10 flex flex-row ">
+          <Link to="/" className="text-gray-500 font-medium text-sm w-fit hover:cursor-pointer hover:text-gray-400">
+          <FaArrowAltCircleLeft className="inline mr-2" />Go back to home
+          </Link>
         </div>
     </div>
   )
