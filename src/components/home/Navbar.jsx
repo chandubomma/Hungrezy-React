@@ -141,13 +141,18 @@ const Navbar = () => {
             )}
           </div>
           <div
-            className="w-fit h-fit border-[1.5px] p-2 rounded-full border-gray-500 hover:scale-110 transition-transform transform cursor-pointer"
+            className={`w-fit h-fit border-[1.5px] ${user&&user.image?'':'p-2'} rounded-full border-gray-500 hover:scale-110 transition-transform transform cursor-pointer`}
             onClick={handleUserClick}
           >
-            <FaUser className="text-2xl text-gray-500" />
+           {
+            user&& 
+              user.image?
+                <img src={user.image} className="w-10 h-10 object-cover rounded-full"/>
+               :<FaUser className="text-2xl text-gray-500" />
+           }
           </div>
           {showDropdown && (
-            <div className="absolute top-12 right-0 bg-white border border-gray-400 p-2 w-36 rounded shadow-md flex flex-col items-center">
+            <div className={`absolute top-12 ${user?'right-24':'right-0'} bg-white border border-gray-400 p-2 w-36 rounded shadow-md flex flex-col items-center`}>
               {
                 !user &&
                 <Link
