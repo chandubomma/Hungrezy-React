@@ -2,41 +2,23 @@ import { LuLayoutDashboard } from "react-icons/lu";
 import { Link, useLocation } from "react-router-dom";
 import { FaChevronUp, FaRegUser } from "react-icons/fa";
 import { IoLogOutOutline } from "react-icons/io5";
-import { useEffect, useState } from "react";
-import MenuLink from "./Dashboard/MenuLink";
-import { GrOrderedList } from "react-icons/gr";
+import { useState } from "react";
+import CustomerLink from "./Sidebar/CustomerLink";
 import { CiViewList } from "react-icons/ci";
 import { RiPlayListAddFill } from "react-icons/ri";
-import {
-  MdOutlineEditNote,
-  MdOutlineMenuBook,
-  MdReviews,
-} from "react-icons/md";
-import { ordersData } from "../../data/orderItems";
-import BlinkingDot from "./BlinkingDot";
+import { MdOutlineMenuBook, MdReviews } from "react-icons/md";
+import { CgDetailsMore } from "react-icons/cg";
 
-const Sidebar = () => {
-  const [newOrders, setNewOrders] = useState(0);
+const AdminSidebar = () => {
   const { pathname } = useLocation();
   const isLinkActive = (path) => {
     return pathname.startsWith(path);
   };
-  const [isMenuOpen, setMenuOpen] = useState(false);
+  const [isCustomerOpen, setMenuOpen] = useState(false);
 
   const toggleMenu = () => {
-    setMenuOpen(!isMenuOpen);
+    setMenuOpen(!isCustomerOpen);
   };
-
-  useEffect(() => {
-    const newOrders = ordersData.filter(
-      (order) =>
-        order.status === "new" &&
-        new Date(order.date).getDate() === new Date().getDate() &&
-        new Date(order.date).getMonth() === new Date().getMonth() &&
-        new Date(order.date).getFullYear() === new Date().getFullYear()
-    );
-    setNewOrders(newOrders.length);
-  }, []);
 
   return (
     <>
@@ -54,37 +36,23 @@ const Sidebar = () => {
           </div>
         </Link>
 
-        <Link to="orders">
-          <div
-            className={`${
-              isLinkActive("/restaurant/orders")
-                ? "text-orange-500 bg-orange-50"
-                : "text-gray-500"
-            } hover:bg-gray-100 w-full px-4 transition-colors duration-300 hover:opacity-80 flex items-center gap-x-4 py-[10px] rounded-md cursor-pointer`}
-          >
-            <GrOrderedList size={24} />
-            <span className="text-base">Orders</span>
-            {newOrders > 0 && <BlinkingDot newOrders={newOrders} />}
-          </div>
-        </Link>
-
         <div onClick={toggleMenu}>
           <div
             className={`${
-              isMenuOpen ? "text-gray-500 bg-gray-50" : "text-gray-500"
+              isCustomerOpen ? "text-gray-500 bg-gray-50" : "text-gray-500"
             } hover:bg-gray-100 w-full px-4 transition-colors duration-300 hover:opacity-80 flex items-center gap-x-4 py-[10px] rounded-md cursor-pointer`}
           >
-            <MdOutlineMenuBook size={24} />
-            <span className="text-base">Menu</span>
-            {isMenuOpen ? (
+            <FaRegUser size={24} />
+            <span className="text-base">Customers</span>
+            {isCustomerOpen ? (
               <FaChevronUp
                 className="ml-auto text-lg transition duration-300"
-                color={isMenuOpen ? "#f97316" : "#9ca3af"}
+                color={isCustomerOpen ? "#f97316" : "#9ca3af"}
                 size={12}
               />
             ) : (
               <FaChevronUp
-                color={isMenuOpen ? "#f97316" : "#9ca3af"}
+                color={isCustomerOpen ? "#f97316" : "#9ca3af"}
                 size={12}
                 className="ml-auto text-lg transform rotate-180 transition duration-300"
               />
@@ -92,29 +60,21 @@ const Sidebar = () => {
           </div>
         </div>
 
-        {isMenuOpen && (
+        {isCustomerOpen && (
           <>
             <div className="ml-8 transition duration-300 transform">
-              <MenuLink
-                isMenuOpen={isLinkActive("/restaurant/menu")}
-                to="menu"
+              <CustomerLink
+                isCustomerOpen={isLinkActive("/admin/customers")}
+                to="customers"
                 icon={<CiViewList size={20} />}
-                text="Menu List"
+                text="Customer List"
               />
-              <MenuLink
-                to="add-menu"
-                isMenuOpen={isLinkActive("/restaurant/add-menu")}
-                icon={<RiPlayListAddFill size={20} />}
-                text="Add Menu"
+              <CustomerLink
+                to={`customers/1`}
+                isCustomerOpen={isLinkActive("/admin/customers")}
+                icon={<CgDetailsMore size={20} />}
+                text="Customer Details"
               />
-              {isLinkActive("/restaurant/edit-menu") && (
-                <MenuLink
-                  to="edit-menu"
-                  isMenuOpen={isLinkActive("/restaurant/edit-menu")}
-                  icon={<MdOutlineEditNote size={20} />}
-                  text="Edit Menu"
-                />
-              )}
             </div>
           </>
         )}
@@ -159,4 +119,4 @@ const Sidebar = () => {
   );
 };
 
-export default Sidebar;
+export default AdminSidebar;

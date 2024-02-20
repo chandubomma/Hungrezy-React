@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { FaChevronRight } from "react-icons/fa6";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { LuUploadCloud } from "react-icons/lu";
 import { FiSave } from "react-icons/fi";
 import { MdOutlineDelete } from "react-icons/md";
@@ -11,6 +11,36 @@ const EditMenu = () => {
     visible: { opacity: 1, x: 0, transition: { duration: 0.8 } },
   };
   const image = useRef(null);
+  const restaurantName = "Pista House";
+  const restaurantEmail = "pistahouse@gmail.com";
+  const [area, setArea] = useState("Hitech City");
+  const [city, setCity] = useState("Hyderabad");
+  const [address, setAddress] = useState("Hitech City, Hyderabad");
+  const [pincode, setPinCodde] = useState("500081");
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleProfileSubmit = (e) => {
+    e.preventDefault();
+    console.log({ area, city, address, pincode });
+  };
+
+  const handleImageChange = (e) => {
+    setSelectedFile(e.target.files[0]);
+    console.log(e.target.files[0]);
+  };
+
+  const handlePasswordChange = (e) => {
+    e.preventDefault();
+    console.log({ currentPassword, newPassword });
+  };
+
+  const handleDeleteAccount = (e) => {
+    e.preventDefault();
+    console.log({ password });
+  };
 
   return (
     <div className="px-4">
@@ -33,13 +63,23 @@ const EditMenu = () => {
             type="file"
             name="file"
             id="file"
+            accept="image/*"
             className="hidden"
             ref={image}
+            onChange={handleImageChange}
           />
-          <p className="text-center text-orange-500 text-sm mt-2 flex flex-col justify-center items-center gap-y-3">
-            <LuUploadCloud className="w-10 h-10" />
-            <span className="block">Upload Image</span>
-          </p>
+          {selectedFile ? (
+            <img
+              src={URL.createObjectURL(selectedFile)}
+              alt="restaurant"
+              className="w-full h-full object-cover rounded-full"
+            />
+          ) : (
+            <p className="text-center text-orange-500 text-sm mt-2 flex flex-col justify-center items-center gap-y-3">
+              <LuUploadCloud className="w-10 h-10" />
+              <span className="block">Upload Image</span>
+            </p>
+          )}
         </div>
 
         <form className="flex flex-col w-[50rem] gap-4 pb-20">
@@ -55,7 +95,8 @@ const EditMenu = () => {
                   placeholder="Restaurant Name"
                   name="restaurantName"
                   type="text"
-                  value={"Pista House"}
+                  value={restaurantName}
+                  disabled
                 />
                 <label htmlFor="restaurantName" className="text-gray-500">
                   Restaurant Name
@@ -69,7 +110,8 @@ const EditMenu = () => {
                   placeholder="Restaurant Email"
                   name="restaurantEmail"
                   type="email"
-                  value={"pistahouse@gmail.com"}
+                  value={restaurantEmail}
+                  disabled
                 />
                 <label htmlFor="restaurantEmail" className="text-gray-500">
                   Restaurant Email
@@ -79,49 +121,22 @@ const EditMenu = () => {
 
             <div className="grid grid-cols-2 gap-4">
               <div className="form-floating">
-                <select
-                  className={`form-select focus:shadow-none focus:border-amber-600 rounded-md w-full h-full cursor-pointer `}
-                  id="state"
-                  value={"Telangana"}
-                >
-                  <option value="Andhra Pradesh">Andhra Pradesh</option>
-                  <option value="Arunachal Pradesh">Arunachal Pradesh</option>
-                  <option value="Assam">Assam</option>
-                  <option value="Bihar">Bihar</option>
-                  <option value="Chhattisgarh">Chhattisgarh</option>
-                  <option value="Goa">Goa</option>
-                  <option value="Gujarat">Gujarat</option>
-                  <option value="Haryana">Haryana</option>
-                  <option value="Himachal Pradesh">Himachal Pradesh</option>
-                  <option value="Jammu and Kashmir">Jammu and Kashmir</option>
-                  <option value="Jharkhand">Jharkhand</option>
-                  <option value="Karnataka">Karnataka</option>
-                  <option value="Kerala">Kerala</option>
-                  <option value="Madhya Pradesh">Madhya Pradesh</option>
-                  <option value="Maharashtra">Maharashtra</option>
-                  <option value="Manipur">Manipur</option>
-                  <option value="Meghalaya">Meghalaya</option>
-                  <option value="Mizoram">Mizoram</option>
-                  <option value="Nagaland">Nagaland</option>
-                  <option value="Odisha">Odisha</option>
-                  <option value="Punjab">Punjab</option>
-                  <option value="Rajasthan">Rajasthan</option>
-                  <option value="Sikkim">Sikkim</option>
-                  <option value="Tamil Nadu">Tamil Nadu</option>
-                  <option value="Telangana">Telangana</option>
-                  <option value="Tripura">Tripura</option>
-                  <option value="Uttarakhand">Uttarakhand</option>
-                  <option value="Uttar Pradesh">Uttar Pradesh</option>
-                  <option value="West Bengal">West Bengal</option>
-                </select>
-                <label htmlFor="state">State</label>
+                <input
+                  className={`form-control focus:shadow-none focus:border-amber-600 rounded-md w-full h-full`}
+                  id="area"
+                  type="text"
+                  value={area}
+                  onChange={(e) => setArea(e.target.value)}
+                ></input>
+                <label htmlFor="area">Area</label>
               </div>
 
               <div className="form-floating">
                 <select
                   className={`form-select focus:shadow-none focus:border-amber-600 rounded-md w-full h-full cursor-pointer `}
                   id="city"
-                  value={"Hyderabad"}
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
                 >
                   <option value="Hyderabad">Hyderabad</option>
                   <option value="Bangalore">Bangalore</option>
@@ -142,7 +157,8 @@ const EditMenu = () => {
                   placeholder="Restaurant Address"
                   name="restaurantAddress"
                   type="text"
-                  value={"Hitech City"}
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
                   style={{ height: "100px" }}
                 />
                 <label htmlFor="restaurantAddress" className="text-gray-500">
@@ -157,7 +173,8 @@ const EditMenu = () => {
                   placeholder="Restaurant Pincode"
                   name="restaurantPincode"
                   type="number"
-                  value={"500081"}
+                  value={pincode}
+                  onChange={(e) => setPinCodde(e.target.value)}
                 />
                 <label htmlFor="restaurantPincode" className="text-gray-500">
                   Restaurant Pincode
@@ -167,7 +184,8 @@ const EditMenu = () => {
           </motion.div>
           <div className="flex items-center justify-center gap-x-20">
             <motion.button
-              type="button"
+              onClick={handleProfileSubmit}
+              type="submit"
               className="py-2 px-4 bg-amber-500 w-fit self-center hover:bg-amber-600 justify-center transition-colors duration-300 text-white rounded-md flex items-center"
               whileHover={{ scale: 1.005 }}
             >
@@ -194,6 +212,8 @@ const EditMenu = () => {
                   placeholder="Current Password"
                   name="currentPassword"
                   type="password"
+                  value={currentPassword}
+                  onChange={(e) => setCurrentPassword(e.target.value)}
                 />
                 <label htmlFor="currentPassword" className="text-gray-500">
                   Current Password
@@ -207,6 +227,8 @@ const EditMenu = () => {
                   placeholder="New Password"
                   name="newPassword"
                   type="password"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
                 />
                 <label htmlFor="newPassword" className="text-gray-500">
                   New Password
@@ -220,6 +242,7 @@ const EditMenu = () => {
               type="button"
               className="py-2 px-4 bg-amber-500 w-fit self-center hover:bg-amber-600 justify-center transition-colors duration-300 text-white rounded-md flex items-center"
               whileHover={{ scale: 1.005 }}
+              onClick={handlePasswordChange}
             >
               <span className="align-baseline text-center">Change</span>
               <FiSave className="ml-2 align-baseline" />
@@ -240,12 +263,14 @@ const EditMenu = () => {
               <div className="form-floating">
                 <input
                   className={`form-control focus:shadow-none focus:border-amber-600 rounded-md w-full h-full`}
-                  id="currentPassword"
-                  placeholder="Current Password"
-                  name="currentPassword"
+                  id="password"
+                  placeholder="Password"
+                  name="password"
                   type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                 />
-                <label htmlFor="currentPassword" className="text-gray-500">
+                <label htmlFor="password" className="text-gray-500">
                   Current Password
                 </label>
               </div>
@@ -255,6 +280,7 @@ const EditMenu = () => {
           <div className="flex items-center justify-center gap-x-20">
             <motion.button
               type="button"
+              onClick={handleDeleteAccount}
               className="py-2 px-4 bg-red-500 w-fit self-center hover:bg-red-600 justify-center transition-colors duration-300 text-white rounded-md flex items-center"
               whileHover={{ scale: 1.005 }}
             >

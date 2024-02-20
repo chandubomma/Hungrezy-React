@@ -22,9 +22,9 @@ import Profile from "./pages/Profile";
 import Recipes from "./pages/Recipes";
 import RecipePage from "./pages/RecipePage";
 import { useLocation } from "react-router-dom";
-import Dashboard from "./components/restaurantAdmin/Dashboard/Dashboard";
+import Dashboard from "./components/restaurantAdmin/Dashboard/RestaurantDashboard";
 import RestaurantNavbar from "./components/restaurantAdmin/RestaurantNavbar";
-import Sidebar from "./components/restaurantAdmin/Sidebar";
+import RestaurantSidebar from "./components/restaurantAdmin/RestaurantSidebar";
 import Orders from "./components/restaurantAdmin/Orders/Orders";
 import MenuList from "./components/restaurantAdmin/Menu/MenuList";
 import AddMenu from "./components/restaurantAdmin/Menu/AddMenu";
@@ -34,6 +34,8 @@ import Order from "./components/restaurantAdmin/Orders/Order";
 import Reviews from "./components/restaurantAdmin/Reviews/Reviews";
 import RestaurantProfile from "./components/restaurantAdmin/Profile/RestaurantProfile";
 import RestaurantSignUpForm from "./pages/ResataurantSignupForm";
+import AdminSidebar from "./components/Admin/AdminSidebar";
+import AdminNavbar from "./components/Admin/AdminNavbar";
 
 const Root = () => {
   const location = useLocation();
@@ -57,7 +59,7 @@ const RestaurantAdmin = () => {
       <RestaurantNavbar />
       <div className="flex flex-row">
         <div className="lg:flex-[2]">
-          <Sidebar />
+          <RestaurantSidebar />
         </div>
         <div className="flex-[11] max-h-[88vh] overflow-y-scroll">
           <Outlet />
@@ -70,7 +72,15 @@ const RestaurantAdmin = () => {
 const Admin = () => {
   return (
     <div className="max-h-full m-0">
-      <Outlet />
+      <AdminNavbar />
+      <div className="flex flex-row">
+        <div className="lg:flex-[2]">
+          <AdminSidebar />
+        </div>
+        <div className="flex-[11] max-h-[88vh] overflow-y-scroll">
+          <Outlet />
+        </div>
+      </div>
     </div>
   );
 };
@@ -121,6 +131,7 @@ const Router = createBrowserRouter(
         <Route path="" element={<PageNotFound />} />
         <Route path="" element={<Admin />}>
           {/* todo : admin routes */}
+          <Route path="dashboard" element={<Dashboard />} />
         </Route>
         <Route path="signin" element={<EmailSigninForm />} />
       </Route>
