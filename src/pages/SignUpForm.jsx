@@ -3,6 +3,8 @@ import UserSignUpStepIndicator from "@/components/forms/UserSignUpStepIndicator"
 import UserDetailsForm from "@/components/forms/UserDetailsForm";
 import MobileField from "@/components/forms/MobileField";
 import OTPField from "@/components/forms/OTPField";
+import EmailField from "@/components/forms/EmailField";
+import {toast} from 'sonner';
 
 
 const SignUpForm = () => {
@@ -12,9 +14,32 @@ const SignUpForm = () => {
     firstName : '',
     lastName : '',
     email : '',
-    password : ''
+    password : '',
+    accessToken : ''
   });
  
+
+  const user_role = "user";
+  const handleEmail = (e)=>{
+    setUser({
+      ...user,
+      email : e.target.value
+    })
+  }
+
+  const validateEmail = (enteredEmail) => {
+    if (!enteredEmail.trim()) {
+      toast.warning("Please enter your email address !");       // If email is empty or contains only spaces
+      return false;
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const isValidFormat = emailRegex.test(enteredEmail);
+    if (!isValidFormat) {
+      toast.error("Invalid email address");     // If email format is invalid
+      return false;
+    }
+    return true;       // If email is valid
+  }
 
   const handleMobileNumber = (e)=>{
     setUser({
@@ -24,10 +49,12 @@ const SignUpForm = () => {
   }
 
  
-
-  async function handleSendOTP(mobileNumber) {
-    const url = `${import.meta.env.VITE_HUNGREZY_API}/auth/sendOTP`;
-  
+  async function handleSendOTP() {
+    const email = user.email;
+    if(!validateEmail(email))return;
+      //todo : need to check email in user base before sending otp;
+    const url = `${import.meta.env.VITE_HUNGREZY_API}/api/auth/send-verification-code`;
+    
     try {
       const response = await fetch(url, {
         method: 'POST',
@@ -35,32 +62,29 @@ const SignUpForm = () => {
           'Content-Type': 'application/json',
           // You may need to include additional headers based on your server requirements
         },
-        body: JSON.stringify({mobileNumber}),
+        body: JSON.stringify({email,user_role}),
       });
-  
+      const result = await response.json();
       if (!response.ok) {
         // Handle non-successful responses here
-        console.error('Error:', response.status, response.statusText);
-        return null;
+        toast.error(result.message)
+        return ;
       }
-  
-      // Parse and return the response JSON
-      const data = await response.json();
-      console.log('Response:', data);
-
+      toast.info('Please check you email for verification code.')
       setCurrStep(2);
-      return data;
+    
     } catch (error) {
       // Handle network errors or other exceptions
-      console.error('Error:', error.message);
-      return null;
+      toast.error('Please try again later!')
+      console.error('Error:', error);
+      return ;
     }
   }
     
 
-  const handleVerifyOTP = async(OTP) => {
-    const url = `${import.meta.env.VITE_HUNGREZY_API}/auth/verifyOTP`;
-  
+  const handleVerifyOTP = async(verificationCode) => {
+    const url = `${import.meta.env.VITE_HUNGREZY_API}/api/auth/verify-code`;
+    const email = user.email;
     try {
       const response = await fetch(url, {
         method: 'POST',
@@ -68,19 +92,24 @@ const SignUpForm = () => {
           'Content-Type': 'application/json',
           // You may need to include additional headers based on your server requirements
         },
-        body: JSON.stringify({OTP,mobileNumber:user.mobileNumber}),
+        body: JSON.stringify({verificationCode,email,user_role}),
       });
   
       if (!response.ok) {
         // Handle non-successful responses here
         console.error('Error:', response.status, response.statusText);
+        toast.error('Verification failed! Please try again.');
+        setCurrStep(1);
         return null;
       }
   
       // Parse and return the response JSON
       const data = await response.json();
-      console.log('Response:', data);
-
+      setUser({
+        ...user,
+        accessToken : data.token
+      })
+      toast.success('Email verification successfull!');
       setCurrStep(3);
       return data;
     } catch (error) {
@@ -88,7 +117,7 @@ const SignUpForm = () => {
       console.error('Error:', error.message);
       return null;
     }
-  };
+  }
 
   if (currStep == 1)
     return (
@@ -99,9 +128,10 @@ const SignUpForm = () => {
 
         <div className="mt-16">
           <h3 className="mb-8 w-80 text-xl text-gray-500 font-medium">
-            Verify Mobile Number
+            Verify Your Email
           </h3>
-          <MobileField handleSendOTP={handleSendOTP} handleMobileNumber={handleMobileNumber} mobileNumber={user.mobileNumber}/>
+          {/* <MobileField handleSendOTP={handleSendOTP} handleMobileNumber={handleMobileNumber} mobileNumber={user.mobileNumber}/> */}
+          <EmailField handleSendOTP={handleSendOTP} handleEmail={handleEmail} email={user.email}/>
         </div>
       </div>
     );

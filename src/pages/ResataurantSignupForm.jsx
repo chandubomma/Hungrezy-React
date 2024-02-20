@@ -84,7 +84,7 @@ const RestaurantSignUpForm = () => {
           'Content-Type': 'application/json',
           // You may need to include additional headers based on your server requirements
         },
-        body: JSON.stringify({verificationCode,email}),
+        body: JSON.stringify({verificationCode,email,user_role}),
       });
   
       if (!response.ok) {

@@ -2,11 +2,14 @@ import { useState } from "react";
 import {useDispatch } from 'react-redux';
 import { setCurrentUser } from "../../redux/slices/userSlice";
 import { useNavigate } from "react-router-dom";
+import {toast} from 'sonner';
+import { useAuth } from "../../AuthContext";
 
 const UserDetailsForm = ({ user, setUser }) => {
   const [errors, setErrors] = useState({});
   const dispatch = useDispatch();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const {signin} = useAuth();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -24,60 +27,64 @@ const handleSubmit = async (e) => {
     e.preventDefault();
     // Perform validation checks here
     const validationErrors = {};
-  
+  console.log(user)
     if (!user.firstName) {
       validationErrors.firstName = 'First Name is required';
-    }
+    }else delete validationErrors.firstName
   
     if (!user.lastName) {
       validationErrors.lastName = 'Last Name is required';
-    }
+    }else delete validationErrors.lastName
   
     if (!user.email) {
       validationErrors.email = 'Email is required';
     } else if (!/\S+@\S+\.\S+/.test(user.email)) {
       validationErrors.email = 'Invalid email address';
-    }
+    }else delete validationErrors.email
   
     if (!user.password) {
       validationErrors.password = 'Password is required';
     } else if (user.password.length < 8) {
       validationErrors.password = 'Password must be at least 8 characters long';
-    }
+    }else delete validationErrors.password
   
     if (user.password !== user.confirmPassword) {
       validationErrors.confirmPassword = 'Passwords do not match';
-    }
+    }else delete validationErrors.confirmPassword
   
     if (Object.keys(validationErrors).length === 0) {
       try {
-        // If there are no validation errors, submit the form or perform further actions
-        const response = await fetch(`${import.meta.env.VITE_HUNGREZY_API}/auth/signup`, {
+        const {firstName,lastName,email,mobileNumber,password}=user;
+        const token = user.accessToken;
+        const response = await fetch(`${import.meta.env.VITE_HUNGREZY_API}/api/auth/user/signup`, {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(user),
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({firstName,lastName,email,mobileNumber,password,accessToken:token}),
         });
-  
-        if (response.ok) {
-          // If the signup request is successful, you can handle the response accordingly
-          console.log('User successfully signed up:', user);
-          // You might want to redirect or update the UI in some way
-          // For now, just navigate back
-          dispatch(setCurrentUser(user));
-          navigate(-1);
-        } else {
-          // Handle non-successful response, e.g., show an error message
-          console.error('Signup request failed:', response.status);
+        const result = await response.json()
+        if(!response.ok){
+          const error = result.message;
+          toast.error(error);
+          return;
         }
-      } catch (error) {
-        console.error('Error during signup request:', error);
+        const {accessToken} = result.data
+        const temp = result.data.user;
+        signin(temp,accessToken);
+        toast.success('Account created successfully!');
+        navigate(-1);
+      }catch(error){
+        console.log(error)
+        toast.error("Something went wrong.Please try again!")
       }
     } else {
       // If there are validation errors, update the errors state
       console.log(validationErrors);
       setErrors(validationErrors);
+      if(validationErrors.firstName)toast.info(validationErrors.firstName);
+      else if(validationErrors.lastName)toast.info(validationErrors.lastName);
+      else if(validationErrors.email)toast.info(validationErrors.email);
+      else if(validationErrors.password)toast.info(validationErrors.password);
+      else if(validationErrors.confirmPassword)toast.info(validationErrors.confirmPassword);
     }
   };
  
@@ -120,15 +127,15 @@ const handleSubmit = async (e) => {
       <div className="form-floating mt-2">
         <input
           className="form-control focus:shadow-none focus:border-amber-600 rounded-md"
-          id="email"
-          placeholder="Enter Email"
-          name="email"
-          type="email"
-          value={user.email}
+          id="mobileNumber"
+          placeholder="Enter mobileNumber"
+          name="mobileNumber"
+          type="number"
+          value={user.mobileNumber}
           onChange={handleChange}
         />
-        <label htmlFor="firstName" className="text-gray-500">
-          Email
+        <label htmlFor="mobileNumber" className="text-gray-500">
+          MobileNumber
         </label>
       </div>
       <div className="form-floating mt-2">
