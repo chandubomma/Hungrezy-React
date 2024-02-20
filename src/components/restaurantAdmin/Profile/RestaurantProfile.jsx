@@ -4,6 +4,8 @@ import { useRef, useState } from "react";
 import { LuUploadCloud } from "react-icons/lu";
 import { FiSave } from "react-icons/fi";
 import { MdOutlineDelete } from "react-icons/md";
+import { useAuth } from "../../../AuthContext";
+import {toast} from 'sonner';
 
 const EditMenu = () => {
   const formVariants = {
@@ -21,10 +23,33 @@ const EditMenu = () => {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [password, setPassword] = useState("");
+  const {user,accessToken,signin} = useAuth()
+  
 
-  const handleProfileSubmit = (e) => {
+  const handleProfileSubmit = async(e) => {
     e.preventDefault();
     console.log({ area, city, address, pincode });
+    try{
+      const url = `${import.meta.env.VITE_HUNGREZY_API}/api/restaurant/${user._id}`;
+      const response = await fetch(url, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({area,city,address}),
+      });
+      const result = await response.json();
+      if (!response.ok) {
+        toast.error(result.message)
+        return ;
+      }
+      toast.success(result.message)
+      signin(result.data,accessToken)
+    }catch(error){
+      toast.error('Please try again later!')
+      console.error('Error:', error);
+    }
   };
 
   const handleImageChange = (e) => {
@@ -95,7 +120,7 @@ const EditMenu = () => {
                   placeholder="Restaurant Name"
                   name="restaurantName"
                   type="text"
-                  value={restaurantName}
+                  value={user && user.name}
                   disabled
                 />
                 <label htmlFor="restaurantName" className="text-gray-500">
@@ -110,7 +135,7 @@ const EditMenu = () => {
                   placeholder="Restaurant Email"
                   name="restaurantEmail"
                   type="email"
-                  value={restaurantEmail}
+                  value={user && user.email}
                   disabled
                 />
                 <label htmlFor="restaurantEmail" className="text-gray-500">
