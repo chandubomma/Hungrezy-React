@@ -21,11 +21,15 @@ import { GrOrderedList } from "react-icons/gr";
 import { CiViewList } from "react-icons/ci";
 import { RiPlayListAddFill } from "react-icons/ri";
 import { MdOutlineEditNote, MdReviews } from "react-icons/md";
+import { useAuth } from "../../AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const RestaurantNavbar = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const { pathname } = useLocation();
-
+  const {signout,user} = useAuth()
+  const navigate = useNavigate();
+  if(!user)navigate('/restaurant/signin');
   const isLinkActive = (path) => {
     return pathname.startsWith(path);
   };
@@ -97,6 +101,7 @@ const RestaurantNavbar = () => {
                 <MenuItem
                   className="flex gap-[10px] items-center"
                   _hover={{ backgroundColor: "red.50" }}
+                  onClick={()=>{signout()}}
                 >
                   <Icon color={"red.400"} as={IoLogOutOutline} w={5} h={5} />
                   <p className="text-red-400">Log Out</p>
@@ -104,8 +109,8 @@ const RestaurantNavbar = () => {
               </MenuList>
             </Menu>
             <div className="py-2">
-              <p className="text-base font-semibold">Pista House</p>
-              <p className="text-sm font-normal">pistahouse@gmail.com</p>
+              <p className="text-base font-semibold">{user && user.name}</p>
+              <p className="text-sm font-normal">{user && user.email}</p>
             </div>
           </div>
         </div>
@@ -157,6 +162,7 @@ const RestaurantNavbar = () => {
                 <MenuItem
                   className="flex gap-[10px] items-center"
                   _hover={{ backgroundColor: "red.50" }}
+                  onClick={()=>{signout();window.location.reload()}}
                 >
                   <Icon color={"red.400"} as={IoLogOutOutline} w={5} h={5} />
                   <p className="text-red-400">Log Out</p>
