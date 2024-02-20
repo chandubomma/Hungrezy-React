@@ -1,10 +1,10 @@
 import { FaChevronRight } from "react-icons/fa";
-import Counter from "./Counter";
+import Counter from "../../Counter";
 import Graphs from "./Graphs";
 import { ordersData } from "../../../data/orderItems";
 import { useEffect, useState } from "react";
 
-const Dashboard = () => {
+const RestaurantDashboard = () => {
   const [totalRevenue, setTotalRevenue] = useState(0);
   const [newOrders, setNewOrders] = useState(0);
   const [pendingOrders, setPendingOrders] = useState(0);
@@ -78,4 +78,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default RestaurantDashboard;

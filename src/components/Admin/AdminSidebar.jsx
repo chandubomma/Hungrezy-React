@@ -1,23 +1,41 @@
 import { LuLayoutDashboard } from "react-icons/lu";
 import { Link, useLocation } from "react-router-dom";
 import { FaChevronUp, FaRegUser } from "react-icons/fa";
-import { IoLogOutOutline } from "react-icons/io5";
+import { IoLogOutOutline, IoRestaurantOutline } from "react-icons/io5";
 import { useState } from "react";
-import CustomerLink from "./Sidebar/CustomerLink";
+import RestaurantLink from "./Sidebar/RestaurantLink";
 import { CiViewList } from "react-icons/ci";
-import { RiPlayListAddFill } from "react-icons/ri";
-import { MdOutlineMenuBook, MdReviews } from "react-icons/md";
+import { MdReviews } from "react-icons/md";
 import { CgDetailsMore } from "react-icons/cg";
+import CustomerLink from "./Sidebar/CustomerLink";
+// import { useAuth } from "../../AuthContext";
 
 const AdminSidebar = () => {
   const { pathname } = useLocation();
-  const isLinkActive = (path) => {
-    return pathname.startsWith(path);
-  };
   const [isCustomerOpen, setMenuOpen] = useState(false);
+  const [isRestaurantOpen, setRestaurantOpen] = useState(false);
 
-  const toggleMenu = () => {
+  // const { signout, user } = useAuth();
+  // const navigate = useNavigate();
+  // if (!user) navigate("/admin/signin");
+
+  const isLinkActive = (path) => {
+    if (path.includes("/:id")) {
+      return (
+        pathname.startsWith(path.split("/:id")[0]) &&
+        pathname !== path.split("/:id")[0]
+      );
+    } else {
+      return pathname === path;
+    }
+  };
+
+  const toggleCustomer = () => {
     setMenuOpen(!isCustomerOpen);
+  };
+
+  const toggleRestaurant = () => {
+    setRestaurantOpen(!isRestaurantOpen);
   };
 
   return (
@@ -26,7 +44,7 @@ const AdminSidebar = () => {
         <Link to="dashboard">
           <div
             className={`${
-              isLinkActive("/restaurant/dashboard")
+              isLinkActive("/admin/dashboard")
                 ? "text-orange-500 bg-orange-50"
                 : "text-gray-500"
             } hover:bg-gray-100 w-full px-4 transition-colors duration-300 hover:opacity-80 flex items-center gap-x-4 py-[10px] rounded-md cursor-pointer`}
@@ -36,7 +54,7 @@ const AdminSidebar = () => {
           </div>
         </Link>
 
-        <div onClick={toggleMenu}>
+        <div onClick={toggleCustomer}>
           <div
             className={`${
               isCustomerOpen ? "text-gray-500 bg-gray-50" : "text-gray-500"
@@ -67,14 +85,59 @@ const AdminSidebar = () => {
                 isCustomerOpen={isLinkActive("/admin/customers")}
                 to="customers"
                 icon={<CiViewList size={20} />}
-                text="Customer List"
+                text="Customers List"
               />
-              <CustomerLink
-                to={`customers/1`}
-                isCustomerOpen={isLinkActive("/admin/customers")}
-                icon={<CgDetailsMore size={20} />}
-                text="Customer Details"
+              {isLinkActive("/admin/customers/:id") && (
+                <CustomerLink
+                  isCustomerOpen={isLinkActive("/admin/customers/:id")}
+                  icon={<CgDetailsMore size={20} />}
+                  text="Customer Details"
+                />
+              )}
+            </div>
+          </>
+        )}
+
+        <div onClick={toggleRestaurant}>
+          <div
+            className={`${
+              isRestaurantOpen ? "text-gray-500 bg-gray-50" : "text-gray-500"
+            } hover:bg-gray-100 w-full px-4 transition-colors duration-300 hover:opacity-80 flex items-center gap-x-4 py-[10px] rounded-md cursor-pointer`}
+          >
+            <IoRestaurantOutline size={24} />
+            <span className="text-base">Restaurants</span>
+            {isRestaurantOpen ? (
+              <FaChevronUp
+                className="ml-auto text-lg transition duration-300"
+                color={isRestaurantOpen ? "#f97316" : "#9ca3af"}
+                size={12}
               />
+            ) : (
+              <FaChevronUp
+                color={isRestaurantOpen ? "#f97316" : "#9ca3af"}
+                size={12}
+                className="ml-auto text-lg transform rotate-180 transition duration-300"
+              />
+            )}
+          </div>
+        </div>
+
+        {isRestaurantOpen && (
+          <>
+            <div className="ml-8 transition duration-300 transform">
+              <RestaurantLink
+                isRestaurantOpen={isLinkActive("/admin/restaurants")}
+                to="restaurants"
+                icon={<CiViewList size={20} />}
+                text="Restaurants List"
+              />
+              {isLinkActive("/admin/restaurants/:id") && (
+                <RestaurantLink
+                  isRestaurantOpen={isLinkActive("/admin/restaurants/:id")}
+                  icon={<CgDetailsMore size={20} />}
+                  text="Restaurant Details"
+                />
+              )}
             </div>
           </>
         )}
@@ -82,7 +145,7 @@ const AdminSidebar = () => {
         <Link to="reviews">
           <div
             className={`${
-              isLinkActive("/restaurant/reviews")
+              isLinkActive("/admin/reviews")
                 ? "text-orange-500 bg-orange-50"
                 : "text-gray-500"
             } hover:bg-gray-100 w-full px-4 transition-colors duration-300 hover:opacity-80 flex items-center gap-x-4 py-[10px] rounded-md cursor-pointer`}
@@ -97,7 +160,7 @@ const AdminSidebar = () => {
         <Link to="profile">
           <div
             className={`${
-              isLinkActive("/restaurant/profile")
+              isLinkActive("/admin/profile")
                 ? "text-orange-500 bg-orange-50"
                 : "text-gray-500"
             } hover:bg-gray-100 w-full px-4 transition-colors duration-300 hover:opacity-80 flex items-center gap-x-4 py-[10px] rounded-md cursor-pointer`}
@@ -106,14 +169,14 @@ const AdminSidebar = () => {
             <span className="text-base">Profile</span>
           </div>
         </Link>
-        <Link to="profile">
+        <div onClick={() => {}}>
           <div
             className={`hover:bg-gray-100 w-full px-4 transition-colors duration-300 hover:opacity-80 flex items-center gap-x-4 py-[10px] rounded-md cursor-pointer`}
           >
             <IoLogOutOutline className="text-red-400" size={24} />
             <span className="text-base text-red-400">Logout</span>
           </div>
-        </Link>
+        </div>
       </div>
     </>
   );

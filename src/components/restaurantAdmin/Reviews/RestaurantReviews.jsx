@@ -1,12 +1,12 @@
 import { Select, SelectItem } from "@tremor/react";
 import { useState } from "react";
 import { FaChevronRight } from "react-icons/fa6";
-import ReviewCard from "./ReviewCard";
+import ReviewCard from "./RestaurantReviewCard";
 import { Image } from "@chakra-ui/react";
 import error from "../../../assets/error.png";
 import { reviewsData } from "../../../data/reviews";
 
-const Reviews = () => {
+const RestaurantReviews = () => {
   const [ratingFilter, setRatingFilter] = useState("all");
   const [dateFilter, setDateFilter] = useState("all");
 
@@ -143,4 +143,4 @@ const Reviews = () => {
   );
 };
 
-export default Reviews;
+export default RestaurantReviews;

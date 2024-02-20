@@ -1,5 +1,5 @@
 import { LuLayoutDashboard } from "react-icons/lu";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FaChevronUp, FaRegUser } from "react-icons/fa";
 import { IoLogOutOutline } from "react-icons/io5";
 import { useEffect, useState } from "react";
@@ -14,9 +14,14 @@ import {
 } from "react-icons/md";
 import { ordersData } from "../../data/orderItems";
 import BlinkingDot from "./BlinkingDot";
+import { useAuth } from "../../AuthContext";
 
 const RestaurantSidebar = () => {
   const [newOrders, setNewOrders] = useState(0);
+  const { signout, user } = useAuth();
+  const navigate = useNavigate();
+  if (!user) navigate("/restaurant/signin");
+
   const { pathname } = useLocation();
   const isLinkActive = (path) => {
     return pathname.startsWith(path);
@@ -146,14 +151,20 @@ const RestaurantSidebar = () => {
             <span className="text-base">Profile</span>
           </div>
         </Link>
-        <Link to="profile">
+        <div
+          to="profile"
+          onClick={() => {
+            signout();
+            window.location.reload();
+          }}
+        >
           <div
             className={`hover:bg-gray-100 w-full px-4 transition-colors duration-300 hover:opacity-80 flex items-center gap-x-4 py-[10px] rounded-md cursor-pointer`}
           >
             <IoLogOutOutline className="text-red-400" size={24} />
             <span className="text-base text-red-400">Logout</span>
           </div>
-        </Link>
+        </div>
       </div>
     </>
   );

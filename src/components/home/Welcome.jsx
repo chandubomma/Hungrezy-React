@@ -7,7 +7,7 @@ import jonathan from "../../assets/jonathanAsset.png";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { ordersData } from "../../data/orderItems";
-import Counter from "../restaurantAdmin/Dashboard/Counter";
+import Counter from "../Counter";
 
 const Welcome = () => {
   const [count, setCount] = useState(0);
