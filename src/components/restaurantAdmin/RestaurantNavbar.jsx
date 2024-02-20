@@ -30,6 +30,7 @@ const RestaurantNavbar = () => {
   const {signout,user} = useAuth()
   const navigate = useNavigate();
   if(!user)navigate('/restaurant/signin');
+  
   const isLinkActive = (path) => {
     return pathname.startsWith(path);
   };

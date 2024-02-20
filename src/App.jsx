@@ -1,5 +1,4 @@
 import SignUpForm from "./pages/SignUpForm";
-import SigninForm from "./pages/SigninForm";
 import { Toaster } from "sonner";
 import {
   Outlet,
@@ -23,7 +22,7 @@ import Profile from "./pages/Profile";
 import Recipes from "./pages/Recipes";
 import RecipePage from "./pages/RecipePage";
 import { useLocation } from "react-router-dom";
-import Dashboard from "./components/restaurantAdmin/Dashboard/RestaurantDashboard";
+import AdminDashboard from "./components/Admin/Dashboard/AdminDashboard";
 import RestaurantNavbar from "./components/restaurantAdmin/RestaurantNavbar";
 import RestaurantSidebar from "./components/restaurantAdmin/RestaurantSidebar";
 import Orders from "./components/restaurantAdmin/Orders/Orders";
@@ -32,11 +31,18 @@ import AddMenu from "./components/restaurantAdmin/Menu/AddMenu";
 import EmailSigninForm from "./pages/EmailSigninForm";
 import EditMenu from "./components/restaurantAdmin/Menu/EditMenu";
 import Order from "./components/restaurantAdmin/Orders/Order";
-import Reviews from "./components/restaurantAdmin/Reviews/Reviews";
+import RestaurantReviews from "./components/restaurantAdmin/Reviews/RestaurantReviews";
 import RestaurantProfile from "./components/restaurantAdmin/Profile/RestaurantProfile";
 import RestaurantSignUpForm from "./pages/ResataurantSignupForm";
 import AdminSidebar from "./components/Admin/AdminSidebar";
 import AdminNavbar from "./components/Admin/AdminNavbar";
+import AdminReviews from "./components/Admin/Reviews/AdminReviews";
+import RestaurantsList from "./components/Admin/Restaurants/RestaurantsList";
+import RestaurantDetails from "./components/Admin/Restaurants/RestaurantDetails";
+import CustomersList from "./components/Admin/Customers/CustomersList";
+import CustomerDetails from "./components/Admin/Customers/CustomerDetails";
+import AdminProfile from "./components/Admin/Profile/AdminProfile";
+import RestaurantDashboard from "./components/restaurantAdmin/Dashboard/RestaurantDashboard";
 import { useAuth } from "./AuthContext";
 
 const Root = () => {
@@ -131,13 +137,13 @@ const Router = createBrowserRouter(
       <Route path="restaurant" element={<EmptyOutletWithToaster />}>
         <Route path="" element={<PageNotFound />} />
         <Route path=""  element={<ProtectedRestaurantAdminRoute element={<RestaurantAdmin />} />}>
-          <Route path="dashboard"  element={<Dashboard />}/>
+          <Route path="dashboard"  element={<RestaurantDashboard />}/>
           <Route path="orders" element={<Orders />} />
           <Route path="orders/:id" element={<Order />} />
           <Route path="menu" element={<MenuList />} />
           <Route path="add-menu" element={<AddMenu />} />
           <Route path="edit-menu/:id" element={<EditMenu />} />
-          <Route path="reviews" element={<Reviews />} />
+          <Route path="reviews" element={<RestaurantReviews />} />
           <Route path="profile" element={<RestaurantProfile />} />
         </Route>
         <Route path="signin" element={<EmailSigninForm />} />
@@ -148,7 +154,13 @@ const Router = createBrowserRouter(
         <Route path="" element={<PageNotFound />} />
         <Route path="" element={<Admin />}>
           {/* todo : admin routes */}
-          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="dashboard" element={<AdminDashboard />} />
+          <Route path="customers" element={<CustomersList />} />
+          <Route path="customers/:id" element={<CustomerDetails />} />
+          <Route path="restaurants" element={<RestaurantsList />} />
+          <Route path="restaurants/:id" element={<RestaurantDetails />} />
+          <Route path="reviews" element={<AdminReviews />} />
+          <Route path="profile" element={<AdminProfile />} />
         </Route>
         <Route path="signin" element={<EmailSigninForm />} />
       </Route>

@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import logo from "./../../assets/logoAsset.png";
-import { FaBars, FaChevronUp, FaSearch } from "react-icons/fa";
+import { FaBars, FaChevronUp, FaRegUser, FaSearch } from "react-icons/fa";
 import {
   Icon,
   IconButton,
@@ -13,31 +13,42 @@ import {
 } from "@chakra-ui/react";
 import { FaUser, FaXmark } from "react-icons/fa6";
 import { LuLayoutDashboard, LuUser2 } from "react-icons/lu";
-import { IoLogOutOutline } from "react-icons/io5";
-import { IoMdNotificationsOutline } from "react-icons/io";
-import MenuLink from "../restaurantAdmin/Dashboard/MenuLink";
-import { BiDish } from "react-icons/bi";
-import { GrOrderedList } from "react-icons/gr";
+import { IoLogOutOutline, IoRestaurantOutline } from "react-icons/io5";
 import { CiViewList } from "react-icons/ci";
-import { RiPlayListAddFill } from "react-icons/ri";
-import { MdOutlineEditNote, MdReviews } from "react-icons/md";
+import { MdReviews } from "react-icons/md";
+import { TfiAnnouncement } from "react-icons/tfi";
+import RestaurantLink from "./Sidebar/RestaurantLink";
+import { CgDetailsMore } from "react-icons/cg";
+import CustomerLink from "./Sidebar/CustomerLink";
 
 const AdminNavbar = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const { pathname } = useLocation();
 
   const isLinkActive = (path) => {
-    return pathname.startsWith(path);
+    if (path.includes("/:id")) {
+      return (
+        pathname.startsWith(path.split("/:id")[0]) &&
+        pathname !== path.split("/:id")[0]
+      );
+    } else {
+      return pathname === path;
+    }
   };
 
   const handleDrawerToggle = () => {
     setIsDrawerOpen((prev) => !prev);
   };
 
-  const [isMenuOpen, setMenuOpen] = useState(false);
+  const [isCustomerOpen, setMenuOpen] = useState(false);
+  const [isRestaurantOpen, setRestaurantOpen] = useState(false);
 
-  const toggleMenu = () => {
-    setMenuOpen((prev) => !prev);
+  const toggleCustomer = () => {
+    setMenuOpen(!isCustomerOpen);
+  };
+
+  const toggleRestaurant = () => {
+    setRestaurantOpen(!isRestaurantOpen);
   };
 
   return (
@@ -65,16 +76,14 @@ const AdminNavbar = () => {
               <MenuButton
                 as={IconButton}
                 aria-label="Options"
-                icon={
-                  <IoMdNotificationsOutline color="gray" className="w-6 h-6" />
-                }
+                icon={<TfiAnnouncement color="gray" className="w-6 h-6" />}
                 variant="outline"
                 className="bg-gray-200"
                 borderRadius={"50%"}
                 size={"lg"}
               />
               <MenuList>
-                <MenuItem>Notification</MenuItem>
+                <MenuItem>Announcments</MenuItem>
               </MenuList>
             </Menu>
             <Menu>
@@ -126,9 +135,7 @@ const AdminNavbar = () => {
               <MenuButton
                 as={IconButton}
                 aria-label="Options"
-                icon={
-                  <IoMdNotificationsOutline className="sm:w-6 sm:h-6 w-4 h-4" />
-                }
+                icon={<TfiAnnouncement className="sm:w-6 sm:h-6 w-4 h-4" />}
                 variant="outline"
                 className="bg-gray-200"
                 borderRadius={"50%"}
@@ -197,10 +204,10 @@ const AdminNavbar = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1 }}
             >
-              <Link to="dashboard" onClick={handleDrawerToggle}>
+              <Link to="dashboard">
                 <div
                   className={`${
-                    isLinkActive("/restaurant/dashboard")
+                    isLinkActive("/admin/dashboard")
                       ? "text-orange-500 bg-orange-50"
                       : "text-gray-500"
                   } hover:bg-gray-100 w-full px-4 transition-colors duration-300 hover:opacity-80 flex items-center gap-x-4 py-[10px] rounded-md cursor-pointer`}
@@ -210,36 +217,25 @@ const AdminNavbar = () => {
                 </div>
               </Link>
 
-              <Link to="orders" onClick={handleDrawerToggle}>
+              <div onClick={toggleCustomer}>
                 <div
                   className={`${
-                    isLinkActive("/restaurant/orders")
-                      ? "text-orange-500 bg-orange-50"
+                    isCustomerOpen
+                      ? "text-gray-500 bg-gray-50"
                       : "text-gray-500"
                   } hover:bg-gray-100 w-full px-4 transition-colors duration-300 hover:opacity-80 flex items-center gap-x-4 py-[10px] rounded-md cursor-pointer`}
                 >
-                  <GrOrderedList size={24} />
-                  <span className="text-base">Orders</span>
-                </div>
-              </Link>
-
-              <div onClick={toggleMenu}>
-                <div
-                  className={`${
-                    isMenuOpen ? "text-gray-500 bg-gray-50" : "text-gray-500"
-                  } hover:bg-gray-100 w-full px-4 transition-colors duration-300 hover:opacity-80 flex items-center gap-x-4 py-[10px] rounded-md cursor-pointer`}
-                >
-                  <BiDish size={24} />
-                  <span className="text-base">Menu</span>
-                  {isMenuOpen ? (
+                  <FaRegUser size={24} />
+                  <span className="text-base">Customers</span>
+                  {isCustomerOpen ? (
                     <FaChevronUp
                       className="ml-auto text-lg transition duration-300"
-                      color={isMenuOpen ? "#f97316" : "#9ca3af"}
+                      color={isCustomerOpen ? "#f97316" : "#9ca3af"}
                       size={12}
                     />
                   ) : (
                     <FaChevronUp
-                      color={isMenuOpen ? "#f97316" : "#9ca3af"}
+                      color={isCustomerOpen ? "#f97316" : "#9ca3af"}
                       size={12}
                       className="ml-auto text-lg transform rotate-180 transition duration-300"
                     />
@@ -247,41 +243,74 @@ const AdminNavbar = () => {
                 </div>
               </div>
 
-              {isMenuOpen && (
+              {isCustomerOpen && (
                 <>
                   <div className="ml-8 transition duration-300 transform">
-                    <MenuLink
-                      onClick={handleDrawerToggle}
-                      isMenuOpen={isLinkActive("/restaurant/menu")}
-                      to="menu"
+                    <CustomerLink
+                      isCustomerOpen={isLinkActive("/admin/customers")}
+                      to="customers"
                       icon={<CiViewList size={20} />}
-                      text="Menu List"
+                      text="Customers List"
                     />
-                    <MenuLink
-                      onClick={handleDrawerToggle}
-                      to="add-menu"
-                      isMenuOpen={isLinkActive("/restaurant/add-menu")}
-                      icon={<RiPlayListAddFill size={20} />}
-                      text="Add Menu"
+                    <CustomerLink
+                      to={`customers/1`}
+                      isCustomerOpen={isLinkActive("/admin/customers/:id")}
+                      icon={<CgDetailsMore size={20} />}
+                      text="Customer Details"
                     />
-                    {isLinkActive("/restaurant/edit-menu") && (
-                      <MenuLink
-                        onClick={handleDrawerToggle}
-                        to="edit-menu"
-                        isMenuOpen={isLinkActive("/restaurant/edit-menu")}
-                        icon={<MdOutlineEditNote size={20} />}
-                        text="Edit Menu"
-                      />
-                    )}
+                  </div>
+                </>
+              )}
+
+              <div onClick={toggleRestaurant}>
+                <div
+                  className={`${
+                    isCustomerOpen
+                      ? "text-gray-500 bg-gray-50"
+                      : "text-gray-500"
+                  } hover:bg-gray-100 w-full px-4 transition-colors duration-300 hover:opacity-80 flex items-center gap-x-4 py-[10px] rounded-md cursor-pointer`}
+                >
+                  <IoRestaurantOutline size={24} />
+                  <span className="text-base">Restaurants</span>
+                  {isRestaurantOpen ? (
+                    <FaChevronUp
+                      className="ml-auto text-lg transition duration-300"
+                      color={isRestaurantOpen ? "#f97316" : "#9ca3af"}
+                      size={12}
+                    />
+                  ) : (
+                    <FaChevronUp
+                      color={isRestaurantOpen ? "#f97316" : "#9ca3af"}
+                      size={12}
+                      className="ml-auto text-lg transform rotate-180 transition duration-300"
+                    />
+                  )}
+                </div>
+              </div>
+
+              {isRestaurantOpen && (
+                <>
+                  <div className="ml-8 transition duration-300 transform">
+                    <RestaurantLink
+                      isRestaurantOpen={isLinkActive("/admin/restaurants")}
+                      to="restaurants"
+                      icon={<CiViewList size={20} />}
+                      text="Restaurants List"
+                    />
+                    <RestaurantLink
+                      to={`restaurants/1`}
+                      isRestaurantOpen={isLinkActive("/admin/restaurants/:id")}
+                      icon={<CgDetailsMore size={20} />}
+                      text="Restaurant Details"
+                    />
                   </div>
                 </>
               )}
 
               <Link to="reviews">
                 <div
-                  onClick={handleDrawerToggle}
                   className={`${
-                    isLinkActive("/restaurant/reviews")
+                    isLinkActive("/admin/reviews")
                       ? "text-orange-500 bg-orange-50"
                       : "text-gray-500"
                   } hover:bg-gray-100 w-full px-4 transition-colors duration-300 hover:opacity-80 flex items-center gap-x-4 py-[10px] rounded-md cursor-pointer`}

@@ -1,6 +1,6 @@
 import { FaRegStar, FaStar } from "react-icons/fa6";
 
-const ReviewCard = ({ review }) => {
+const RestaurantReviewCard = ({ review }) => {
   return (
     <>
       <div className="flex items-center mb-4">
@@ -18,4 +18,4 @@ const ReviewCard = ({ review }) => {
   );
 };
 
-export default ReviewCard;
+export default RestaurantReviewCard;
