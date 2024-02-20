@@ -52,9 +52,34 @@ const EditMenu = () => {
     }
   };
 
-  const handleImageChange = (e) => {
+  const handleImageUpdate = async (e) => {
+   
+  };
+
+  const handleImageChange = async(e) => {
+    e.preventDefault();
     setSelectedFile(e.target.files[0]);
-    console.log(e.target.files[0]);
+    const formData = new FormData();
+    formData.append('image', e.target.files[0]);
+    const url = `${import.meta.env.VITE_HUNGREZY_API}/api/restaurant/${user._id}/upload/image`;
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${accessToken}`, // Include authorization token if needed
+        },
+        body: formData, // Set the FormData object as the body
+      });
+      if (!response.ok) {
+        toast.error('Failed to upload image');
+        return;
+      }
+      toast.success('Image uploaded successfully');
+      // Handle success
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      toast.error('Please try again later!');
+    }
   };
 
   const handlePasswordChange = (e) => {
@@ -86,8 +111,7 @@ const EditMenu = () => {
         >
           <input
             type="file"
-            name="file"
-            id="file"
+            name="image"
             accept="image/*"
             className="hidden"
             ref={image}
