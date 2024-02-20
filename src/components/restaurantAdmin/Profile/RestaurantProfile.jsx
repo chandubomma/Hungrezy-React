@@ -52,10 +52,6 @@ const EditMenu = () => {
     }
   };
 
-  const handleImageUpdate = async (e) => {
-   
-  };
-
   const handleImageChange = async(e) => {
     e.preventDefault();
     setSelectedFile(e.target.files[0]);

@@ -1,13 +1,47 @@
 // AccountPage.js
-import React, { useState } from "react";
+import React, { useState,useRef } from "react";
 import bcrypt from "bcryptjs";
+import {toast} from 'sonner';
+import { useAuth } from "../../AuthContext";
 
-const Account = ({ user }) => {
+const Account = () => {
+  const {user,accessToken,signin,signout} = useAuth()
   const [editing, setEditing] = useState(false);
   const [editedUser, setEditedUser] = useState({ ...user });
+  const image = useRef(null);
+  
 
   const handleEditClick = () => {
     setEditing(true);
+  };
+
+  const handleImageChange = async(e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append('image', e.target.files[0]);
+    const url = `${import.meta.env.VITE_HUNGREZY_API}/api/user/${user._id}/upload/image`;
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${accessToken}`, // Include authorization token if needed
+        },
+        body: formData, // Set the FormData object as the body
+      });
+      if (!response.ok) {
+        toast.error('Failed to upload image');
+        return;
+      }
+      const result = await response.json()
+      const temp = result.data;
+      console.log(temp);
+      signin(temp.token.user,temp.token.accessToken);
+      toast.success('Image uploaded successfully');
+      // Handle success
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      toast.error('Please try again later!');
+    }
   };
 
   const handleSaveClick = async () => {
@@ -101,6 +135,17 @@ const Account = ({ user }) => {
             onChange={handleInputChange}
             disabled={!editing}
             className="border border-gray-300 px-3 py-2 w-full rounded-md focus:outline-none"
+          />
+        </div>
+        <div className="mb-4">
+          <label className="block text-gray-600 mb-2">Image</label>
+          <input
+            type="file"
+            name="image"
+            accept="image/*"
+            className=""
+            ref={image}
+            onChange={handleImageChange}
           />
         </div>
         <div className="col-span-2">

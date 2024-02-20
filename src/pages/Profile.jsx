@@ -63,7 +63,12 @@ const Profile = () => {
       <div className="container mx-auto p-4">
         {!scrolling && user && (
           <div className="flex flex-col items-center my-4 lg:flex-row">
-            <div className="text-3xl font-bold text-white mb-4 lg:mb-0 lg:mr-6">
+            <div>
+              {
+                user && user.image && <img src={user.image} className="w-24 h-24 object-cover rounded-full"/>
+              }
+            </div>
+            <div className="text-4xl font-bold ml-4 text-white mb-3 lg:mb-0 lg:mr-6">
               {user.firstName + " " + user.lastName}
             </div>
             <div className="text-white">
