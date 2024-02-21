@@ -1,7 +1,5 @@
 import { motion } from "framer-motion";
 import { FaArrowRight, FaChevronRight } from "react-icons/fa6";
-import { useRef, useState } from "react";
-import { LuUploadCloud } from "react-icons/lu";
 import { TiArrowBackOutline } from "react-icons/ti";
 import { RiDraftLine } from "react-icons/ri";
 
@@ -9,19 +7,6 @@ const AddMenu = () => {
   const formVariants = {
     hidden: { opacity: 0, x: 0 },
     visible: { opacity: 1, x: 0, transition: { duration: 0.8 } },
-  };
-  const image = useRef(null);
-  const [imageSrc, setImageSrc] = useState(null);
-
-  const handleImageChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setImageSrc(e.target.result);
-      };
-      reader.readAsDataURL(file);
-    }
   };
 
   return (
@@ -36,34 +21,7 @@ const AddMenu = () => {
           <p className="text-orange-500 underline">Add Menu</p>
         </div>
       </div>
-      <div className="h-fit flex md:flex-row flex-col w-full gap-x-10">
-        <motion.div
-          onClick={() => image.current.click()}
-          className="w-[17rem] cursor-pointer h-[17rem] my-20 mx-auto object-cover rounded-full bg-orange-100 border-dotted border-2 border-orange-500 flex items-center justify-center"
-          whileHover={{ scale: 1.05 }}
-        >
-          <input
-            onChange={handleImageChange}
-            type="file"
-            name="file"
-            id="file"
-            className="hidden"
-            ref={image}
-          />
-          {imageSrc ? (
-            <img
-              src={imageSrc}
-              alt="Uploaded"
-              className="w-full h-full object-cover rounded-full"
-            />
-          ) : (
-            <p className="text-center text-orange-500 text-sm mt-2 flex flex-col justify-center items-center gap-y-3">
-              <LuUploadCloud className="w-10 h-10" />
-              <span className="block">Upload Image</span>
-            </p>
-          )}
-        </motion.div>
-
+      <div className="h-fit flex md:flex-row flex-col w-full gap-x-10 items-center justify-center">
         <form className="flex flex-col w-[50rem] gap-4 pb-20">
           <motion.div
             variants={formVariants}

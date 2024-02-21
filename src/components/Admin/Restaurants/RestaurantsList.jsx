@@ -15,7 +15,6 @@ import {
   TableRow,
   Text,
 } from "@tremor/react";
-import { restaurantsData } from "../../../data/restaurants";
 import { BadgeCheckIcon } from "@heroicons/react/outline";
 import { RxCross2 } from "react-icons/rx";
 import { MdOutlinePending } from "react-icons/md";
@@ -23,11 +22,63 @@ import { MdOutlinePending } from "react-icons/md";
 const RestaurantsList = () => {
   const [statusFilter, setStatusFilter] = useState("all");
   const [ratingFilter, setRatingFilter] = useState("all");
-  const [restaurants, setRestaurants] = useState(restaurantsData);
+  const [restaurants, setRestaurants] = useState([]);
+  const [totalPages, setTotalPages] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
-    setRestaurants(restaurantsData);
-  }, [statusFilter, ratingFilter]);
+    fetchRestaurants(currentPage);
+  }, [statusFilter, ratingFilter, currentPage]);
+
+  const fetchRestaurants = async (page) => {
+    const response = await fetch(
+      `${import.meta.env.VITE_HUNGREZY_API}/api/restaurant/all?page=${page}`
+    );
+    if (!response.ok) {
+      setRestaurants([]);
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const result = await response.json();
+    const { data, totalPages: total } = result;
+    setRestaurants(data);
+    setTotalPages(total);
+  };
+
+  const handleStatusChange = (value) => {
+    setStatusFilter(value);
+  };
+
+  const handleRatingChange = (value) => {
+    setRatingFilter(value);
+  };
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
+  const paginationNumbers = [];
+  let startPage = currentPage - 2;
+  if (startPage < 1) {
+    startPage = 1;
+  }
+  let endPage = startPage + 4;
+  if (endPage > totalPages) {
+    endPage = totalPages;
+  }
+  for (let i = startPage; i <= endPage; i++) {
+    paginationNumbers.push(
+      <button
+        key={i}
+        className={`mx-1.5 px-1.5 border rounded ${
+          currentPage === i ? "bg-orange-500 text-white" : "text-orange-500"
+        }`}
+        onClick={() => handlePageChange(i)}
+      >
+        {i}
+      </button>
+    );
+  }
 
   const filteredRestaurants = restaurants.filter((restaurant) => {
     if (statusFilter !== "all" && restaurant.status !== statusFilter) {
@@ -39,7 +90,6 @@ const RestaurantsList = () => {
     ) {
       return false;
     }
-
     return true;
   });
 
@@ -64,7 +114,7 @@ const RestaurantsList = () => {
             className="w-[10rem]"
             placeholder="Status"
             value={statusFilter}
-            onValueChange={setStatusFilter}
+            onValueChange={handleStatusChange}
             defaultValue="all"
           >
             <SelectItem value="all" className="cursor-pointer">
@@ -92,7 +142,7 @@ const RestaurantsList = () => {
             className="w-[10rem]"
             placeholder="Rating"
             value={ratingFilter}
-            onValueChange={setRatingFilter}
+            onValueChange={handleRatingChange}
             defaultValue="all"
           >
             <SelectItem value="all" className="cursor-pointer">
@@ -113,7 +163,7 @@ const RestaurantsList = () => {
           </Select>
         </div>
       </div>
-      <Table className="mt-4 h-[30rem] overflow-y-scroll">
+      <Table className="mt-4 h-[25rem] overflow-y-scroll">
         <TableHead>
           <TableRow>
             <TableHeaderCell>Name</TableHeaderCell>
@@ -125,7 +175,7 @@ const RestaurantsList = () => {
         </TableHead>
         <TableBody>
           {filteredRestaurants.map((restaurant) => (
-            <TableRow key={restaurant.id}>
+            <TableRow key={restaurant.email}>
               <TableCell>{restaurant.name}</TableCell>
               <TableCell>
                 <div className="flex gap-x-2">
@@ -168,7 +218,7 @@ const RestaurantsList = () => {
                 </Badge>
               </TableCell>
               <TableCell>
-                <Link to={`/admin/restaurants/${restaurant.id}`}>
+                <Link to={`/admin/restaurants/${restaurant._id}`}>
                   <IoEye className="w-6 h-6 text-gray-500" />
                 </Link>
               </TableCell>
@@ -176,6 +226,7 @@ const RestaurantsList = () => {
           ))}
         </TableBody>
       </Table>
+      <div className="flex justify-center mt-4">{paginationNumbers}</div>
     </div>
   );
 };
