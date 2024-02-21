@@ -133,7 +133,7 @@ const RestaurantsList = () => {
     <div className="px-4">
       <div className="flex justify-between items-center">
         <h1 className="text-xl font-medium">Restaurants List</h1>
-        <div className="flex items-center py-2.5 gap-2 mx-5">
+        <div className="flex items-center py-2.5 gap-2 mx-2">
           <p>Admin</p>
           <span>
             <FaChevronRight className="text-gray-500" />
