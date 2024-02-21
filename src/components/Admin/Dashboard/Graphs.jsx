@@ -1,5 +1,6 @@
-import { Card, SparkAreaChart } from "@tremor/react";
 import { useEffect, useState } from "react";
+import SparkChartComponent from "./SparkChartComponent";
+import PieChartComponent from "./PieChartComponent";
 
 const customersData = [
   {
@@ -103,7 +104,26 @@ const restaurantsData = [
   },
 ];
 
-const Graphs = () => {
+const datahero = [
+  {
+    name: "approved",
+    value: 9800,
+  },
+  {
+    name: "suspended",
+    value: 4567,
+  },
+  {
+    name: "inprogress",
+    value: 3908,
+  },
+  {
+    name: "rejected",
+    value: 2400,
+  },
+];
+
+const Graphs = ({ restaurants, loading }) => {
   const [totalCustomers, setTotalCustomers] = useState(0);
   const [customerPercentageChange, setCustomerPercentageChange] = useState(0);
   const [totalRestaurants, setTotalRestaurants] = useState(0);
@@ -161,64 +181,31 @@ const Graphs = () => {
   }, []);
 
   return (
-    <div className="flex my-10">
-      <Card className="mx-auto flex max-w-lg items-center justify-between px-4 py-3.5">
-        <div className="flex items-center space-x-2.5">
-          <p className="text-tremor-content-strong dark:text-dark-tremor-content-strong font-medium">
-            Customers
-          </p>
-        </div>
-        <SparkAreaChart
+    <div>
+      <div className="flex my-10">
+        <SparkChartComponent
           data={customersData}
-          categories={["customers"]}
-          index={"month"}
-          colors={["orange"]}
-          className="h-8 w-20 sm:h-10 sm:w-36"
+          percentageChange={customerPercentageChange}
+          total={totalCustomers}
+          label={"customers"}
         />
-        <div className="flex items-center space-x-2.5">
-          <span className="font-medium text-tremor-content-strong dark:text-dark-tremor-content-strong">
-            {totalCustomers}
-          </span>
-          <span
-            className={`rounded px-2 py-1 font-medium text-white ${
-              customerPercentageChange >= 0 ? "bg-orange-500" : "bg-red-500"
-            }`}
-          >
-            {customerPercentageChange >= 0
-              ? `+${customerPercentageChange}%`
-              : `${customerPercentageChange}%`}
-          </span>
-        </div>
-      </Card>
 
-      <Card className="mx-auto flex max-w-lg items-center justify-between px-4 py-3.5">
-        <div className="flex items-center space-x-2.5">
-          <p className="text-tremor-content-strong dark:text-dark-tremor-content-strong font-medium">
-            Restaurants
-          </p>
-        </div>
-        <SparkAreaChart
+        <SparkChartComponent
           data={restaurantsData}
-          categories={["restaurants"]}
-          index={"month"}
-          colors={["orange"]}
-          className="h-8 w-20 sm:h-10 sm:w-36"
+          percentageChange={restauantsPercentageChange}
+          total={totalRestaurants}
+          label={"restaurants"}
         />
-        <div className="flex items-center space-x-2.5">
-          <span className="font-medium text-tremor-content-strong dark:text-dark-tremor-content-strong">
-            {totalRestaurants}
-          </span>
-          <span
-            className={`rounded px-2 py-1 font-medium text-white ${
-              restauantsPercentageChange >= 0 ? "bg-orange-500" : "bg-red-500"
-            }`}
-          >
-            {restauantsPercentageChange >= 0
-              ? `+${restauantsPercentageChange}%`
-              : `${restauantsPercentageChange}%`}
-          </span>
-        </div>
-      </Card>
+      </div>
+
+      <div className="flex my-10">
+        <PieChartComponent data={datahero} label={"Customers"} />
+        <PieChartComponent
+          data={restaurants}
+          label={"Restaurants"}
+          loading={loading}
+        />
+      </div>
     </div>
   );
 };

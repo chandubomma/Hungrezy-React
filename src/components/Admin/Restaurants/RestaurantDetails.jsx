@@ -30,8 +30,6 @@ const RestaurantDetails = () => {
     setRestaurant(result.data);
   };
 
-  console.log(restaurant);
-
   return (
     <div className="px-4">
       <div className="flex justify-between items-center">
