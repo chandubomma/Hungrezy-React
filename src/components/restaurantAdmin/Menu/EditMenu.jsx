@@ -8,15 +8,19 @@ import { FiSave } from "react-icons/fi";
 import { TiArrowBackOutline } from "react-icons/ti";
 import { MdOutlinePublic } from "react-icons/md";
 import { RiDraftLine } from "react-icons/ri";
+import { useSelector, useDispatch } from 'react-redux';
+import { updateMenuItem,addMenuItem, deleteMenuItem,selectMenu } from '../../../redux/slices/menuSlice';
 
 const EditMenu = () => {
+  const Menu = useSelector(selectMenu);
+  const dispatch = useDispatch();
   const formVariants = {
     hidden: { opacity: 0, x: 0 },
     visible: { opacity: 1, x: 0, transition: { duration: 0.8 } },
   };
   const image = useRef(null);
   const { id } = useParams();
-  const menuItem = menuItems.find((item) => item.id === id);
+  const menuItem = Menu.find((item) => item.id === id);
 
   return (
     <div className="px-4">
@@ -111,6 +115,7 @@ const EditMenu = () => {
                 id="menuItemCategory"
                 value={menuItem.category}
               >
+                <option value={menuItem.category}>{menuItem.category}</option>
                 <option value="main-course">Main Course</option>
                 <option value="appetizer">Appetizer</option>
                 <option value="dessert">Dessert</option>

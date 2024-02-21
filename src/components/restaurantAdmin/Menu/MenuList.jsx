@@ -19,13 +19,16 @@ import { CiEdit } from "react-icons/ci";
 import { Link } from "react-router-dom";
 import { menuItems } from "../../../data/menuItems";
 import { useAuth } from "../../../AuthContext";
+import { useSelector, useDispatch } from 'react-redux';
+import { selectMenu,setMenu } from '../../../redux/slices/menuSlice';
 
 
 const MenuList = () => {
   const [statusFilter, setStatusFilter] = useState("published");
   const [categoryFilter, setCategoryFilter] = useState("all");
-  const [Menu,setMenu] = useState([]);
-  const {user,accessToken} = useAuth()
+  const Menu = useSelector(selectMenu);
+  const {user,accessToken} = useAuth();
+  const dispatch = useDispatch();
 
   const fetchMenu = async()=>{
     const url = `${import.meta.env.VITE_HUNGREZY_API}/api/restaurant/menu/${user.menu_id}`;
@@ -41,7 +44,7 @@ const MenuList = () => {
       delete result.data._id;
       console.log(result.data)
       const temp = convertMenuObjecttoArray(result.data);
-      setMenu(temp);
+      dispatch(setMenu(temp))
     }catch(error){
       console.log(error);
     }
