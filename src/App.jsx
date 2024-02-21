@@ -40,6 +40,7 @@ import AdminReviews from "./components/Admin/Reviews/AdminReviews";
 import RestaurantsList from "./components/Admin/Restaurants/RestaurantsList";
 import RestaurantDetails from "./components/Admin/Restaurants/RestaurantDetails";
 import CustomersList from "./components/Admin/Customers/CustomersList";
+import AdminsList from "./components/Admin/Admins/AdminsList";
 import CustomerDetails from "./components/Admin/Customers/CustomerDetails";
 import AdminProfile from "./components/Admin/Profile/AdminProfile";
 import RestaurantDashboard from "./components/restaurantAdmin/Dashboard/RestaurantDashboard";
@@ -170,6 +171,7 @@ const Router = createBrowserRouter(
         <Route path="" element={<ProtectedAdminRoute element={<Admin />}/>}>
           <Route path="dashboard" element={<AdminDashboard />} />
           <Route path="customers" element={<CustomersList />} />
+          <Route path="admins" element={<AdminsList />} />
           <Route path="customers/:id" element={<CustomerDetails />} />
           <Route path="restaurants" element={<RestaurantsList />} />
           <Route path="restaurants/:id" element={<RestaurantDetails />} />

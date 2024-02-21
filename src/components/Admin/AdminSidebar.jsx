@@ -8,14 +8,15 @@ import { CiViewList } from "react-icons/ci";
 import { MdReviews } from "react-icons/md";
 import { CgDetailsMore } from "react-icons/cg";
 import CustomerLink from "./Sidebar/CustomerLink";
-// import { useAuth } from "../../AuthContext";
+import AdminLink from "./Sidebar/AdminLink";
+ import { useAuth } from "../../AuthContext";
 
 const AdminSidebar = () => {
   const { pathname } = useLocation();
   const [isCustomerOpen, setMenuOpen] = useState(false);
   const [isRestaurantOpen, setRestaurantOpen] = useState(false);
-
-  // const { signout, user } = useAuth();
+  const [isAdminOpen, setAdminOpen] = useState(false);
+   const { user } = useAuth();
   // const navigate = useNavigate();
   // if (!user) navigate("/admin/signin");
 
@@ -36,6 +37,10 @@ const AdminSidebar = () => {
 
   const toggleRestaurant = () => {
     setRestaurantOpen(!isRestaurantOpen);
+  };
+
+  const toggleAdmin = () => {
+    setAdminOpen(!isAdminOpen);
   };
 
   return (
@@ -136,6 +141,53 @@ const AdminSidebar = () => {
                   isRestaurantOpen={isLinkActive("/admin/restaurants/:id")}
                   icon={<CgDetailsMore size={20} />}
                   text="Restaurant Details"
+                />
+              )}
+            </div>
+          </>
+        )}
+
+        {
+          user.superAdmin &&
+          <div onClick={toggleAdmin}>
+          <div
+            className={`${
+              isAdminOpen ? "text-gray-500 bg-gray-50" : "text-gray-500"
+            } hover:bg-gray-100 w-full px-4 transition-colors duration-300 hover:opacity-80 flex items-center gap-x-4 py-[10px] rounded-md cursor-pointer`}
+          >
+            <FaRegUser size={24} />
+            <span className="text-base">Admins</span>
+            {isAdminOpen ? (
+              <FaChevronUp
+                className="ml-auto text-lg transition duration-300"
+                color={isAdminOpen ? "#f97316" : "#9ca3af"}
+                size={12}
+              />
+            ) : (
+              <FaChevronUp
+                color={isAdminOpen ? "#f97316" : "#9ca3af"}
+                size={12}
+                className="ml-auto text-lg transform rotate-180 transition duration-300"
+              />
+            )}
+          </div>
+        </div>
+        }
+
+        {isAdminOpen && (
+          <>
+            <div className="ml-8 transition duration-300 transform">
+              <AdminLink
+                isAdminOpen={isLinkActive("/admin/admins")}
+                to="admins"
+                icon={<CiViewList size={20} />}
+                text="Admins List"
+              />
+              {isLinkActive("/admin/customers/:id") && (
+                <AdminLink
+                  isCustomerOpen={isLinkActive("/admin/customers/:id")}
+                  icon={<CgDetailsMore size={20} />}
+                  text="Admin Details"
                 />
               )}
             </div>

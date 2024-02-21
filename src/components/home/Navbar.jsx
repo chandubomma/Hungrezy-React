@@ -23,6 +23,7 @@ const Navbar = () => {
 
   if(user && user.user_role){
     if(user.user_role=='restaurant')navigate('/restaurant/dashboard')
+    else if(user.user_role=='admin' || user.user_role=='superadmin')navigate('/admin/dashboard')
   }
 
   const isLinkActive = (path) => {
