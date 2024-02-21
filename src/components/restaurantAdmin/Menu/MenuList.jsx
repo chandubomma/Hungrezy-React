@@ -18,8 +18,14 @@ import { MdDeleteOutline } from "react-icons/md";
 import { CiEdit } from "react-icons/ci";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../../AuthContext";
+<<<<<<< HEAD
 import { useSelector, useDispatch } from "react-redux";
 import { selectMenu, setMenu } from "../../../redux/slices/menuSlice";
+=======
+import { useSelector, useDispatch } from 'react-redux';
+import { selectMenu,setMenu,deleteMenuItem } from '../../../redux/slices/menuSlice';
+
+>>>>>>> c4c83618fbf806ebbe59e0847fe8d215c67de4c6
 
 const MenuList = () => {
   const [statusFilter, setStatusFilter] = useState("published");
@@ -71,9 +77,9 @@ const MenuList = () => {
     return menuArray;
   };
 
-  useEffect(() => {
-    fetchMenu();
-  }, []);
+  useEffect(()=>{
+    if(!Menu)fetchMenu()
+  },[])
 
   const filteredMenuItems = Menu.filter((menuItem) => {
     if (
@@ -220,6 +226,7 @@ const MenuList = () => {
                       menuItem.available === true ? BadgeCheckIcon : RiDraftLine
                     }
                   >
+<<<<<<< HEAD
                     <Text>
                       {menuItem.available === true ? "Published" : "Draft"}
                     </Text>
@@ -241,6 +248,17 @@ const MenuList = () => {
               </TableRow>
             ))
           )}
+=======
+                    <CiEdit className="w-5 h-5 text-gray-500" />
+                  </Link>
+                  <Link onClick={()=>dispatch(deleteMenuItem(menuItem.id))} className="flex items-center justify-center rounded-md cursor-pointer">
+                    <MdDeleteOutline className="w-5 h-5 text-red-500" />
+                  </Link>
+                </div>
+              </TableCell>
+            </TableRow>
+          ))}
+>>>>>>> c4c83618fbf806ebbe59e0847fe8d215c67de4c6
         </TableBody>
       </Table>
       
