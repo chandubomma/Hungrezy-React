@@ -7,17 +7,43 @@ import { IoPricetag } from "react-icons/io5";
 import { MdEmail, MdOutlinePending, MdPlace } from "react-icons/md";
 import { RiQuestionFill } from "react-icons/ri";
 import { RxCross2 } from "react-icons/rx";
+import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
+import { selectMenu, setMenu } from "../../../redux/slices/menuSlice";
+import Skeleton from "./Skeleton";
+import MenuItemsTable from "./MenuItemsTable";
+import { BsThreeDotsVertical } from "react-icons/bs";
+import {
+  IconButton,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+} from "@chakra-ui/react";
+import ConfirmationModal from "./ConfirmationModal";
 
 const RestaurantDetails = () => {
   const [restaurant, setRestaurant] = useState(null);
   const { id } = useParams();
+  const [loading, setLoading] = useState(true);
+  const menu = useSelector(selectMenu);
+  const dispatch = useDispatch();
+  const [openModal, setOpenModal] = useState(false);
+  const [state, setState] = useState(null);
 
   useEffect(() => {
-    fetchRestaurant(id);
+    setLoading(true);
+    fetchRestaurantDetails(id);
+    setLoading(false);
   }, [id]);
 
-  const fetchRestaurant = async (id) => {
+  const toggleModal = (state) => {
+    setOpenModal(!openModal);
+    setState(state);
+    console.log(state);
+  };
+
+  const fetchRestaurantDetails = async (id) => {
     const response = await fetch(
       `${import.meta.env.VITE_HUNGREZY_API}/api/restaurant/${id}`
     );
@@ -28,21 +54,94 @@ const RestaurantDetails = () => {
 
     const result = await response.json();
     setRestaurant(result.data);
+
+    const url = `${import.meta.env.VITE_HUNGREZY_API}/api/restaurant/menu/${
+      result.data.menu_id
+    }`;
+    try {
+      const response = await fetch(url);
+      const result = await response.json();
+      delete result.data._id;
+      const temp = convertMenuObjecttoArray(result.data);
+      dispatch(setMenu(temp));
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
   };
+
+  const convertMenuObjecttoArray = (menuObject) => {
+    const menuArray = [];
+    for (const category in menuObject) {
+      for (const item in menuObject[category]) {
+        menuArray.push({
+          id: `${category.replace(/\s+/g, "")}-${item.replace(/\s+/g, "")}`,
+          name: item,
+          price: menuObject[category][item].price,
+          category: category,
+          quantity: 1,
+          discount: 0,
+          available: true,
+        });
+      }
+    }
+    return menuArray;
+  };
+
+  if (loading || !restaurant) {
+    return <Skeleton />;
+  }
 
   return (
     <div className="px-4">
       <div className="flex justify-between items-center">
         <h1 className="text-xl font-medium">View Restaurant</h1>
-        <div className="flex items-center py-3 gap-2 mx-5">
-          <p>Admin</p>
-          <span>
-            <FaChevronRight className="text-gray-500" />
-          </span>
-          <p className="text-orange-500 underline">Restaurant</p>
+        <div className="flex items-center py-3 gap-3 mx-2">
+          <div className="flex items-center gap-2">
+            <p>Admin</p>
+            <span>
+              <FaChevronRight className="text-gray-500" />
+            </span>
+            <p className="text-orange-500 underline">Restaurant</p>
+          </div>
+          <Menu>
+            <MenuButton
+              as={IconButton}
+              aria-label="Options"
+              icon={<BsThreeDotsVertical color="gray" className="w-4 h-4" />}
+              variant="outline"
+              className="bg-gray-200"
+              borderRadius={"50%"}
+              size={"md"}
+            />
+            <MenuList>
+              <MenuItem onClick={() => toggleModal("approved")}>
+                Approve
+              </MenuItem>
+              <MenuItem onClick={() => toggleModal("suspended")}>
+                Suspend
+              </MenuItem>
+              <MenuItem
+                onClick={() => {
+                  toggleModal("rejected");
+                }}
+              >
+                Reject
+              </MenuItem>
+            </MenuList>
+          </Menu>
         </div>
       </div>
 
+      {openModal && (
+        <ConfirmationModal
+          openModal={openModal}
+          toggleModal={toggleModal}
+          restaurantId={restaurant._id}
+          state={state}
+        />
+      )}
       <div className="flex lg:flex-row flex-col items-center my-4">
         <div className="lg:flex-[3]">
           <img
@@ -52,7 +151,7 @@ const RestaurantDetails = () => {
           />
         </div>
 
-        <div className="border rounded p-4 items-center my-4 justify-center lg:flex-[5] md:w-[40rem] w-[20rem]">
+        <div className="border rounded p-4 items-center mt-4 justify-center lg:flex-[5] md:w-[40rem] w-[20rem]">
           <div className="grid grid-cols-1 gap-4 mb-4">
             <div className="flex flex-col">
               <div className="flex justify-between mb-2">
@@ -139,6 +238,10 @@ const RestaurantDetails = () => {
           </div>
         </div>
       </div>
+
+      <p className="text-xl font-medium px-4">Menu</p>
+
+      <MenuItemsTable Menu={menu} />
     </div>
   );
 };

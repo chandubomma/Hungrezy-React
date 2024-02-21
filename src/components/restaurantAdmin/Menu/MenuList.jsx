@@ -76,7 +76,7 @@ const MenuList = () => {
   };
 
   useEffect(() => {
-    if (!Menu) fetchMenu();
+    fetchMenu();
   }, []);
 
   const filteredMenuItems = Menu.filter((menuItem) => {
