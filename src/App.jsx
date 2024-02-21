@@ -76,6 +76,20 @@ const ProtectedRestaurantAdminRoute = ({ element }) => {
   return element;
 };
 
+const ProtectedAdminRoute = ({ element }) => {
+  const { user, loading } = useAuth();
+  const isAuthenticated = user !== null;
+  const hasCorrectRole = user && (user.user_role === 'admin' || user.user_role=='superadmin');
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+  if (!isAuthenticated || !hasCorrectRole) {
+    return <Navigate to="/admin/signin" replace />;
+  }
+
+  return element;
+};
+
 
 const RestaurantAdmin = () => {
   return (
@@ -151,10 +165,9 @@ const Router = createBrowserRouter(
         <Route path="signup" element={<RestaurantSignUpForm />} />
       </Route>
 
-      <Route path="admin" element={<Outlet />}>
+      <Route path="admin" element={<EmptyOutletWithToaster />}>
         <Route path="" element={<PageNotFound />} />
-        <Route path="" element={<Admin />}>
-          {/* todo : admin routes */}
+        <Route path="" element={<ProtectedAdminRoute element={<Admin />}/>}>
           <Route path="dashboard" element={<AdminDashboard />} />
           <Route path="customers" element={<CustomersList />} />
           <Route path="customers/:id" element={<CustomerDetails />} />
