@@ -1,7 +1,7 @@
 import { DonutChart } from "@tremor/react";
 
 const dataFormatter = (number) =>
-  `$ ${Intl.NumberFormat("us").format(number).toString()}`;
+  `${Intl.NumberFormat("us").format(number).toString()}`;
 
 const PieChartComponent = ({ data, label, loading }) => {
   return (
@@ -17,7 +17,7 @@ const PieChartComponent = ({ data, label, loading }) => {
             ) : (
               <DonutChart
                 className="h-72 w-72"
-                colors={["green", "yellow", "blue", "red"]}
+                colors={["green-400", "yellow-400", "blue-400", "red-400"]}
                 data={data}
                 variant="pie"
                 valueFormatter={dataFormatter}

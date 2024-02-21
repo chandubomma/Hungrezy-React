@@ -26,10 +26,33 @@ const RestaurantsList = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
+  const [filteredRestaurants, setFilteredRestaurants] = useState([]);
 
   useEffect(() => {
     fetchRestaurants(currentPage);
-  }, [statusFilter, ratingFilter, currentPage]);
+  }, [currentPage]);
+
+  useEffect(() => {
+    if (statusFilter === "all" && ratingFilter === "all") {
+      setFilteredRestaurants(restaurants);
+    } else if (statusFilter === "all" && ratingFilter !== "all") {
+      setFilteredRestaurants(
+        restaurants.filter((restaurant) => restaurant.rating >= ratingFilter)
+      );
+    } else if (statusFilter !== "all" && ratingFilter === "all") {
+      setFilteredRestaurants(
+        restaurants.filter((restaurant) => restaurant.status === statusFilter)
+      );
+    } else {
+      setFilteredRestaurants(
+        restaurants.filter(
+          (restaurant) =>
+            restaurant.status === statusFilter &&
+            restaurant.rating >= ratingFilter
+        )
+      );
+    }
+  }, [statusFilter, ratingFilter, restaurants]);
 
   const fetchRestaurants = async (page) => {
     setLoading(true);
@@ -189,7 +212,7 @@ const RestaurantsList = () => {
         <TableBody>
           {loading
             ? skeletonRows
-            : restaurants.map((restaurant) => (
+            : filteredRestaurants.map((restaurant) => (
                 <TableRow key={restaurant.email}>
                   <TableCell>{restaurant.name}</TableCell>
                   <TableCell>

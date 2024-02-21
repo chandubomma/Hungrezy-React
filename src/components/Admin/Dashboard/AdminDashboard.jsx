@@ -43,14 +43,14 @@ const AdminDashboard = () => {
     try {
       setLoadingRestaurants(true);
       const response = await fetch(
-        `${import.meta.env.VITE_HUNGREZY_API}/api/restaurant/all`
+        `${import.meta.env.VITE_HUNGREZY_API}/api/restaurant/count`
       );
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
 
       const result = await response.json();
-      setTotalRestaurants(result.count);
+      setTotalRestaurants(result.total);
       const { approved, suspended, inprogress, rejected } = result;
 
       // Update the state with the extracted counts
