@@ -28,8 +28,7 @@ const RestaurantNavbar = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const { pathname } = useLocation();
   const {signout,user} = useAuth()
-  const navigate = useNavigate();
-  if(!user)navigate('/restaurant/signin');
+  
   
   const isLinkActive = (path) => {
     return pathname.startsWith(path);

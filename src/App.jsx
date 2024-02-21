@@ -63,18 +63,19 @@ const Root = () => {
 
 
 const ProtectedRestaurantAdminRoute = ({ element }) => {
-  const { user } = useAuth();
-  console.log(user);
-  // Check if user is authenticated and has the correct role
+  const { user, loading } = useAuth();
   const isAuthenticated = user !== null;
   const hasCorrectRole = user && user.user_role === 'restaurant';
-
+  if (loading) {
+    return <p>Loading...</p>;
+  }
   if (!isAuthenticated || !hasCorrectRole) {
     return <Navigate to="/restaurant/signin" replace />;
   }
 
   return element;
 };
+
 
 const RestaurantAdmin = () => {
   return (
@@ -134,9 +135,9 @@ const Router = createBrowserRouter(
         <Route path="signup" element={<SignUpForm />} />
       </Route>
 
-      <Route path="restaurant" element={<EmptyOutletWithToaster />}>
+      <Route path="restaurant" element={<ProtectedRestaurantAdminRoute element={<EmptyOutletWithToaster />} />}>
         <Route path="" element={<PageNotFound />} />
-        <Route path=""  element={<ProtectedRestaurantAdminRoute element={<RestaurantAdmin />} />}>
+        <Route path=""  element={<RestaurantAdmin />}>
           <Route path="dashboard"  element={<RestaurantDashboard />}/>
           <Route path="orders" element={<Orders />} />
           <Route path="orders/:id" element={<Order />} />
