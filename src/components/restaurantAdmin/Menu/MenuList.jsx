@@ -17,60 +17,63 @@ import { useEffect, useState } from "react";
 import { MdDeleteOutline } from "react-icons/md";
 import { CiEdit } from "react-icons/ci";
 import { Link } from "react-router-dom";
-import { menuItems } from "../../../data/menuItems";
 import { useAuth } from "../../../AuthContext";
-import { useSelector, useDispatch } from 'react-redux';
-import { selectMenu,setMenu } from '../../../redux/slices/menuSlice';
-
+import { useSelector, useDispatch } from "react-redux";
+import { selectMenu, setMenu } from "../../../redux/slices/menuSlice";
 
 const MenuList = () => {
   const [statusFilter, setStatusFilter] = useState("published");
   const [categoryFilter, setCategoryFilter] = useState("all");
+  const [loading, setLoading] = useState(true);
   const Menu = useSelector(selectMenu);
-  const {user,accessToken} = useAuth();
+  const { user, accessToken } = useAuth();
   const dispatch = useDispatch();
 
-  const fetchMenu = async()=>{
-    const url = `${import.meta.env.VITE_HUNGREZY_API}/api/restaurant/menu/${user.menu_id}`;
-    try{
+  const fetchMenu = async () => {
+    setLoading(true);
+    const url = `${import.meta.env.VITE_HUNGREZY_API}/api/restaurant/menu/${
+      user.menu_id
+    }`;
+    try {
       const response = await fetch(url, {
-        method: 'GET',
+        method: "GET",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
         },
       });
       const result = await response.json();
       delete result.data._id;
-      console.log(result.data)
       const temp = convertMenuObjecttoArray(result.data);
-      dispatch(setMenu(temp))
-    }catch(error){
+      dispatch(setMenu(temp));
+      setLoading(false);
+    } catch (error) {
       console.log(error);
+      setLoading(false);
     }
-  }
+  };
 
-  const convertMenuObjecttoArray = (menuObject)=>{
+  const convertMenuObjecttoArray = (menuObject) => {
     const menuArray = [];
     for (const category in menuObject) {
       for (const item in menuObject[category]) {
         menuArray.push({
-          id: `${category.replace(/\s+/g, '')}-${item.replace(/\s+/g, '')}`,
+          id: `${category.replace(/\s+/g, "")}-${item.replace(/\s+/g, "")}`,
           name: item,
           price: menuObject[category][item].price,
           category: category,
-          quantity: 1, 
-          discount: 0, 
-          available: true
+          quantity: 1,
+          discount: 0,
+          available: true,
         });
       }
     }
     return menuArray;
-  }
+  };
 
-  useEffect(()=>{
-    fetchMenu()
-  },[])
+  useEffect(() => {
+    fetchMenu();
+  }, []);
 
   const filteredMenuItems = Menu.filter((menuItem) => {
     if (
@@ -93,6 +96,32 @@ const MenuList = () => {
 
     return statusMatch && categoryMatch;
   });
+
+  const categories = [...new Set(Menu.map((menuItem) => menuItem.category))];
+
+  const renderSkeleton = () => (
+    <TableRow>
+      <TableCell>
+        <div className="animate-pulse h-4 bg-gray-200 rounded w-24"></div>
+      </TableCell>
+      <TableCell>
+        <div className="animate-pulse h-4 bg-gray-200 rounded w-24"></div>
+      </TableCell>
+      <TableCell>
+        <div className="animate-pulse h-4 bg-gray-200 rounded w-24"></div>
+      </TableCell>
+      <TableCell>
+        <div className="animate-pulse h-4 bg-gray-200 rounded w-24"></div>
+      </TableCell>
+      <TableCell>
+        <div className="animate-pulse h-4 bg-gray-200 rounded w-24"></div>
+      </TableCell>
+      <TableCell>
+        <div className="animate-pulse h-4 bg-gray-200 rounded w-24"></div>
+      </TableCell>
+    </TableRow>
+  );
+
   return (
     <div className="px-4">
       <div className="flex justify-between items-center">
@@ -107,7 +136,9 @@ const MenuList = () => {
       </div>
       <div className="flex sm:flex-row flex-col gap-y-5 items-center mt-2 sm:gap-x-5">
         <div className="flex items-center gap-2">
-          <p className="text-sm font-semibold text-gray-500 pt-3">Status: &nbsp;</p>
+          <p className="text-sm font-semibold text-gray-500 pt-3">
+            Status: &nbsp;
+          </p>
           <Select
             className="w-[10rem]"
             placeholder="Status"
@@ -140,18 +171,15 @@ const MenuList = () => {
             <SelectItem value="all" className="cursor-pointer">
               All
             </SelectItem>
-            <SelectItem value="main course" className="cursor-pointer">
-              Main Course
-            </SelectItem>
-            <SelectItem value="appetizer" className="cursor-pointer">
-              Appetizer
-            </SelectItem>
-            <SelectItem value="dessert" className="cursor-pointer">
-              Dessert
-            </SelectItem>
-            <SelectItem value="drinks" className="cursor-pointer">
-              Drinks
-            </SelectItem>
+            {categories.map((cat) => (
+              <SelectItem
+                key={cat}
+                value={cat.toLowerCase()}
+                className="cursor-pointer"
+              >
+                {cat}
+              </SelectItem>
+            ))}
           </Select>
         </div>
       </div>
@@ -168,42 +196,54 @@ const MenuList = () => {
         </TableHead>
 
         <TableBody>
-          {filteredMenuItems.map((menuItem) => (
-            <TableRow key={menuItem.id}>
-              <TableCell>{menuItem.id}</TableCell>
-              <TableCell>{menuItem.name}</TableCell>
-              <TableCell>&#8377;{menuItem.price}</TableCell>
-              <TableCell>{menuItem.category}</TableCell>
-              <TableCell>
-                <Badge
-                  className="px-3 py-1 flex items-center w-28 justify-center"
-                  color={menuItem.available === true ? "green" : "gray"}
-                  icon={
-                    menuItem.available === true ? BadgeCheckIcon : RiDraftLine
-                  }
-                >
-                  <Text>
-                    {menuItem.available === true ? "Published" : "Draft"}
-                  </Text>
-                </Badge>
-              </TableCell>
-              <TableCell className="flex items-center justify-center lg:-ml-14 md:-ml-10">
-                <div className="flex w-fit gap-3">
-                  <Link
-                    to={`/restaurant/edit-menu/${menuItem.id}`}
-                    className="flex items-center justify-center rounded-md cursor-pointer"
+          {loading ? (
+            <>
+              {renderSkeleton()}
+              {renderSkeleton()}
+              {renderSkeleton()}
+              {renderSkeleton()}
+              {renderSkeleton()}
+              {renderSkeleton()}
+            </>
+          ) : (
+            filteredMenuItems.map((menuItem) => (
+              <TableRow key={menuItem.id}>
+                <TableCell>{menuItem.id}</TableCell>
+                <TableCell>{menuItem.name}</TableCell>
+                <TableCell>&#8377;{menuItem.price}</TableCell>
+                <TableCell>{menuItem.category}</TableCell>
+                <TableCell>
+                  <Badge
+                    className="px-3 py-1 flex items-center w-28 justify-center"
+                    color={menuItem.available === true ? "green" : "gray"}
+                    icon={
+                      menuItem.available === true ? BadgeCheckIcon : RiDraftLine
+                    }
                   >
-                    <CiEdit className="w-5 h-5 text-gray-500" />
-                  </Link>
-                  <Link className="flex items-center justify-center rounded-md cursor-pointer">
-                    <MdDeleteOutline className="w-5 h-5 text-red-500" />
-                  </Link>
-                </div>
-              </TableCell>
-            </TableRow>
-          ))}
+                    <Text>
+                      {menuItem.available === true ? "Published" : "Draft"}
+                    </Text>
+                  </Badge>
+                </TableCell>
+                <TableCell className="flex items-center justify-center lg:-ml-14 md:-ml-10">
+                  <div className="flex w-fit gap-3">
+                    <Link
+                      to={`/restaurant/edit-menu/${menuItem.id}`}
+                      className="flex items-center justify-center rounded-md cursor-pointer"
+                    >
+                      <CiEdit className="w-5 h-5 text-gray-500" />
+                    </Link>
+                    <Link className="flex items-center justify-center rounded-md cursor-pointer">
+                      <MdDeleteOutline className="w-5 h-5 text-red-500" />
+                    </Link>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))
+          )}
         </TableBody>
       </Table>
+      
     </div>
   );
 };
