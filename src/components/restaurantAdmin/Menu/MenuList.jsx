@@ -13,16 +13,63 @@ import {
 import { BadgeCheckIcon } from "@heroicons/react/outline";
 import { FaChevronRight } from "react-icons/fa6";
 import { RiDraftLine } from "react-icons/ri";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MdDeleteOutline } from "react-icons/md";
 import { CiEdit } from "react-icons/ci";
 import { Link } from "react-router-dom";
 import { menuItems } from "../../../data/menuItems";
+import { useAuth } from "../../../AuthContext";
+
 
 const MenuList = () => {
   const [statusFilter, setStatusFilter] = useState("published");
   const [categoryFilter, setCategoryFilter] = useState("all");
-  const filteredMenuItems = menuItems.filter((menuItem) => {
+  const [Menu,setMenu] = useState([]);
+  const {user,accessToken} = useAuth()
+
+  const fetchMenu = async()=>{
+    const url = `${import.meta.env.VITE_HUNGREZY_API}/api/restaurant/menu/${user.menu_id}`;
+    try{
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`,
+        },
+      });
+      const result = await response.json();
+      delete result.data._id;
+      console.log(result.data)
+      const temp = convertMenuObjecttoArray(result.data);
+      setMenu(temp);
+    }catch(error){
+      console.log(error);
+    }
+  }
+
+  const convertMenuObjecttoArray = (menuObject)=>{
+    const menuArray = [];
+    for (const category in menuObject) {
+      for (const item in menuObject[category]) {
+        menuArray.push({
+          id: `${category.replace(/\s+/g, '')}-${item.replace(/\s+/g, '')}`,
+          name: item,
+          price: menuObject[category][item].price,
+          category: category,
+          quantity: 1, 
+          discount: 0, 
+          available: true
+        });
+      }
+    }
+    return menuArray;
+  }
+
+  useEffect(()=>{
+    fetchMenu()
+  },[])
+
+  const filteredMenuItems = Menu.filter((menuItem) => {
     if (
       (!statusFilter || statusFilter === "all") &&
       (!categoryFilter || categoryFilter === "all")
