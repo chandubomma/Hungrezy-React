@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { MdEmail, MdPhone } from "react-icons/md";
 import { IoEye } from "react-icons/io5";
+import { BiShareAlt } from "react-icons/bi";
+import { FaShareSquare } from "react-icons/fa";
+import {toast} from 'sonner';
 import { Switch, Select,
     SelectItem,
     Table,
@@ -49,6 +52,23 @@ const AdminsList = () => {
       }
   };
 
+  const handleShareCredentials = async(adminId)=>{
+    try {
+        const response = await fetch(`${import.meta.env.VITE_HUNGREZY_API}/api/admin/${adminId}/share-credentials`,{
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        if(!response.ok)toast.error("Unable to share credentials")
+        else toast.success("Credentials shared successfully!");
+        const { data } = await response.json();
+
+          } catch (error) {
+            console.error("Error toggling admin status:", error);
+          }
+  }
+
   return (
     <div className="px-4">
       <Table className="mt-4 h-[30rem] overflow-y-scroll">
@@ -79,9 +99,25 @@ const AdminsList = () => {
                 </div>
               </TableCell>
               <TableCell>
-                <Link to={`/admin/admins/${admin._id}`}>
-                  <IoEye className="w-6 h-6 text-gray-500" />
-                </Link>
+                    <div className="flex items-center gap-x-2">
+                        <Link to={`/admin/admins/${admin._id}`}>
+                        <IoEye className="w-6 h-6 text-gray-500" />
+                        </Link>
+                        <span
+                        onClick={() => {
+                            const shareConfirmation = window.confirm(
+                            `Share credentials to ${admin.firstName} ${admin.lastName}?`
+                            );
+                            if (shareConfirmation) {
+                                handleShareCredentials(admin._id);
+                            }
+                        }}
+                        className="cursor-pointer"
+                        >
+                        <FaShareSquare className="w-5 h-5 text-gray-600 ml-2 mb-1" />
+                        </span>
+                    </div>
+            
               </TableCell>
               <TableCell>
                 <Switch
