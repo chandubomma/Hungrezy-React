@@ -12,9 +12,8 @@ const EmailAndPassword = ({setSignInWithOTP,email,handleEmail,validateEmail}) =>
     const {signin} = useAuth();
     let user_role;
     if(location.pathname=='/admin/signin')user_role="admin"
-    if(location.pathname=='/restaurant/signin')user_role="restaurant"
+    else if(location.pathname=='/restaurant/signin')user_role="restaurant"
     else user_role="user"
-    
     const validatePassword = (enteredPassword) => {
       if (!enteredPassword.trim()) {
         // If password is empty or contains only spaces

@@ -20,10 +20,12 @@ import { TfiAnnouncement } from "react-icons/tfi";
 import RestaurantLink from "./Sidebar/RestaurantLink";
 import { CgDetailsMore } from "react-icons/cg";
 import CustomerLink from "./Sidebar/CustomerLink";
+import { useAuth } from "../../AuthContext";
 
 const AdminNavbar = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const { pathname } = useLocation();
+  const {signout,user} = useAuth()
 
   const isLinkActive = (path) => {
     if (path.includes("/:id")) {
@@ -106,6 +108,7 @@ const AdminNavbar = () => {
                 <MenuItem
                   className="flex gap-[10px] items-center"
                   _hover={{ backgroundColor: "red.50" }}
+                  onClick={()=>{signout()}}
                 >
                   <Icon color={"red.400"} as={IoLogOutOutline} w={5} h={5} />
                   <p className="text-red-400">Log Out</p>
@@ -113,8 +116,8 @@ const AdminNavbar = () => {
               </MenuList>
             </Menu>
             <div className="py-2">
-              <p className="text-base font-semibold">Susritha sabbini</p>
-              <p className="text-sm font-normal">Admin</p>
+              <p className="text-base font-semibold">{(user.firstName+" "+user.lastName).replace(/\b\w/g, (char) => char.toUpperCase())}</p>
+              <p className="text-sm font-normal">{user.superAdmin?'Super Admin':"Admin"}</p>
             </div>
           </div>
         </div>
