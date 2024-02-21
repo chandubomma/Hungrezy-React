@@ -25,17 +25,22 @@ const RestaurantsList = () => {
   const [restaurants, setRestaurants] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchRestaurants(currentPage);
   }, [statusFilter, ratingFilter, currentPage]);
 
   const fetchRestaurants = async (page) => {
+    setLoading(true);
     const response = await fetch(
-      `${import.meta.env.VITE_HUNGREZY_API}/api/restaurant/all?page=${page}`
+      `${
+        import.meta.env.VITE_HUNGREZY_API
+      }/api/restaurant/all?page=${page}&perPage=10`
     );
     if (!response.ok) {
       setRestaurants([]);
+      setLoading(false);
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
 
@@ -43,6 +48,7 @@ const RestaurantsList = () => {
     const { data, totalPages: total } = result;
     setRestaurants(data);
     setTotalPages(total);
+    setLoading(false);
   };
 
   const handleStatusChange = (value) => {
@@ -80,18 +86,25 @@ const RestaurantsList = () => {
     );
   }
 
-  const filteredRestaurants = restaurants.filter((restaurant) => {
-    if (statusFilter !== "all" && restaurant.status !== statusFilter) {
-      return false;
-    }
-    if (
-      ratingFilter !== "all" &&
-      parseFloat(restaurant.rating) < parseFloat(ratingFilter)
-    ) {
-      return false;
-    }
-    return true;
-  });
+  const skeletonRows = Array.from({ length: 10 }).map((_, index) => (
+    <TableRow key={index}>
+      <TableCell>
+        <div className="animate-pulse h-4 bg-gray-200 rounded"></div>
+      </TableCell>
+      <TableCell>
+        <div className="animate-pulse h-4 bg-gray-200 rounded"></div>
+      </TableCell>
+      <TableCell>
+        <div className="animate-pulse h-4 bg-gray-200 rounded"></div>
+      </TableCell>
+      <TableCell>
+        <div className="animate-pulse h-4 bg-gray-200 rounded"></div>
+      </TableCell>
+      <TableCell>
+        <div className="animate-pulse h-4 bg-gray-200 rounded"></div>
+      </TableCell>
+    </TableRow>
+  ));
 
   return (
     <div className="px-4">
@@ -174,56 +187,58 @@ const RestaurantsList = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {filteredRestaurants.map((restaurant) => (
-            <TableRow key={restaurant.email}>
-              <TableCell>{restaurant.name}</TableCell>
-              <TableCell>
-                <div className="flex gap-x-2">
-                  <MdEmail className="w-5 h-5 text-gray-500" />
-                  {restaurant.email}
-                </div>
-              </TableCell>
-              <TableCell>
-                <div className="flex gap-x-2">
-                  <FaStar className="w-5 h-5 text-yellow-500" />
-                  {restaurant.rating}
-                </div>
-              </TableCell>
-              <TableCell>
-                <Badge
-                  className="px-3 py-1 flex items-center w-28"
-                  color={
-                    restaurant.status === "approved"
-                      ? "green"
-                      : restaurant.status === "suspended"
-                      ? "yellow"
-                      : restaurant.status === "inprogress"
-                      ? "blue"
-                      : "red"
-                  }
-                  icon={
-                    restaurant.status === "approved"
-                      ? BadgeCheckIcon
-                      : restaurant.status === "rejected"
-                      ? RxCross2
-                      : restaurant.status === "inprogress"
-                      ? MdOutlinePending
-                      : RxCross2
-                  }
-                >
-                  <Text>
-                    {restaurant.status.charAt(0).toUpperCase() +
-                      restaurant.status.slice(1)}
-                  </Text>
-                </Badge>
-              </TableCell>
-              <TableCell>
-                <Link to={`/admin/restaurants/${restaurant._id}`}>
-                  <IoEye className="w-6 h-6 text-gray-500" />
-                </Link>
-              </TableCell>
-            </TableRow>
-          ))}
+          {loading
+            ? skeletonRows
+            : restaurants.map((restaurant) => (
+                <TableRow key={restaurant.email}>
+                  <TableCell>{restaurant.name}</TableCell>
+                  <TableCell>
+                    <div className="flex gap-x-2">
+                      <MdEmail className="w-5 h-5 text-gray-500" />
+                      {restaurant.email}
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex gap-x-2">
+                      <FaStar className="w-5 h-5 text-yellow-500" />
+                      {restaurant.rating}
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <Badge
+                      className="px-3 py-1 flex items-center w-28"
+                      color={
+                        restaurant.status === "approved"
+                          ? "green"
+                          : restaurant.status === "suspended"
+                          ? "yellow"
+                          : restaurant.status === "inprogress"
+                          ? "blue"
+                          : "red"
+                      }
+                      icon={
+                        restaurant.status === "approved"
+                          ? BadgeCheckIcon
+                          : restaurant.status === "rejected"
+                          ? RxCross2
+                          : restaurant.status === "inprogress"
+                          ? MdOutlinePending
+                          : RxCross2
+                      }
+                    >
+                      <Text>
+                        {restaurant.status.charAt(0).toUpperCase() +
+                          restaurant.status.slice(1)}
+                      </Text>
+                    </Badge>
+                  </TableCell>
+                  <TableCell>
+                    <Link to={`/admin/restaurants/${restaurant._id}`}>
+                      <IoEye className="w-6 h-6 text-gray-500" />
+                    </Link>
+                  </TableCell>
+                </TableRow>
+              ))}
         </TableBody>
       </Table>
       <div className="flex justify-center mt-4">{paginationNumbers}</div>
