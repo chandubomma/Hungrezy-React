@@ -18,14 +18,12 @@ import { MdDeleteOutline } from "react-icons/md";
 import { CiEdit } from "react-icons/ci";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../../AuthContext";
-<<<<<<< HEAD
 import { useSelector, useDispatch } from "react-redux";
-import { selectMenu, setMenu } from "../../../redux/slices/menuSlice";
-=======
-import { useSelector, useDispatch } from 'react-redux';
-import { selectMenu,setMenu,deleteMenuItem } from '../../../redux/slices/menuSlice';
-
->>>>>>> c4c83618fbf806ebbe59e0847fe8d215c67de4c6
+import {
+  selectMenu,
+  setMenu,
+  deleteMenuItem,
+} from "../../../redux/slices/menuSlice";
 
 const MenuList = () => {
   const [statusFilter, setStatusFilter] = useState("published");
@@ -77,9 +75,9 @@ const MenuList = () => {
     return menuArray;
   };
 
-  useEffect(()=>{
-    if(!Menu)fetchMenu()
-  },[])
+  useEffect(() => {
+    if (!Menu) fetchMenu();
+  }, []);
 
   const filteredMenuItems = Menu.filter((menuItem) => {
     if (
@@ -226,12 +224,12 @@ const MenuList = () => {
                       menuItem.available === true ? BadgeCheckIcon : RiDraftLine
                     }
                   >
-<<<<<<< HEAD
                     <Text>
                       {menuItem.available === true ? "Published" : "Draft"}
                     </Text>
                   </Badge>
                 </TableCell>
+
                 <TableCell className="flex items-center justify-center lg:-ml-14 md:-ml-10">
                   <div className="flex w-fit gap-3">
                     <Link
@@ -240,7 +238,10 @@ const MenuList = () => {
                     >
                       <CiEdit className="w-5 h-5 text-gray-500" />
                     </Link>
-                    <Link className="flex items-center justify-center rounded-md cursor-pointer">
+                    <Link
+                      onClick={() => dispatch(deleteMenuItem(menuItem.id))}
+                      className="flex items-center justify-center rounded-md cursor-pointer"
+                    >
                       <MdDeleteOutline className="w-5 h-5 text-red-500" />
                     </Link>
                   </div>
@@ -248,20 +249,8 @@ const MenuList = () => {
               </TableRow>
             ))
           )}
-=======
-                    <CiEdit className="w-5 h-5 text-gray-500" />
-                  </Link>
-                  <Link onClick={()=>dispatch(deleteMenuItem(menuItem.id))} className="flex items-center justify-center rounded-md cursor-pointer">
-                    <MdDeleteOutline className="w-5 h-5 text-red-500" />
-                  </Link>
-                </div>
-              </TableCell>
-            </TableRow>
-          ))}
->>>>>>> c4c83618fbf806ebbe59e0847fe8d215c67de4c6
         </TableBody>
       </Table>
-      
     </div>
   );
 };
