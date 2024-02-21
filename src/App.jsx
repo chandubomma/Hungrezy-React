@@ -135,9 +135,9 @@ const Router = createBrowserRouter(
         <Route path="signup" element={<SignUpForm />} />
       </Route>
 
-      <Route path="restaurant" element={<ProtectedRestaurantAdminRoute element={<EmptyOutletWithToaster />} />}>
+      <Route path="restaurant" element={<EmptyOutletWithToaster />}>
         <Route path="" element={<PageNotFound />} />
-        <Route path=""  element={<RestaurantAdmin />}>
+        <Route path=""  element={<ProtectedRestaurantAdminRoute element={<RestaurantAdmin/>} />}>
           <Route path="dashboard"  element={<RestaurantDashboard />}/>
           <Route path="orders" element={<Orders />} />
           <Route path="orders/:id" element={<Order />} />
