@@ -2,12 +2,43 @@ import { motion } from "framer-motion";
 import { FaArrowRight, FaChevronRight } from "react-icons/fa6";
 import { TiArrowBackOutline } from "react-icons/ti";
 import { RiDraftLine } from "react-icons/ri";
+import { useSelector, useDispatch } from 'react-redux';
+import { addMenuItem,selectMenu } from '../../../redux/slices/menuSlice';
+import { useState } from "react";
+import {toast} from 'sonner';
 
 const AddMenu = () => {
+  const emptyItem = {
+    id: '',
+    name: '',
+    price: 0,
+    category: '',
+    quantity: 1, 
+    discount: 0, 
+    available: true
+}
+  const [menuItem,setMenuItem] = useState(emptyItem);
+  const dispatch = useDispatch();
   const formVariants = {
     hidden: { opacity: 0, x: 0 },
     visible: { opacity: 1, x: 0, transition: { duration: 0.8 } },
   };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setMenuItem((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleAddMenuItem = ()=>{
+    const temp = menuItem;
+    temp.id = `${temp.category.replace(/\s+/g, '')}-${temp.name.replace(/\s+/g, '')}`
+    dispatch(addMenuItem(temp));
+    toast.success('Menu Item added successfully!');
+    setMenuItem(emptyItem)
+  }
 
   return (
     <div className="px-4">
@@ -33,8 +64,9 @@ const AddMenu = () => {
                   className="form-control focus:shadow-none focus:border-amber-600 rounded-md w-full h-full"
                   id="menuItemName"
                   placeholder="Menu Item Name"
-                  name="menuItemName"
+                  name="name"
                   type="text"
+                  onChange={handleChange}
                 />
                 <label htmlFor="menuItemName" className="text-gray-500">
                   Menu Item Name
@@ -46,8 +78,9 @@ const AddMenu = () => {
                   className="form-control focus:shadow-none focus:border-amber-600 rounded-md w-full h-full"
                   id="menuItemPrice"
                   placeholder="Menu Item Price"
-                  name="menuItemPrice"
+                  name="price"
                   type="number"
+                  onChange={handleChange}
                 />
                 <label htmlFor="menuItemPrice" className="text-gray-500">
                   Menu Item Price
@@ -73,6 +106,8 @@ const AddMenu = () => {
               <select
                 className="form-select focus:shadow-none focus:border-amber-600 rounded-md w-full h-full cursor-pointer"
                 id="menuItemCategory"
+                name="category"
+                onChange={handleChange}
               >
                 <option value="main-course">Main Course</option>
                 <option value="appetizer">Appetizer</option>
@@ -88,8 +123,9 @@ const AddMenu = () => {
                   className="form-control focus:shadow-none focus:border-amber-600 rounded-md w-full h-full"
                   id="menuItemQuantity"
                   placeholder="Menu Item Quantity"
-                  name="menuItemQuantity"
+                  name="quantity"
                   type="number"
+                  onChange={handleChange}
                 />
                 <label htmlFor="menuItemQuantity" className="text-gray-500">
                   Menu Item Quantity
@@ -101,8 +137,9 @@ const AddMenu = () => {
                   className="form-control focus:shadow-none focus:border-amber-600 rounded-md w-full h-full"
                   id="menuItemDiscount"
                   placeholder="Menu Item Discount"
-                  name="menuItemDiscount"
+                  name="discount"
                   type="number"
+                  onChange={handleChange}
                 />
                 <label htmlFor="menuItemDiscount" className="text-gray-500">
                   Menu Item Discount
@@ -124,6 +161,7 @@ const AddMenu = () => {
               type="button"
               className="py-2 px-4 bg-amber-500 w-fit self-center hover:bg-amber-600 justify-center transition-colors duration-300 text-white rounded-md flex items-center"
               whileHover={{ scale: 1.005 }}
+              onClick={handleAddMenuItem}
             >
               <span className="align-baseline text-center">Add</span>
               <FaArrowRight className="ml-2 align-baseline" />

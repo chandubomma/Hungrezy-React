@@ -20,7 +20,7 @@ import { Link } from "react-router-dom";
 import { menuItems } from "../../../data/menuItems";
 import { useAuth } from "../../../AuthContext";
 import { useSelector, useDispatch } from 'react-redux';
-import { selectMenu,setMenu } from '../../../redux/slices/menuSlice';
+import { selectMenu,setMenu,deleteMenuItem } from '../../../redux/slices/menuSlice';
 
 
 const MenuList = () => {
@@ -69,7 +69,7 @@ const MenuList = () => {
   }
 
   useEffect(()=>{
-    fetchMenu()
+    if(!Menu)fetchMenu()
   },[])
 
   const filteredMenuItems = Menu.filter((menuItem) => {
@@ -195,7 +195,7 @@ const MenuList = () => {
                   >
                     <CiEdit className="w-5 h-5 text-gray-500" />
                   </Link>
-                  <Link className="flex items-center justify-center rounded-md cursor-pointer">
+                  <Link onClick={()=>dispatch(deleteMenuItem(menuItem.id))} className="flex items-center justify-center rounded-md cursor-pointer">
                     <MdDeleteOutline className="w-5 h-5 text-red-500" />
                   </Link>
                 </div>
