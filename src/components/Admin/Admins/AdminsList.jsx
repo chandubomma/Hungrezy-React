@@ -29,8 +29,24 @@ const AdminsList = () => {
     }
   };
 
-  const handleToggle = (adminId, isActive) => {
-    
+  const handleToggle = async(adminId, isActive) => {
+    try {
+    const response = await fetch(`${import.meta.env.VITE_HUNGREZY_API}/api/admin/${adminId}/status`,{
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body : JSON.stringify({active:isActive})
+    });
+        const { data } = await response.json();
+        setAdmins((prevAdmins) =>
+            prevAdmins.map((admin) =>
+            admin._id === adminId ? { ...admin, active: isActive } : admin
+      )
+    );
+      } catch (error) {
+        console.error("Error toggling admin status:", error);
+      }
   };
 
   return (
