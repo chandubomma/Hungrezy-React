@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { BiSolidFoodMenu } from "react-icons/bi";
 import { FaChevronRight, FaStar } from "react-icons/fa6";
 import { IoPricetag } from "react-icons/io5";
-import { MdEmail, MdOutlinePending, MdPlace } from "react-icons/md";
+import { MdEmail, MdFoodBank, MdOutlinePending, MdPlace } from "react-icons/md";
 import { RiQuestionFill } from "react-icons/ri";
 import { RxCross2 } from "react-icons/rx";
 import { useDispatch, useSelector } from "react-redux";
@@ -184,7 +184,7 @@ const RestaurantDetails = () => {
               </div>
               <div className="flex justify-between mb-2">
                 <p className="text-gray-500 flex items-center">
-                  <MdPlace className="mr-2" />
+                  <MdFoodBank className="mr-2" />
                   Cuisine:
                 </p>
                 <p className="text-gray-700">{restaurant?.cuisine}</p>

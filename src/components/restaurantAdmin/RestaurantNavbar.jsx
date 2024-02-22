@@ -1,15 +1,23 @@
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import logo from "./../../assets/logoAsset.png";
 import { FaBars, FaChevronUp, FaSearch } from "react-icons/fa";
 import {
+  Button,
+  Divider,
   Icon,
   IconButton,
   Menu,
   MenuButton,
   MenuItem,
   MenuList,
+  Popover,
+  PopoverArrow,
+  PopoverBody,
+  PopoverContent,
+  PopoverHeader,
+  PopoverTrigger,
 } from "@chakra-ui/react";
 import { FaUser, FaXmark } from "react-icons/fa6";
 import { LuLayoutDashboard, LuUser2 } from "react-icons/lu";
@@ -23,13 +31,16 @@ import { RiPlayListAddFill } from "react-icons/ri";
 import { MdOutlineEditNote, MdReviews } from "react-icons/md";
 import { useAuth } from "../../AuthContext";
 import { useNavigate } from "react-router-dom";
+import useWebSocket from "../../hooks/useWebsocket";
 
 const RestaurantNavbar = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const { pathname } = useLocation();
-  const {signout,user} = useAuth()
-  
-  
+  const { signout, user } = useAuth();
+  const [announcements, setAnnouncements] = useState([]);
+  const [count, setCount] = useState(0);
+  const { socket } = useWebSocket(); // Initialize WebSocket hook
+
   const isLinkActive = (path) => {
     return pathname.startsWith(path);
   };
@@ -43,6 +54,40 @@ const RestaurantNavbar = () => {
   const toggleMenu = () => {
     setMenuOpen((prev) => !prev);
   };
+
+  useEffect(() => {
+    fetchAnnouncements();
+  }, []);
+
+  const fetchAnnouncements = async () => {
+    const response = await fetch(
+      `${import.meta.env.VITE_HUNGREZY_API}/api/admin/announcements`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ to: "restaurant" }),
+      }
+    );
+    const result = await response.json();
+    setAnnouncements(result.data);
+  };
+
+  // Listen for "announcement" event from WebSocket
+  useEffect(() => {
+    if (socket) {
+      socket.on("announcement", (newAnnouncement) => {
+        setAnnouncements((prevAnnouncements) => [
+          ...prevAnnouncements,
+          { _id: newAnnouncement, announcement: newAnnouncement },
+        ]);
+        setCount((prev) => prev + 1);
+      });
+
+      return () => {
+        socket.off("announcement");
+      };
+    }
+  }, [socket, announcements]);
 
   return (
     <div>
@@ -65,22 +110,42 @@ const RestaurantNavbar = () => {
             />
           </div>
           <div className="flex gap-x-4 items-center">
-            <Menu>
-              <MenuButton
-                as={IconButton}
-                aria-label="Options"
-                icon={
-                  <IoMdNotificationsOutline color="gray" className="w-6 h-6" />
-                }
-                variant="outline"
-                className="bg-gray-200"
-                borderRadius={"50%"}
-                size={"lg"}
-              />
-              <MenuList>
-                <MenuItem>Notification</MenuItem>
-              </MenuList>
-            </Menu>
+            <Popover>
+              <PopoverTrigger>
+                <Button
+                  size="md"
+                  rounded={"full"}
+                  leftIcon={<IoMdNotificationsOutline className="h-6 w-6" />}
+                  colorScheme="gray"
+                  backgroundColor={"gray.200"}
+                >
+                  {count > 0 && (
+                    <span className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 bg-red-500 text-white px-1 rounded-full text-xs">
+                      {count}
+                    </span>
+                  )}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent height={"28rem"}>
+                <PopoverArrow />
+                <PopoverHeader>Notifications</PopoverHeader>
+                <PopoverBody>
+                  {announcements.length === 0 && (
+                    <p className="text-sm text-center">No notifications!</p>
+                  )}
+                  {announcements.map((announcement, index) => (
+                    <div key={index}>
+                      <div className="flex gap-2 items-center my-3">
+                        <div>
+                          <p className="text-sm">{announcement.announcement}</p>
+                        </div>
+                      </div>
+                      <Divider />
+                    </div>
+                  ))}
+                </PopoverBody>
+              </PopoverContent>
+            </Popover>
             <Menu>
               <MenuButton
                 as={IconButton}
@@ -101,7 +166,9 @@ const RestaurantNavbar = () => {
                 <MenuItem
                   className="flex gap-[10px] items-center"
                   _hover={{ backgroundColor: "red.50" }}
-                  onClick={()=>{signout()}}
+                  onClick={() => {
+                    signout();
+                  }}
                 >
                   <Icon color={"red.400"} as={IoLogOutOutline} w={5} h={5} />
                   <p className="text-red-400">Log Out</p>
@@ -127,22 +194,42 @@ const RestaurantNavbar = () => {
 
         <div className="flex items-center justify-between gap-3">
           <div className="relative flex gap-x-3 items-center">
-            <Menu>
-              <MenuButton
-                as={IconButton}
-                aria-label="Options"
-                icon={
-                  <IoMdNotificationsOutline className="sm:w-6 sm:h-6 w-4 h-4" />
-                }
-                variant="outline"
-                className="bg-gray-200"
-                borderRadius={"50%"}
-                color="gray"
-              />
-              <MenuList>
-                <MenuItem>Notification</MenuItem>
-              </MenuList>
-            </Menu>
+            <Popover>
+              <PopoverTrigger>
+                <Button
+                  size="md"
+                  rounded={"full"}
+                  leftIcon={<IoMdNotificationsOutline className="h-6 w-6" />}
+                  colorScheme="gray"
+                  backgroundColor={"gray.200"}
+                >
+                  {count > 0 && (
+                    <span className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 bg-red-500 text-white px-1 rounded-full text-xs">
+                      {count}
+                    </span>
+                  )}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent height={"28rem"}>
+                <PopoverArrow />
+                <PopoverHeader>Notifications</PopoverHeader>
+                <PopoverBody>
+                  {announcements.length === 0 && (
+                    <p className="text-sm text-center">No notifications!</p>
+                  )}
+                  {announcements.map((announcement, index) => (
+                    <div key={index}>
+                      <div className="flex gap-2 items-center my-3">
+                        <div>
+                          <p className="text-sm">{announcement.announcement}</p>
+                        </div>
+                      </div>
+                      <Divider />
+                    </div>
+                  ))}
+                </PopoverBody>
+              </PopoverContent>
+            </Popover>
             <Menu>
               <MenuButton
                 as={IconButton}
@@ -162,7 +249,10 @@ const RestaurantNavbar = () => {
                 <MenuItem
                   className="flex gap-[10px] items-center"
                   _hover={{ backgroundColor: "red.50" }}
-                  onClick={()=>{signout();window.location.reload()}}
+                  onClick={() => {
+                    signout();
+                    window.location.reload();
+                  }}
                 >
                   <Icon color={"red.400"} as={IoLogOutOutline} w={5} h={5} />
                   <p className="text-red-400">Log Out</p>

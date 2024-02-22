@@ -1,9 +1,4 @@
-import {
-  FaArrowRight,
-  FaUtensils,
-  FaHandshake,
-  FaMotorcycle,
-} from "react-icons/fa";
+import { FaArrowRight, FaUtensils } from "react-icons/fa";
 import { motion, useAnimation } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { useEffect } from "react";
@@ -69,48 +64,25 @@ const Partners = () => {
           </motion.button>
         </motion.div>
 
-        {/* Organization Partner Card */}
         <motion.div
           key="organization"
           className="w-[425px] h-fit bg-white rounded-lg shadow-md p-5 m-5 relative"
           variants={itemVariants}
         >
-          <FaHandshake className="absolute -left-4 -top-4 text-amber-500 w-8 h-8" />
+          <FaUtensils className="absolute -left-4 -top-4 text-amber-500 w-8 h-8" />
           <p className="text-gray-800 text-center font-light mt-2">
-            Become an Organization Partner
+            Already a Restaurant Partner
           </p>
           <p className="text-gray-600 text-center font-semibold mt-2">
-            - Explore collaboration opportunities
+            - Manage your restaurant
           </p>
           <motion.button
             whileHover={{ scale: 1.05 }}
             type="button"
+            onClick={() => navigate("/restaurant/signin")}
             className="mx-auto py-3 px-8 bg-amber-500 hover:bg-amber-600 transition-colors duration-300 text-white rounded-full flex items-center mt-4"
           >
             <span className="align-baseline"> Click Here </span>
-            <FaArrowRight className="ml-2 align-baseline" />
-          </motion.button>
-        </motion.div>
-
-        {/* Driver Partner Card */}
-        <motion.div
-          key="driver"
-          className="w-[425px] h-fit bg-white rounded-lg shadow-md p-5 m-5 relative"
-          variants={itemVariants}
-        >
-          <FaMotorcycle className="absolute -left-4 -top-4 text-amber-500 w-8 h-8" />
-          <p className="text-gray-800 text-center font-light mt-2">
-            Join as a Delivery Driver
-          </p>
-          <p className="text-gray-600 text-center font-semibold mt-2">
-            - Start earning with us
-          </p>
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            type="button"
-            className="mx-auto py-3 px-8 bg-amber-500 hover:bg-amber-600 transition-colors duration-300 text-white rounded-full flex items-center mt-4"
-          >
-            <span className="align-baseline"> Apply Now </span>
             <FaArrowRight className="ml-2 align-baseline" />
           </motion.button>
         </motion.div>

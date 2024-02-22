@@ -6,7 +6,7 @@ import {
   RouterProvider,
   createBrowserRouter,
   createRoutesFromElements,
-  Navigate
+  Navigate,
 } from "react-router-dom";
 import React from "react";
 import Home from "./pages/Home";
@@ -42,7 +42,7 @@ import RestaurantDetails from "./components/Admin/Restaurants/RestaurantDetails"
 import CustomersList from "./components/Admin/Customers/CustomersList";
 import AdminsList from "./components/Admin/Admins/AdminsList";
 import CustomerDetails from "./components/Admin/Customers/CustomerDetails";
-import AdminProfile from "./components/Admin/Profile/AdminProfile";
+import Queries from "./components/Admin/Queries/Queries";
 import RestaurantDashboard from "./components/restaurantAdmin/Dashboard/RestaurantDashboard";
 import { useAuth } from "./AuthContext";
 
@@ -62,11 +62,10 @@ const Root = () => {
   );
 };
 
-
 const ProtectedRestaurantAdminRoute = ({ element }) => {
   const { user, loading } = useAuth();
   const isAuthenticated = user !== null;
-  const hasCorrectRole = user && user.user_role === 'restaurant';
+  const hasCorrectRole = user && user.user_role === "restaurant";
   if (loading) {
     return <p>Loading...</p>;
   }
@@ -80,7 +79,8 @@ const ProtectedRestaurantAdminRoute = ({ element }) => {
 const ProtectedAdminRoute = ({ element }) => {
   const { user, loading } = useAuth();
   const isAuthenticated = user !== null;
-  const hasCorrectRole = user && (user.user_role === 'admin' || user.user_role=='superadmin');
+  const hasCorrectRole =
+    user && (user.user_role === "admin" || user.user_role == "superadmin");
   if (loading) {
     return <p>Loading...</p>;
   }
@@ -90,7 +90,6 @@ const ProtectedAdminRoute = ({ element }) => {
 
   return element;
 };
-
 
 const RestaurantAdmin = () => {
   return (
@@ -152,8 +151,13 @@ const Router = createBrowserRouter(
 
       <Route path="restaurant" element={<EmptyOutletWithToaster />}>
         <Route path="" element={<PageNotFound />} />
-        <Route path=""  element={<ProtectedRestaurantAdminRoute element={<RestaurantAdmin/>} />}>
-          <Route path="dashboard"  element={<RestaurantDashboard />}/>
+        <Route
+          path=""
+          element={
+            <ProtectedRestaurantAdminRoute element={<RestaurantAdmin />} />
+          }
+        >
+          <Route path="dashboard" element={<RestaurantDashboard />} />
           <Route path="orders" element={<Orders />} />
           <Route path="orders/:id" element={<Order />} />
           <Route path="menu" element={<MenuList />} />
@@ -168,7 +172,7 @@ const Router = createBrowserRouter(
 
       <Route path="admin" element={<EmptyOutletWithToaster />}>
         <Route path="" element={<PageNotFound />} />
-        <Route path="" element={<ProtectedAdminRoute element={<Admin />}/>}>
+        <Route path="" element={<ProtectedAdminRoute element={<Admin />} />}>
           <Route path="dashboard" element={<AdminDashboard />} />
           <Route path="customers" element={<CustomersList />} />
           <Route path="admins" element={<AdminsList />} />
@@ -176,7 +180,7 @@ const Router = createBrowserRouter(
           <Route path="restaurants" element={<RestaurantsList />} />
           <Route path="restaurants/:id" element={<RestaurantDetails />} />
           <Route path="reviews" element={<AdminReviews />} />
-          <Route path="profile" element={<AdminProfile />} />
+          <Route path="queries" element={<Queries />} />
         </Route>
         <Route path="signin" element={<EmailSigninForm />} />
       </Route>

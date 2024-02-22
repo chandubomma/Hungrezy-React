@@ -2,22 +2,22 @@ import { motion } from "framer-motion";
 import { FaArrowRight, FaChevronRight } from "react-icons/fa6";
 import { TiArrowBackOutline } from "react-icons/ti";
 import { RiDraftLine } from "react-icons/ri";
-import { useSelector, useDispatch } from 'react-redux';
-import { addMenuItem,selectMenu } from '../../../redux/slices/menuSlice';
+import { useSelector, useDispatch } from "react-redux";
+import { addMenuItem, selectMenu } from "../../../redux/slices/menuSlice";
 import { useState } from "react";
-import {toast} from 'sonner';
+import { toast } from "sonner";
 
 const AddMenu = () => {
   const emptyItem = {
-    id: '',
-    name: '',
+    id: "",
+    name: "",
     price: 0,
-    category: '',
-    quantity: 1, 
-    discount: 0, 
-    available: true
-}
-  const [menuItem,setMenuItem] = useState(emptyItem);
+    category: "",
+    quantity: 1,
+    discount: 0,
+    available: true,
+  };
+  const [menuItem, setMenuItem] = useState(emptyItem);
   const dispatch = useDispatch();
   const formVariants = {
     hidden: { opacity: 0, x: 0 },
@@ -32,13 +32,16 @@ const AddMenu = () => {
     }));
   };
 
-  const handleAddMenuItem = ()=>{
+  const handleAddMenuItem = () => {
     const temp = menuItem;
-    temp.id = `${temp.category.replace(/\s+/g, '')}-${temp.name.replace(/\s+/g, '')}`
+    temp.id = `${temp.category.replace(/\s+/g, "")}-${temp.name.replace(
+      /\s+/g,
+      ""
+    )}`;
     dispatch(addMenuItem(temp));
-    toast.success('Menu Item added successfully!');
-    setMenuItem(emptyItem)
-  }
+    toast.success("Menu Item added successfully!");
+    setMenuItem(emptyItem);
+  };
 
   return (
     <div className="px-4">
@@ -103,18 +106,16 @@ const AddMenu = () => {
             </div>
 
             <div className="form-floating">
-              <select
-                className="form-select focus:shadow-none focus:border-amber-600 rounded-md w-full h-full cursor-pointer"
+              <input
+                className="form-control focus:shadow-none focus:border-amber-600 rounded-md w-full h-full"
                 id="menuItemCategory"
+                placeholder="Menu Item Category"
                 name="category"
                 onChange={handleChange}
-              >
-                <option value="main-course">Main Course</option>
-                <option value="appetizer">Appetizer</option>
-                <option value="dessert">Dessert</option>
-                <option value="drinks">Drinks</option>
-              </select>
-              <label htmlFor="menuItemCategory">Menu Item Category</label>
+              ></input>
+              <label htmlFor="menuItemCategory" className="text-gray-500">
+                Menu Item Category
+              </label>
             </div>
 
             <div className="grid md:grid-cols-2 grid-cols-1 gap-4">

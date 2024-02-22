@@ -2,30 +2,49 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import logo from "./../../assets/logoAsset.png";
-import { FaBars, FaChevronUp, FaRegUser, FaSearch } from "react-icons/fa";
 import {
+  FaBars,
+  FaChevronUp,
+  FaRegQuestionCircle,
+  FaRegUser,
+  FaSearch,
+} from "react-icons/fa";
+import {
+  Button,
   Icon,
   IconButton,
   Menu,
   MenuButton,
   MenuItem,
   MenuList,
+  Popover,
+  PopoverArrow,
+  PopoverBody,
+  PopoverContent,
+  PopoverHeader,
+  PopoverTrigger,
 } from "@chakra-ui/react";
 import { FaUser, FaXmark } from "react-icons/fa6";
-import { LuLayoutDashboard, LuUser2 } from "react-icons/lu";
+import { LuLayoutDashboard } from "react-icons/lu";
 import { IoLogOutOutline, IoRestaurantOutline } from "react-icons/io5";
 import { CiViewList } from "react-icons/ci";
-import { MdReviews } from "react-icons/md";
+import { MdOutlineRateReview } from "react-icons/md";
 import { TfiAnnouncement } from "react-icons/tfi";
 import RestaurantLink from "./Sidebar/RestaurantLink";
 import { CgDetailsMore } from "react-icons/cg";
 import CustomerLink from "./Sidebar/CustomerLink";
 import { useAuth } from "../../AuthContext";
+import { toast } from "sonner";
+import { Select, SelectItem } from "@tremor/react";
+import useWebSocket from "../../hooks/useWebsocket";
 
 const AdminNavbar = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const { pathname } = useLocation();
-  const {signout,user} = useAuth()
+  const { signout, user } = useAuth();
+  const [announcement, setAnnouncement] = useState("");
+  const [to, setTo] = useState("all");
+  const { socket, sendMessage } = useWebSocket();
 
   const isLinkActive = (path) => {
     if (path.includes("/:id")) {
@@ -53,6 +72,33 @@ const AdminNavbar = () => {
     setRestaurantOpen(!isRestaurantOpen);
   };
 
+  const handlePostAnnouncement = async () => {
+    if (!announcement.trim()) {
+      toast.warning("Please enter an announcement");
+      return;
+    }
+    if(socket) {
+      sendMessage(announcement);
+    }
+    const response = await fetch(
+      `${import.meta.env.VITE_HUNGREZY_API}/api/admin/announce`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ announcement, to }),
+      }
+    );
+    const result = await response.json();
+    if (!response.ok) {
+      const error = result.message;
+      toast.error(error);
+      return;
+    }
+    toast.success("Announcement posted successfully");
+    setAnnouncement("");
+  };
+
+
   return (
     <div>
       <div className="hidden lg:flex px-4 w-full justify-between items-center border-b">
@@ -74,20 +120,76 @@ const AdminNavbar = () => {
             />
           </div>
           <div className="flex gap-x-4 items-center">
-            <Menu>
-              <MenuButton
-                as={IconButton}
-                aria-label="Options"
-                icon={<TfiAnnouncement color="gray" className="w-6 h-6" />}
-                variant="outline"
-                className="bg-gray-200"
-                borderRadius={"50%"}
-                size={"lg"}
-              />
-              <MenuList>
-                <MenuItem>Announcments</MenuItem>
-              </MenuList>
-            </Menu>
+            <Popover>
+              <PopoverTrigger>
+                <Button
+                  size="md"
+                  rounded={"full"}
+                  leftIcon={<TfiAnnouncement className="h-6 w-6" />}
+                  colorScheme="gray"
+                  backgroundColor={"gray.200"}
+                ></Button>
+              </PopoverTrigger>
+              <PopoverContent height={"28rem"}>
+                <PopoverArrow />
+                <PopoverHeader>
+                  <div className="flex items-center gap-2">
+                    <p className="text-sm font-semibold text-gray-500 pt-3">
+                      To: &nbsp;
+                    </p>
+                    <Select
+                      className="w-[10rem]"
+                      defaultValue="all"
+                      value={to}
+                      onValueChange={setTo}
+                    >
+                      <SelectItem
+                        value="all"
+                        className="cursor-pointer"
+                        defaultChecked
+                      >
+                        All
+                      </SelectItem>
+                      <SelectItem value="customers" className="cursor-pointer">
+                        Customers
+                      </SelectItem>
+                      <SelectItem
+                        value="restaurants"
+                        className="cursor-pointer"
+                      >
+                        Restaurants
+                      </SelectItem>
+                    </Select>
+                  </div>
+                </PopoverHeader>
+                <PopoverBody>
+                  <div className="form-floating my-3">
+                    <textarea
+                      onChange={(e) => setAnnouncement(e.target.value)}
+                      className="form-control focus:shadow-none focus:border-amber-600 rounded-md w-full h-full"
+                      id="announcement"
+                      placeholder="Write an announcement..."
+                      name="announcement"
+                      style={{ height: "270px", maxHeight: "270px" }}
+                      value={announcement}
+                    />
+                    <label htmlFor="announcment" className="text-gray-500">
+                      Write an announcement...
+                    </label>
+                  </div>
+
+                  <div className="flex items-center justify-center gap-x-20">
+                    <button
+                      type="button"
+                      onClick={handlePostAnnouncement}
+                      className="py-2 px-4 bg-orange-400 w-fit self-center hover:bg-orange-500 justify-center transition-colors duration-300 text-white rounded-md flex items-center"
+                    >
+                      Post
+                    </button>
+                  </div>
+                </PopoverBody>
+              </PopoverContent>
+            </Popover>
             <Menu>
               <MenuButton
                 as={IconButton}
@@ -99,16 +201,12 @@ const AdminNavbar = () => {
                 size={"lg"}
               />
               <MenuList>
-                <Link to="profile">
-                  <MenuItem icon={<LuUser2 className="w-[18px] h-[18px]" />}>
-                    My Profile
-                  </MenuItem>
-                </Link>
-
                 <MenuItem
                   className="flex gap-[10px] items-center"
                   _hover={{ backgroundColor: "red.50" }}
-                  onClick={()=>{signout()}}
+                  onClick={() => {
+                    signout();
+                  }}
                 >
                   <Icon color={"red.400"} as={IoLogOutOutline} w={5} h={5} />
                   <p className="text-red-400">Log Out</p>
@@ -116,8 +214,15 @@ const AdminNavbar = () => {
               </MenuList>
             </Menu>
             <div className="py-2">
-              <p className="text-base font-semibold">{(user.firstName+" "+user.lastName).replace(/\b\w/g, (char) => char.toUpperCase())}</p>
-              <p className="text-sm font-normal">{user.superAdmin?'Super Admin':"Admin"}</p>
+              <p className="text-base font-semibold">
+                {(user.firstName + " " + user.lastName).replace(
+                  /\b\w/g,
+                  (char) => char.toUpperCase()
+                )}
+              </p>
+              <p className="text-sm font-normal">
+                {user.superAdmin ? "Super Admin" : "Admin"}
+              </p>
             </div>
           </div>
         </div>
@@ -134,20 +239,77 @@ const AdminNavbar = () => {
 
         <div className="flex items-center justify-between gap-3">
           <div className="relative flex gap-x-3 items-center">
-            <Menu>
-              <MenuButton
-                as={IconButton}
-                aria-label="Options"
-                icon={<TfiAnnouncement className="sm:w-6 sm:h-6 w-4 h-4" />}
-                variant="outline"
-                className="bg-gray-200"
-                borderRadius={"50%"}
-                color="gray"
-              />
-              <MenuList>
-                <MenuItem>Notification</MenuItem>
-              </MenuList>
-            </Menu>
+            <Popover>
+              <PopoverTrigger>
+                <Button
+                  size="md"
+                  rounded={"full"}
+                  leftIcon={<TfiAnnouncement className="h-6 w-6" />}
+                  colorScheme="gray"
+                  backgroundColor={"gray.200"}
+                ></Button>
+              </PopoverTrigger>
+              <PopoverContent height={"28rem"}>
+                <PopoverArrow />
+                <PopoverHeader>
+                  <div className="flex items-center gap-2">
+                    <p className="text-sm font-semibold text-gray-500 pt-3">
+                      To: &nbsp;
+                    </p>
+                    <Select
+                      className="w-[10rem]"
+                      defaultValue="all"
+                      value={to}
+                      onValueChange={setTo}
+                    >
+                      <SelectItem
+                        value="all"
+                        className="cursor-pointer"
+                        defaultChecked
+                      >
+                        All
+                      </SelectItem>
+                      <SelectItem value="customers" className="cursor-pointer">
+                        Customers
+                      </SelectItem>
+                      <SelectItem
+                        value="restaurants"
+                        className="cursor-pointer"
+                      >
+                        Restaurants
+                      </SelectItem>
+                    </Select>
+                  </div>
+                </PopoverHeader>
+                <PopoverBody>
+                  <div className="form-floating my-3">
+                    <textarea
+                      className="form-control focus:shadow-none focus:border-amber-600 rounded-md w-full h-full"
+                      id="announcement"
+                      placeholder="Write an announcement..."
+                      name="announcement"
+                      style={{ height: "270px", maxHeight: "270px" }}
+                      onChange={(e) => setAnnouncement(e.target.value)}
+                      value={announcement}
+                    />
+                    <label htmlFor="announcment" className="text-gray-500">
+                      Write an announcement...
+                    </label>
+                  </div>
+
+                  <div className="flex items-center justify-center gap-x-20">
+                    <button
+                      type="button"
+                      onClick={handlePostAnnouncement}
+                      className="py-2 px-4 bg-orange-400 w-fit self-center hover:bg-orange-500 justify-center transition-colors duration-300 text-white rounded-md flex items-center"
+                    >
+                      Post
+                    </button>
+                  </div>
+                </PopoverBody>
+              </PopoverContent>
+            </Popover>
+
             <Menu>
               <MenuButton
                 as={IconButton}
@@ -159,14 +321,12 @@ const AdminNavbar = () => {
                 color="gray"
               />
               <MenuList>
-                <Link to="profile">
-                  <MenuItem icon={<LuUser2 className="w-[18px] h-[18px]" />}>
-                    My Profile
-                  </MenuItem>
-                </Link>
                 <MenuItem
                   className="flex gap-[10px] items-center"
                   _hover={{ backgroundColor: "red.50" }}
+                  onClick={() => {
+                    signout();
+                  }}
                 >
                   <Icon color={"red.400"} as={IoLogOutOutline} w={5} h={5} />
                   <p className="text-red-400">Log Out</p>
@@ -318,8 +478,21 @@ const AdminNavbar = () => {
                       : "text-gray-500"
                   } hover:bg-gray-100 w-full px-4 transition-colors duration-300 hover:opacity-80 flex items-center gap-x-4 py-[10px] rounded-md cursor-pointer`}
                 >
-                  <MdReviews size={24} />
+                  <MdOutlineRateReview size={24} />
                   <span className="text-base">Reviews</span>
+                </div>
+              </Link>
+
+              <Link to="queries">
+                <div
+                  className={`${
+                    isLinkActive("/admin/queries")
+                      ? "text-orange-500 bg-orange-50"
+                      : "text-gray-500"
+                  } hover:bg-gray-100 w-full px-4 transition-colors duration-300 hover:opacity-80 flex items-center gap-x-4 py-[10px] rounded-md cursor-pointer`}
+                >
+                  <FaRegQuestionCircle size={24} />
+                  <span className="text-base">Queries</span>
                 </div>
               </Link>
             </motion.div>
