@@ -100,9 +100,6 @@ const AdminsList = () => {
               </TableCell>
               <TableCell>
                     <div className="flex items-center gap-x-2">
-                        <Link to={`/admin/admins/${admin._id}`}>
-                        <IoEye className="w-6 h-6 text-gray-500" />
-                        </Link>
                         <span
                         onClick={() => {
                             const shareConfirmation = window.confirm(
