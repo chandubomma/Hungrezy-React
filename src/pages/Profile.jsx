@@ -18,7 +18,7 @@ const Profile = () => {
   const [activeTab, setActiveTab] = useState("orders"); // Default active tab
   const navigate = useNavigate();
   //const currentUser = useSelector(selectUser);
-  const {user} = useAuth()
+  const {user,loading} = useAuth()
   console.log(user);
   useEffect(() => {
     const handleScroll = () => {
@@ -26,11 +26,15 @@ const Profile = () => {
     };
 
     window.addEventListener("scroll", handleScroll);
-
+    
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+
+ 
+  if(!loading && !user)navigate('/signin')
+ 
 
   const handleTabClick = (tab) => {
     setActiveTab(tab);
