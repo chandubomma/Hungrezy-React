@@ -2,13 +2,27 @@ import React from "react";
 import { Select, SelectItem } from "@tremor/react";
 import { useState } from "react";
 import { FaChevronRight } from "react-icons/fa6";
-import { Image } from "@chakra-ui/react";
+import {
+  IconButton,
+  Image,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+} from "@chakra-ui/react";
 import error from "../../../assets/error.png";
 import { queriesData } from "../../../data/queries"; // Assuming you have queriesData
+import { BsThreeDotsVertical } from "react-icons/bs";
 
 const AdminQueries = () => {
   const [statusFilter, setStatusFilter] = useState("all");
   const [typeFilter, setTypeFilter] = useState("all");
+  const [state, setState] = useState(null);
+
+  const toggleModal = (state) => {
+    setState(state);
+    console.log(state);
+  };
 
   const filteredQueries = queriesData.filter((query) => {
     if (
@@ -121,7 +135,24 @@ const AdminQueries = () => {
                 >
                   {query.status}
                 </p>
+                {query.status === "in-progress" ? (
+                  <Menu>
+                    <MenuButton
+                      as={IconButton}
+                      aria-label="Options"
+                      icon={<BsThreeDotsVertical />}
+                      variant="outline"
+                      size="sm"
+                    />
+                    <MenuList>
+                      <MenuItem onClick={() => toggleModal(query.id)}>
+                        Mark as resolved
+                      </MenuItem>
+                    </MenuList>
+                  </Menu>
+                ) : null}
               </div>
+              <p className="text-sm text-gray-600">{query.from}</p>
               <p className="text-sm text-gray-600">{query.content}</p>
             </div>
           ))}
