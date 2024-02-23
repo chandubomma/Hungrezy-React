@@ -22,8 +22,8 @@ import { IoEye } from "react-icons/io5";
 import { HiMiniBolt } from "react-icons/hi2";
 
 const Orders = () => {
-  const [statusFilter, setStatusFilter] = useState("new");
-  const [dateFilter, setDateFilter] = useState("today");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [dateFilter, setDateFilter] = useState("all");
   const [orders, setOrders] = useState(ordersData);
 
   const handleAccept = (orderId) => {
@@ -91,7 +91,9 @@ const Orders = () => {
       </div>
       <div className="flex sm:flex-row flex-col gap-y-5 items-center mt-2 sm:gap-x-5">
         <div className="flex items-center gap-2">
-          <p className="text-sm font-semibold text-gray-500 pt-3">Status: &nbsp;</p>
+          <p className="text-sm font-semibold text-gray-500 pt-3">
+            Status: &nbsp;
+          </p>
           <Select
             className="w-[10rem]"
             placeholder="Status"
@@ -117,7 +119,9 @@ const Orders = () => {
           </Select>
         </div>
         <div className="flex items-center gap-2">
-          <p className="text-sm font-semibold text-gray-500 pt-3">Date: &nbsp;</p>
+          <p className="text-sm font-semibold text-gray-500 pt-3">
+            Date: &nbsp;
+          </p>
           <Select
             className="w-[10rem]"
             placeholder="Date"
