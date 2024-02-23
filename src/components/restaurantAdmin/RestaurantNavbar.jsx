@@ -78,7 +78,7 @@ const RestaurantNavbar = () => {
       socket.on("announcement", (newAnnouncement) => {
         setAnnouncements((prevAnnouncements) => [
           ...prevAnnouncements,
-          { _id: newAnnouncement, announcement: newAnnouncement },
+          newAnnouncement
         ]);
         setCount((prev) => prev + 1);
       });

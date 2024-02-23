@@ -25,7 +25,7 @@ const useWebSocket = () => {
 
   const sendMessage = (message) => {
     if (socket) {
-      socket.emit("new-announcement", message);
+      socket.emit("new-announcement", message.payload);
     }
   };
 

@@ -77,9 +77,7 @@ const AdminNavbar = () => {
       toast.warning("Please enter an announcement");
       return;
     }
-    if(socket) {
-      sendMessage(announcement);
-    }
+    
     const response = await fetch(
       `${import.meta.env.VITE_HUNGREZY_API}/api/admin/announce`,
       {
@@ -89,6 +87,12 @@ const AdminNavbar = () => {
       }
     );
     const result = await response.json();
+    if(socket) {
+      sendMessage({
+        type: "announcement",
+        payload: result.data
+      });
+    }
     if (!response.ok) {
       const error = result.message;
       toast.error(error);
