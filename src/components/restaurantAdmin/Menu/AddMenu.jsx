@@ -1,24 +1,28 @@
 import { motion } from "framer-motion";
 import { FaArrowRight, FaChevronRight } from "react-icons/fa6";
 import { TiArrowBackOutline } from "react-icons/ti";
-import { RiDraftLine } from "react-icons/ri";
 import { useSelector, useDispatch } from "react-redux";
 import { addMenuItem, selectMenu } from "../../../redux/slices/menuSlice";
 import { useState } from "react";
 import { toast } from "sonner";
+import { useAuth } from "../../../AuthContext";
+import { Switch } from "@chakra-ui/react";
+import { FormControl, FormLabel } from "@chakra-ui/react";
 
 const AddMenu = () => {
   const emptyItem = {
     id: "",
     name: "",
-    price: 0,
+    price: "",
     category: "",
     quantity: 1,
     discount: 0,
+    veg_or_non_veg: "Veg",
     available: true,
   };
   const [menuItem, setMenuItem] = useState(emptyItem);
   const dispatch = useDispatch();
+  const { signout, user } = useAuth();
   const formVariants = {
     hidden: { opacity: 0, x: 0 },
     visible: { opacity: 1, x: 0, transition: { duration: 0.8 } },
@@ -32,16 +36,42 @@ const AddMenu = () => {
     }));
   };
 
-  const handleAddMenuItem = () => {
+  const handleToggle = () => {
+    setMenuItem((prev) => ({
+      ...prev,
+      veg_or_non_veg: prev.veg_or_non_veg === "Veg" ? "Non-veg" : "Veg",
+    }));
+  };
+
+  const handleAddMenuItem = async () => {
     const temp = menuItem;
     temp.id = `${temp.category.replace(/\s+/g, "")}-${temp.name.replace(
       /\s+/g,
       ""
     )}`;
     dispatch(addMenuItem(temp));
-    toast.success("Menu Item added successfully!");
+    const response = await fetch(
+      `${import.meta.env.VITE_HUNGREZY_API}/api/menu/addMenu`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          restaurantId: user._id,
+          menuItem: temp,
+        }),
+      }
+    );
+    const result = await response.json();
+    if (!response.ok) {
+      const error = result.message;
+      toast.error(error);
+      return;
+    }
+    toast.success("Menu Item Added");
     setMenuItem(emptyItem);
   };
+
+  console.log(menuItem);
 
   return (
     <div className="px-4">
@@ -56,10 +86,10 @@ const AddMenu = () => {
         </div>
       </div>
       <div className="h-fit flex md:flex-row flex-col w-full gap-x-10 items-center justify-center">
-        <form className="flex flex-col w-[50rem] gap-4 pb-20">
+        <form className="flex flex-col md:w-[50rem] gap-4 sm:w-[30rem] w-[20rem]">
           <motion.div
             variants={formVariants}
-            className="flex flex-col form-floating mt-2 gap-4"
+            className="flex flex-col form-floating mt-20 mb-10 gap-4"
           >
             <div className="grid md:grid-cols-2 grid-cols-1 gap-4">
               <div className="form-floating">
@@ -93,20 +123,6 @@ const AddMenu = () => {
               </div>
             </div>
 
-            {/* TEXTAREA DESCRIPTION */}
-            <div className="form-floating">
-              <textarea
-                className="form-control focus:shadow-none focus:border-amber-600 rounded-md w-full resize-none h-96"
-                id="menuItemDescription"
-                placeholder="Menu Item Description"
-                name="menuItemDescription"
-                style={{ height: "200px" }}
-              />
-              <label htmlFor="menuItemDescription" className="text-gray-500">
-                Menu Item Description
-              </label>
-            </div>
-
             <div className="form-floating">
               <input
                 className="form-control focus:shadow-none focus:border-amber-600 rounded-md w-full h-full"
@@ -121,37 +137,16 @@ const AddMenu = () => {
               </label>
             </div>
 
-            <div className="grid md:grid-cols-2 grid-cols-1 gap-4">
-              <div className="form-floating">
-                <input
-                  className="form-control focus:shadow-none focus:border-amber-600 rounded-md w-full h-full"
-                  id="menuItemQuantity"
-                  placeholder="Menu Item Quantity"
-                  name="quantity"
-                  type="number"
-                  value={menuItem.quantity}
-                  onChange={handleChange}
-                />
-                <label htmlFor="menuItemQuantity" className="text-gray-500">
-                  Menu Item Quantity
-                </label>
-              </div>
-
-              <div className="form-floating">
-                <input
-                  className="form-control focus:shadow-none focus:border-amber-600 rounded-md w-full h-full"
-                  id="menuItemDiscount"
-                  placeholder="Menu Item Discount"
-                  name="discount"
-                  type="number"
-                  onChange={handleChange}
-                  value={menuItem.discount}
-                />
-                <label htmlFor="menuItemDiscount" className="text-gray-500">
-                  Menu Item Discount
-                </label>
-              </div>
-            </div>
+            <FormControl display="flex" alignItems="center">
+              <FormLabel htmlFor="Veg" mb="0">
+                Veg
+              </FormLabel>
+              <Switch
+                id="Veg"
+                onChange={handleToggle}
+                isChecked={menuItem.veg_or_non_veg === "Veg"}
+              />
+            </FormControl>
           </motion.div>
           <div className="flex items-center justify-center gap-x-20">
             <motion.button
@@ -171,15 +166,6 @@ const AddMenu = () => {
             >
               <span className="align-baseline text-center">Add</span>
               <FaArrowRight className="ml-2 align-baseline" />
-            </motion.button>
-
-            <motion.button
-              type="button"
-              className="py-2 px-4 bg-gray-200 w-fit self-center justify-center hover:bg-gray-300 transition-colors duration-300 text-gray-800 rounded-md flex items-center"
-              whileHover={{ scale: 1.005 }}
-            >
-              <span className="align-baseline text-center">Draft</span>
-              <RiDraftLine className="ml-2 align-baseline" />
             </motion.button>
           </div>
         </form>
