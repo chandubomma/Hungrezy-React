@@ -50,6 +50,7 @@ const RestaurantNavbar = () => {
   };
 
   const [isMenuOpen, setMenuOpen] = useState(false);
+  const [popoverOpen, setPopoverOpen] = useState(false);
 
   const toggleMenu = () => {
     setMenuOpen((prev) => !prev);
@@ -77,8 +78,8 @@ const RestaurantNavbar = () => {
     if (socket) {
       socket.on("announcement", (newAnnouncement) => {
         setAnnouncements((prevAnnouncements) => [
+          newAnnouncement,
           ...prevAnnouncements,
-          newAnnouncement
         ]);
         setCount((prev) => prev + 1);
       });
@@ -88,6 +89,43 @@ const RestaurantNavbar = () => {
       };
     }
   }, [socket, announcements]);
+
+  const getTimeDifference = (createdAt) => {
+    const currentTime = new Date();
+    const postTime = new Date(createdAt);
+    const timeDifference = Math.abs(currentTime - postTime) / 1000; // Difference in seconds
+
+    const timeIntervals = {
+      year: 31536000,
+      month: 2592000,
+      week: 604800,
+      day: 86400,
+      hour: 3600,
+      minute: 60,
+      second: 1,
+    };
+
+    let timeAgo = "";
+
+    for (const interval in timeIntervals) {
+      const count = Math.floor(timeDifference / timeIntervals[interval]);
+      if (count > 0) {
+        timeAgo = `${count} ${interval}${count === 1 ? "" : "s"} ago`;
+        break;
+      }
+    }
+
+    return timeAgo || "just now";
+  };
+
+  const handlePopoverOpen = () => {
+    setPopoverOpen(true);
+    fetchAnnouncements();
+  };
+
+  const handlePopoverClose = () => {
+    setPopoverOpen(false);
+  };
 
   return (
     <div>
@@ -110,7 +148,11 @@ const RestaurantNavbar = () => {
             />
           </div>
           <div className="flex gap-x-4 items-center">
-            <Popover>
+            <Popover
+              isOpen={popoverOpen}
+              onOpen={handlePopoverOpen}
+              onClose={handlePopoverClose}
+            >
               <PopoverTrigger>
                 <Button
                   size="md"
@@ -118,6 +160,7 @@ const RestaurantNavbar = () => {
                   leftIcon={<IoMdNotificationsOutline className="h-6 w-6" />}
                   colorScheme="gray"
                   backgroundColor={"gray.200"}
+                  onClick={() => setCount(0)}
                 >
                   {count > 0 && (
                     <span className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 bg-red-500 text-white px-1 rounded-full text-xs">
@@ -126,7 +169,7 @@ const RestaurantNavbar = () => {
                   )}
                 </Button>
               </PopoverTrigger>
-              <PopoverContent height={"28rem"}>
+              <PopoverContent height={"28rem"} overflowY={"scroll"}>
                 <PopoverArrow />
                 <PopoverHeader>Notifications</PopoverHeader>
                 <PopoverBody>
@@ -137,6 +180,9 @@ const RestaurantNavbar = () => {
                     <div key={index}>
                       <div className="flex gap-2 items-center my-3">
                         <div>
+                          <p className="text-xs text-end">
+                            {getTimeDifference(announcement.createdAt)}
+                          </p>
                           <p className="text-sm">{announcement.announcement}</p>
                         </div>
                       </div>
@@ -194,7 +240,11 @@ const RestaurantNavbar = () => {
 
         <div className="flex items-center justify-between gap-3">
           <div className="relative flex gap-x-3 items-center">
-            <Popover>
+            <Popover
+              isOpen={popoverOpen}
+              onOpen={handlePopoverOpen}
+              onClose={handlePopoverClose}
+            >
               <PopoverTrigger>
                 <Button
                   size="md"
@@ -210,7 +260,7 @@ const RestaurantNavbar = () => {
                   )}
                 </Button>
               </PopoverTrigger>
-              <PopoverContent height={"28rem"}>
+              <PopoverContent height={"28rem"} overflowY={"scroll"}>
                 <PopoverArrow />
                 <PopoverHeader>Notifications</PopoverHeader>
                 <PopoverBody>
@@ -221,6 +271,9 @@ const RestaurantNavbar = () => {
                     <div key={index}>
                       <div className="flex gap-2 items-center my-3">
                         <div>
+                          <p className="text-xs text-end">
+                            {getTimeDifference(announcement.createdAt)}
+                          </p>
                           <p className="text-sm">{announcement.announcement}</p>
                         </div>
                       </div>
