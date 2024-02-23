@@ -10,7 +10,7 @@ const menuSlice = createSlice({
       state.menuItems = action.payload; 
     },
     addMenuItem: (state, action) => {
-      state.menuItems.push(action.payload);
+      state.menuItems = [action.payload, ...state.menuItems];
     },
     deleteMenuItem: (state, action) => {
       state.menuItems = state.menuItems.filter(item => item.id !== action.payload);

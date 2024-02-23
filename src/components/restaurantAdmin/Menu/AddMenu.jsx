@@ -68,6 +68,7 @@ const AddMenu = () => {
                   id="menuItemName"
                   placeholder="Menu Item Name"
                   name="name"
+                  value={menuItem.name}
                   type="text"
                   onChange={handleChange}
                 />
@@ -83,6 +84,7 @@ const AddMenu = () => {
                   placeholder="Menu Item Price"
                   name="price"
                   type="number"
+                  value={menuItem.price}
                   onChange={handleChange}
                 />
                 <label htmlFor="menuItemPrice" className="text-gray-500">
@@ -112,6 +114,7 @@ const AddMenu = () => {
                 placeholder="Menu Item Category"
                 name="category"
                 onChange={handleChange}
+                value={menuItem.category}
               ></input>
               <label htmlFor="menuItemCategory" className="text-gray-500">
                 Menu Item Category
@@ -126,6 +129,7 @@ const AddMenu = () => {
                   placeholder="Menu Item Quantity"
                   name="quantity"
                   type="number"
+                  value={menuItem.quantity}
                   onChange={handleChange}
                 />
                 <label htmlFor="menuItemQuantity" className="text-gray-500">
@@ -141,6 +145,7 @@ const AddMenu = () => {
                   name="discount"
                   type="number"
                   onChange={handleChange}
+                  value={menuItem.discount}
                 />
                 <label htmlFor="menuItemDiscount" className="text-gray-500">
                   Menu Item Discount
