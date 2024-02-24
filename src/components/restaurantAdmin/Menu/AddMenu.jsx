@@ -1,8 +1,8 @@
 import { motion } from "framer-motion";
 import { FaArrowRight, FaChevronRight } from "react-icons/fa6";
 import { TiArrowBackOutline } from "react-icons/ti";
-import { useSelector, useDispatch } from "react-redux";
-import { addMenuItem, selectMenu } from "../../../redux/slices/menuSlice";
+import { useDispatch } from "react-redux";
+import { addMenuItem } from "../../../redux/slices/menuSlice";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useAuth } from "../../../AuthContext";
@@ -22,7 +22,7 @@ const AddMenu = () => {
   };
   const [menuItem, setMenuItem] = useState(emptyItem);
   const dispatch = useDispatch();
-  const { signout, user } = useAuth();
+  const { user, accessToken } = useAuth();
   const formVariants = {
     hidden: { opacity: 0, x: 0 },
     visible: { opacity: 1, x: 0, transition: { duration: 0.8 } },
@@ -54,10 +54,18 @@ const AddMenu = () => {
       `${import.meta.env.VITE_HUNGREZY_API}/api/menu/addMenu`,
       {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
         body: JSON.stringify({
           restaurantId: user._id,
-          menuItem: temp,
+          menuItem: {
+            name: menuItem.name,
+            category: menuItem.category,
+            price: menuItem.price,
+            veg_or_non_veg: menuItem.veg_or_non_veg,
+          },
         }),
       }
     );
@@ -71,7 +79,6 @@ const AddMenu = () => {
     setMenuItem(emptyItem);
   };
 
-  console.log(menuItem);
 
   return (
     <div className="px-4">
@@ -144,6 +151,7 @@ const AddMenu = () => {
               <Switch
                 id="Veg"
                 onChange={handleToggle}
+                colorScheme="green"
                 isChecked={menuItem.veg_or_non_veg === "Veg"}
               />
             </FormControl>

@@ -14,7 +14,6 @@ import { BadgeCheckIcon } from "@heroicons/react/outline";
 import { FaChevronRight } from "react-icons/fa6";
 import { RiDraftLine } from "react-icons/ri";
 import { useEffect, useState } from "react";
-import { MdDeleteOutline } from "react-icons/md";
 import { CiEdit } from "react-icons/ci";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../../AuthContext";
@@ -22,7 +21,6 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   selectMenu,
   setMenu,
-  deleteMenuItem,
 } from "../../../redux/slices/menuSlice";
 
 const MenuList = () => {
@@ -58,6 +56,7 @@ const MenuList = () => {
   };
 
   const convertMenuObjecttoArray = (menuObject) => {
+    console.log(menuObject);
     const menuArray = [];
     for (const category in menuObject) {
       for (const item in menuObject[category]) {
@@ -233,16 +232,10 @@ const MenuList = () => {
                 <TableCell className="flex items-center justify-center lg:-ml-14 md:-ml-10">
                   <div className="flex w-fit gap-3">
                     <Link
-                      to={`/restaurant/edit-menu/${menuItem.id}`}
+                      to={`/restaurant/edit-menu/${user.menu_id}?category=${menuItem.category}&item=${menuItem.name}`}
                       className="flex items-center justify-center rounded-md cursor-pointer"
                     >
                       <CiEdit className="w-5 h-5 text-gray-500" />
-                    </Link>
-                    <Link
-                      onClick={() => dispatch(deleteMenuItem(menuItem.id))}
-                      className="flex items-center justify-center rounded-md cursor-pointer"
-                    >
-                      <MdDeleteOutline className="w-5 h-5 text-red-500" />
                     </Link>
                   </div>
                 </TableCell>
