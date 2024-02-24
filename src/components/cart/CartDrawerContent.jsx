@@ -9,6 +9,7 @@ import {
   FaTrash,
 } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
+import { useAuth } from "../../AuthContext";
 import {
   addToCart,
   removeFromCart,
@@ -24,6 +25,7 @@ const CartDrawerContent = ({ isDrawerOpen, handleCartDrawerToggle }) => {
   const cartItems = useSelector(selectCartItems);
   const totalPrice = useSelector(selectTotalPrice);
   const navigate = useNavigate();
+  const {user,loading} = useAuth()
 
   const variants = {
     hidden: { opacity: 0, y: 50 },
@@ -139,7 +141,8 @@ const CartDrawerContent = ({ isDrawerOpen, handleCartDrawerToggle }) => {
               whileHover={{ scale: 1.05 }}
               variants={variants}
               onClick={() => {
-                navigate("/checkout");
+                if( !user)navigate('/signin')
+                else navigate("/checkout");
                 handleCartDrawerToggle();
               }}
             >

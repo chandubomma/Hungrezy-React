@@ -3,19 +3,25 @@ import { FaShoppingBag } from "react-icons/fa";
 import paypal from "./../../assets/paypal.png";
 import maestro from "./../../assets/maestro.png";
 import visa from "./../../assets/visa.png";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from '../../redux/slices/userSlice';
-import {addOrder} from '../../redux/slices/ordersSlice'
+import {addOrder} from '../../redux/slices/ordersSlice';
+import { useAuth } from "../../AuthContext";
 import {
   selectCartItems,
-  clearCart
+  clearCart,
+  selectTotalPrice
 } from "./../../redux/slices/cartSlice";
 import { useNavigate } from "react-router-dom";
 
+import {toast} from 'sonner';
+
 const CheckOutForm = () => {
+  const {user,accessToken,loading} = useAuth()
   const dispatch = useDispatch();
   const cartItems = useSelector(selectCartItems);
+  const totalPrice = useSelector(selectTotalPrice);
   const [Address,setAddress] = useState({
     address : '',
     city : '',
@@ -30,23 +36,66 @@ const CheckOutForm = () => {
   const currentUser = useSelector(selectUser);
   const [selectedTab, setSelectedTab] = useState("card");
   const navigate = useNavigate()
+  if(!loading && !user)navigate('/signin');
+  useEffect(()=>{
+    if(!loading && !user)navigate('/signin');
+  },[user])
 
-  const handlePlaceOrder = ()=>{
+  const handlePlaceOrder = async()=>{
     const order = {
-      items : cartItems,
-      address : Address,
-      user : {
-        name : currentUser.firstName+" "+currentUser.lastName,
-        email : currentUser.email,
-        mobileNumber : currentUser.mobileNumber
+      userId : user._id,
+      restaurantId : cartItems[0].restaurantId,
+      foodItems : cartItems.map((item)=>{
+        return {
+          name : item.itemName,
+          category : item.category,
+          quantity : item.count
+        }
+      }),
+      address : Address.address,
+      paymentDetails : {
+        method :selectedTab,
+        amount : totalPrice
       },
-      paymentMethod : selectedTab,
-      status : 'pending'
     }
-    dispatch(addOrder(order));
-    dispatch(clearCart());
-    navigate('/profile');
+    await placeOrder(order);
+   // dispatch(addOrder(order)); // todo: need to change according to new order strucutre after fetching from api.
+   
+   // navigate('/profile');
   }
+
+  const placeOrder = async(order)=>{
+    console.log(order);
+    const url = `${import.meta.env.VITE_HUNGREZY_API}/api/order/place`;
+    try{
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`, 
+        },
+        body: JSON.stringify(order)
+      });
+      if (!response.ok) {
+        toast.error('Failed to place order');
+        return;
+      }
+      const result = await response.json();
+      toast.success("Order places succesfully!");
+      dispatch(clearCart());
+      console.log(result)
+    }catch(error){
+        console.error(error);
+        toast.error(error.message);
+    }
+  }
+
+  const handleAddressChange = (e) => {
+    setAddress({
+      ...Address,
+      [e.target.name]: e.target.value,
+    });
+  };
 
   return (
     <div className="flex-1">
@@ -67,6 +116,7 @@ const CheckOutForm = () => {
                 placeholder="Full Name"
                 name="fullName"
                 type="text"
+                value={user.firstName + " " + user.lastName}
               />
               <label htmlFor="fullName" className="text-gray-500">
                 Full Name
@@ -86,6 +136,7 @@ const CheckOutForm = () => {
                   placeholder="Enter Email"
                   name="email"
                   type="email"
+                  value={user.email}
                 />
                 <label htmlFor="email" className="text-gray-500">
                   Email
@@ -103,6 +154,7 @@ const CheckOutForm = () => {
                   placeholder="Phone Number"
                   name="phone"
                   type="text"
+                  value={user.mobileNumber}
                 />
                 <label htmlFor="phone" className="text-gray-500">
                   Phone
@@ -123,6 +175,8 @@ const CheckOutForm = () => {
                 placeholder="Address"
                 name="address"
                 type="text"
+                value={Address.address}
+                onChange={handleAddressChange}
               />
               <label htmlFor="address" className="text-gray-500">
                 Address
@@ -142,6 +196,8 @@ const CheckOutForm = () => {
                   placeholder="City"
                   name="city"
                   type="text"
+                  value={Address.city}
+                  onChange={handleAddressChange}
                 />
                 <label htmlFor="city" className="text-gray-500">
                   City
@@ -159,6 +215,8 @@ const CheckOutForm = () => {
                   placeholder="State"
                   name="state"
                   type="text"
+                  value={Address.state}
+                  onChange={handleAddressChange}
                 />
                 <label htmlFor="state" className="text-gray-500">
                   State
@@ -179,6 +237,8 @@ const CheckOutForm = () => {
                   placeholder="Zip"
                   name="zip"
                   type="text"
+                  value={Address.zip}
+                  onChange={handleAddressChange}
                 />
                 <label htmlFor="zip" className="text-gray-500">
                   Zip
@@ -211,7 +271,7 @@ const CheckOutForm = () => {
           <div className="flex gap-5">
             <div
               className={`cursor-pointer ${
-                selectedTab === "card"
+                selectedTab === "debit-card"
                   ? "border-b-2 border-amber-600 text-amber-600 pb-2"
                   : ""
               }`}

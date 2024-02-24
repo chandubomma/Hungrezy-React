@@ -72,7 +72,9 @@ const RestaurantMenu = () => {
         throw new Error('Failed to fetch menu items');
       }
       const result = await response.json();
+      console.log(result)
       const data = result.data;
+      console.log(data)
       delete data._id;
       return data; 
     } catch (error) {
@@ -86,6 +88,7 @@ const RestaurantMenu = () => {
     dispatch(
       addToCart({
         restaurant: restaurant.name,
+        restaurantId: restaurant._id,
         category,
         itemName,
         price,
