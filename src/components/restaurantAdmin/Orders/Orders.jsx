@@ -20,11 +20,48 @@ import { ordersData } from "../../../data/orderItems";
 import { Link } from "react-router-dom";
 import { IoEye } from "react-icons/io5";
 import { HiMiniBolt } from "react-icons/hi2";
+import { useAuth } from "../../../AuthContext";
+import { format } from 'date-fns';
 
 const Orders = () => {
   const [statusFilter, setStatusFilter] = useState("all");
   const [dateFilter, setDateFilter] = useState("all");
-  const [orders, setOrders] = useState(ordersData);
+  const [orders, setOrders] = useState([]);
+  const {user,accessToken,loading} = useAuth()
+
+  const fetchRestaurantOrders = async(restaurantId,status,customerId)=>{
+    let url = `${import.meta.env.VITE_HUNGREZY_API}/api/order/restaurant/${restaurantId}?status=${status}`;
+    if(customerId)url+=`&cutomerId=${customerId}`
+    try{
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`, 
+        },
+      });
+      if (!response.ok) {
+        console.log('Failed to fetch user orders');
+        return [];
+      }
+      const result = await response.json();
+      console.log(result)
+      if(!result.data)return []
+      return result.data
+    }catch(error){
+      console.log(error)
+    }
+  }
+
+  useEffect(()=>{
+    const fetchData = async () => {
+      if (user) {
+        const data = await fetchRestaurantOrders(user._id, 'all',null);
+        setOrders(data);
+      }
+    };
+    if(!orders.length>0)fetchData();
+  },[])
 
   const handleAccept = (orderId) => {
     const orderIndex = ordersData.findIndex(
@@ -35,11 +72,11 @@ const Orders = () => {
     setOrders(newOrders);
   };
 
-  useEffect(() => {
-    setOrders(ordersData);
-  }, [statusFilter, dateFilter, orders]);
+  // useEffect(() => {
+  //   setOrders(ordersData);
+  // }, [statusFilter, dateFilter, orders]);
 
-  const filteredOrders = ordersData.filter((order) => {
+  const filteredOrders = orders.filter((order) => {
     if (
       (!statusFilter || statusFilter === "all") &&
       (!dateFilter || dateFilter === "all")
@@ -49,7 +86,7 @@ const Orders = () => {
 
     const statusCondition =
       !statusFilter || statusFilter === order.status || statusFilter === "all";
-    const orderDate = new Date(order.date);
+    const orderDate = new Date(order.orderedAt);
     const today = new Date();
     let lastWeek = new Date(today);
     lastWeek.setDate(today.getDate() - 7);
@@ -104,13 +141,13 @@ const Orders = () => {
             <SelectItem value="all" className="cursor-pointer" defaultChecked>
               All
             </SelectItem>
-            <SelectItem value="new" className="cursor-pointer">
+            <SelectItem value="placed" className="cursor-pointer">
               New
             </SelectItem>
             <SelectItem value="delivered" className="cursor-pointer">
               Delivered
             </SelectItem>
-            <SelectItem value="pending" className="cursor-pointer">
+            <SelectItem value="processing" className="cursor-pointer">
               Pending
             </SelectItem>
             <SelectItem value="cancelled" className="cursor-pointer">
@@ -160,29 +197,29 @@ const Orders = () => {
         </TableHead>
         <TableBody>
           {filteredOrders.map((order) => (
-            <TableRow key={order.orderId}>
-              <TableCell>{order.date}</TableCell>
-              <TableCell>{order.orderId}</TableCell>
-              <TableCell>{order.customerName}</TableCell>
-              <TableCell>&#8377;{order.total}</TableCell>
+            <TableRow key={order._id}>
+              <TableCell>{format(new Date(order.orderedAt), "MMM dd, yyyy, hh:mm:ss a")}</TableCell>
+              <TableCell>{order._id}</TableCell>
+              <TableCell>{order.userId.firstName}</TableCell>
+              <TableCell>&#8377;{order.paymentDetails.amount}</TableCell>
               <TableCell>
                 <Badge
                   className="px-3 py-1 flex items-center w-28"
                   color={
                     order.status === "delivered"
                       ? "green"
-                      : order.status === "pending"
+                      : order.status === "processing"
                       ? "yellow"
-                      : order.status === "new"
+                      : order.status === "placed"
                       ? "blue"
                       : "red"
                   }
                   icon={
                     order.status === "delivered"
                       ? BadgeCheckIcon
-                      : order.status === "pending"
+                      : order.status === "processing"
                       ? MdOutlinePending
-                      : order.status === "new"
+                      : order.status === "placed"
                       ? MdFoodBank
                       : RxCross2
                   }
@@ -197,14 +234,14 @@ const Orders = () => {
               <TableCell className="flex items-center justify-center lg:-ml-14 md:-ml-10">
                 <div className="flex w-fit gap-3">
                   <Link
-                    to={`/restaurant/orders/${order.orderId}`}
+                    to={`/restaurant/orders/${order._id}`}
                     className="flex items-center justify-center rounded-md cursor-pointer underline"
                   >
                     <IoEye className="w-5 h-5 text-gray-500" />
                   </Link>
                   {order.status === "new" && (
                     <Badge
-                      onClick={() => handleAccept(order.orderId)}
+                      onClick={() => handleAccept(order._id)}
                       className="px-3 py-1 flex items-center w-28 cursor-pointer hover:scale-105 transition-all"
                       color={"green"}
                       icon={HiMiniBolt}
