@@ -49,7 +49,9 @@ const CheckOutForm = () => {
         return {
           name : item.itemName,
           category : item.category,
-          quantity : item.count
+          quantity : item.count,
+          price : item.price,
+          veg_or_non_veg : item.veg_or_non_veg
         }
       }),
       address : Address.address,
@@ -61,7 +63,7 @@ const CheckOutForm = () => {
     await placeOrder(order);
    // dispatch(addOrder(order)); // todo: need to change according to new order strucutre after fetching from api.
    
-   // navigate('/profile');
+   
   }
 
   const placeOrder = async(order)=>{
@@ -83,6 +85,7 @@ const CheckOutForm = () => {
       const result = await response.json();
       toast.success("Order places succesfully!");
       dispatch(clearCart());
+      navigate('/profile');
       console.log(result)
     }catch(error){
         console.error(error);

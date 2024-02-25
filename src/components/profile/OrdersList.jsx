@@ -41,7 +41,7 @@ const OrdersList = () => {
   const {user,accessToken,loading} = useAuth()
   const [orders,setOrders] = useState([])
   const fetchUserOrders = async(userId,status)=>{
-    const url = `${import.meta.env.VITE_HUNGREZY_API}/api/order/user/all/${userId}?status=${status}`;
+    const url = `${import.meta.env.VITE_HUNGREZY_API}/api/order/user/${userId}?status=${status}`;
     try{
       const response = await fetch(url, {
         method: 'GET',
