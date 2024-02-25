@@ -29,7 +29,10 @@ const RestaurantDetails = () => {
   const menu = useSelector(selectMenu);
   const dispatch = useDispatch();
   const [openModal, setOpenModal] = useState(false);
-  const [state, setState] = useState(null);
+  const [status, setStatus] = useState(null);
+  const handleDone = () => {
+    fetchRestaurantDetails(id);
+  };
 
   useEffect(() => {
     setLoading(true);
@@ -37,10 +40,9 @@ const RestaurantDetails = () => {
     setLoading(false);
   }, [id]);
 
-  const toggleModal = (state) => {
+  const toggleModal = async (status) => {
     setOpenModal(!openModal);
-    setState(state);
-    console.log(state);
+    setStatus(status);
   };
 
   const fetchRestaurantDetails = async (id) => {
@@ -116,19 +118,23 @@ const RestaurantDetails = () => {
               size={"md"}
             />
             <MenuList>
-              <MenuItem onClick={() => toggleModal("approved")}>
-                Approve
-              </MenuItem>
-              <MenuItem onClick={() => toggleModal("suspended")}>
-                Suspend
-              </MenuItem>
-              <MenuItem
-                onClick={() => {
-                  toggleModal("rejected");
-                }}
-              >
-                Reject
-              </MenuItem>
+              {restaurant.status !== "approved" && (
+                <MenuItem onClick={() => toggleModal("approved")}>
+                  Approve
+                </MenuItem>
+              )}
+              {restaurant.status !== "suspended" &&
+                restaurant.status !== "inprogress" && (
+                  <MenuItem onClick={() => toggleModal("suspended")}>
+                    Suspend
+                  </MenuItem>
+                )}
+              {restaurant.status !== "rejected" &&
+                restaurant.status === "inprogress" && (
+                  <MenuItem onClick={() => toggleModal("rejected")}>
+                    Reject
+                  </MenuItem>
+                )}
             </MenuList>
           </Menu>
         </div>
@@ -139,7 +145,8 @@ const RestaurantDetails = () => {
           openModal={openModal}
           toggleModal={toggleModal}
           restaurantId={restaurant._id}
-          state={state}
+          status={status}
+          handleDone={handleDone}
         />
       )}
       <div className="flex lg:flex-row flex-col items-center my-4">

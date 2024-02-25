@@ -1,14 +1,36 @@
-const ConfirmationModal = ({ toggleModal, restaurantId, state }) => {
+import { toast } from "sonner";
+
+const ConfirmationModal = ({
+  toggleModal,
+  restaurantId,
+  status,
+  handleDone,
+}) => {
   const label =
-    state === "approved"
+    status === "approved"
       ? "approve"
-      : state === "suspended"
+      : status === "suspended"
       ? "suspend"
       : "reject";
 
-  const handleConfirmation = async (state) => {
-    toggleModal(state);
-    // TODO: // Add the logic to approve, suspend or reject the restaurant
+  const handleConfirmation = async (status) => {
+    toggleModal(status);
+    const url = `${
+      import.meta.env.VITE_HUNGREZY_API
+    }/api/restaurant/${restaurantId}/updateStatus`;
+    const response = await fetch(url, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ status }),
+    });
+    const result = await response.json();
+    if (!response.ok) {
+      const error = result.message;
+      toast.error(error);
+      return;
+    }
+    handleDone();
+    toast.success(result.message);
   };
 
   return (
@@ -27,7 +49,7 @@ const ConfirmationModal = ({ toggleModal, restaurantId, state }) => {
           </button>
           <button
             className="px-4 py-2 bg-red-500 rounded-lg text-white"
-            onClick={() => handleConfirmation(state)}
+            onClick={() => handleConfirmation(status)}
           >
             Yes
           </button>

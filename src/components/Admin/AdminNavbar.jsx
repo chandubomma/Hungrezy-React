@@ -77,7 +77,7 @@ const AdminNavbar = () => {
       toast.warning("Please enter an announcement");
       return;
     }
-    
+
     const response = await fetch(
       `${import.meta.env.VITE_HUNGREZY_API}/api/admin/announce`,
       {
@@ -87,10 +87,10 @@ const AdminNavbar = () => {
       }
     );
     const result = await response.json();
-    if(socket) {
+    if (socket) {
       sendMessage({
         type: "announcement",
-        payload: result.data
+        payload: result.data,
       });
     }
     if (!response.ok) {
@@ -101,7 +101,6 @@ const AdminNavbar = () => {
     toast.success("Announcement posted successfully");
     setAnnouncement("");
   };
-
 
   return (
     <div>
@@ -115,14 +114,7 @@ const AdminNavbar = () => {
             <h2 className="font-bold text-2xl">Hungrezy</h2>
           </Link>
         </div>
-        <div className="flex-[11] flex justify-between items-center w-full ml-10">
-          <div className="flex items-center gap-x-4 border px-4 py-2 rounded-3xl bg-gray-50">
-            <FaSearch className="text-gray-500 font-light" />
-            <input
-              className="outline-none focus:outline-none bg-gray-50"
-              placeholder="Search for items..."
-            />
-          </div>
+        <div className="flex-[11] flex justify-end items-center w-full ml-10">
           <div className="flex gap-x-4 items-center">
             <Popover>
               <PopoverTrigger>

@@ -18,49 +18,43 @@ import {
 import { BadgeCheckIcon } from "@heroicons/react/outline";
 import { RxCross2 } from "react-icons/rx";
 import { MdOutlinePending } from "react-icons/md";
+import { Image } from "@chakra-ui/react";
+import error from "../../../assets/error.png";
+import { FaSearch } from "react-icons/fa";
 
 const RestaurantsList = () => {
   const [statusFilter, setStatusFilter] = useState("all");
   const [ratingFilter, setRatingFilter] = useState("all");
+  const [searchFilter, setSearchFilter] = useState("");
   const [restaurants, setRestaurants] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
-  const [filteredRestaurants, setFilteredRestaurants] = useState([]);
 
   useEffect(() => {
-    fetchRestaurants(currentPage);
-  }, [currentPage]);
+    fetchRestaurants();
+  }, [currentPage, ratingFilter, statusFilter, searchFilter]);
 
-  useEffect(() => {
-    if (statusFilter === "all" && ratingFilter === "all") {
-      setFilteredRestaurants(restaurants);
-    } else if (statusFilter === "all" && ratingFilter !== "all") {
-      setFilteredRestaurants(
-        restaurants.filter((restaurant) => restaurant.rating >= ratingFilter)
-      );
-    } else if (statusFilter !== "all" && ratingFilter === "all") {
-      setFilteredRestaurants(
-        restaurants.filter((restaurant) => restaurant.status === statusFilter)
-      );
-    } else {
-      setFilteredRestaurants(
-        restaurants.filter(
-          (restaurant) =>
-            restaurant.status === statusFilter &&
-            restaurant.rating >= ratingFilter
-        )
-      );
-    }
-  }, [statusFilter, ratingFilter, restaurants]);
-
-  const fetchRestaurants = async (page) => {
+  const fetchRestaurants = async () => {
     setLoading(true);
-    const response = await fetch(
-      `${
-        import.meta.env.VITE_HUNGREZY_API
-      }/api/restaurant/all?page=${page}&perPage=10`
-    );
+    let url = `${
+      import.meta.env.VITE_HUNGREZY_API
+    }/api/restaurant/all?page=${currentPage}&perPage=10`;
+
+    if (statusFilter !== "all") {
+      url += `&status=${statusFilter}`;
+    }
+
+    if (ratingFilter !== "all") {
+      url += `&rating=${ratingFilter}`;
+    }
+
+    if (searchFilter) {
+      url += `&search=${searchFilter}`;
+    }
+
+    const response = await fetch(url);
+
     if (!response.ok) {
       setRestaurants([]);
       setLoading(false);
@@ -75,10 +69,12 @@ const RestaurantsList = () => {
   };
 
   const handleStatusChange = (value) => {
+    setCurrentPage(1);
     setStatusFilter(value);
   };
 
   const handleRatingChange = (value) => {
+    setCurrentPage(1);
     setRatingFilter(value);
   };
 
@@ -142,6 +138,15 @@ const RestaurantsList = () => {
         </div>
       </div>
       <div className="flex sm:flex-row flex-col gap-y-5 items-center mt-2 sm:gap-x-5">
+        <div className="flex items-center gap-x-4 border px-4 py-2 rounded-3xl bg-gray-50">
+          <FaSearch className="text-gray-500 font-light" />
+          <input
+            className="outline-none focus:outline-none bg-gray-50"
+            placeholder="Search for items..."
+            onChange={(e) => setSearchFilter(e.target.value)}
+            value={searchFilter}
+          />
+        </div>
         <div className="flex items-center gap-2">
           <p className="text-sm font-semibold text-gray-500 pt-3">
             Status: &nbsp;
@@ -210,9 +215,19 @@ const RestaurantsList = () => {
           </TableRow>
         </TableHead>
         <TableBody>
+          {!loading && restaurants.length === 0 && (
+            <TableRow>
+              <TableCell colSpan="5">
+                <div className="flex items-center justify-center flex-col">
+                  <p className="text-orange-500">No restaurants found</p>
+                  <Image src={error} alt="error" className="h-80 w-80" />
+                </div>
+              </TableCell>
+            </TableRow>
+          )}
           {loading
             ? skeletonRows
-            : filteredRestaurants.map((restaurant) => (
+            : restaurants.map((restaurant) => (
                 <TableRow key={restaurant.email}>
                   <TableCell>{restaurant.name}</TableCell>
                   <TableCell>
