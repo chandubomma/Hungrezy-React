@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import { FaStar } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
+import { Link} from "react-router-dom/dist";
 
 const RestaurantCard = ({ restaurant }) => {
   const navigate = useNavigate();
@@ -21,12 +22,12 @@ const RestaurantCard = ({ restaurant }) => {
         <h2 className="font-semibold text-xl mb-2">{restaurant.name}</h2>
         <p className="text-gray-600 text-sm mb-4">{restaurant.cuisine}</p>
         <div className="flex items-center justify-between">
-          <button
-            onClick={() => navigateToRestaurant(restaurant)}
+          <Link
+           to={`/restaurant/${restaurant._id}`}
             className="bg-amber-400 hover:bg-amber-500 text-white font-bold py-2 px-4 rounded-full"
           >
             Order Now
-          </button>
+          </Link>
           <span className="font-medium">
             {restaurant.rating}
             <FaStar className="inline ml-1 mb-1.5 text-amber-500" />

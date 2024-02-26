@@ -104,7 +104,63 @@ const RestaurantReviews = () => {
 
   return (
     <div className="container mx-auto p-4">
-      
+       {/* Add Review Section */}
+       <div className="mb-6 ">
+        <h2 className="text-xl font-semibold mb-2 text-gray-500 ">Add a Review</h2>
+        <div className='flex justify-between mt-4'>
+        <div className="flex flex-col mb-2 w-96">
+          <label htmlFor="userName" className="mr-2 text-gray-500 font-semibold mb-1">
+            Your Name
+          </label>
+          <input
+            type="text"
+            id="userName"
+            name="userName"
+            value={newReview.userName}
+            onChange={handleInputChange}
+            className="p-2 border border-gray-300 rounded h-12 outline-none"
+          />
+        </div>
+        <div className="flex flex-col mb-2 w-96">
+          <label htmlFor="rating" className="mr-2 text-gray-500 font-semibold mb-1">
+            Rating
+          </label>
+          <select
+            id="rating"
+            name="rating"
+            value={newReview.rating}
+            onChange={handleInputChange}
+            className="p-2 border border-gray-300 rounded h-12 outline-none"
+          >
+            {[1, 2, 3, 4, 5].map((value) => (
+              <option key={value} value={value}>
+                {value}
+              </option>
+            ))}
+          </select>
+        </div>
+        </div>
+        
+        <div className="flex flex-col mb-2 mt-3">
+          <label htmlFor="reviewText" className="mr-2 text-gray-500 font-semibold mb-1">
+            Review
+          </label>
+          <textarea
+            id="reviewText"
+            name="reviewText"
+            value={newReview.reviewText}
+            onChange={handleInputChange}
+            rows={5}
+            className="p-2 border border-gray-300 rounded outline-none"
+          />
+        </div>
+        <button
+          onClick={handleAddReview}
+          className="bg-amber-500 text-white px-4 py-2.5 mt-4 rounded-md hover:bg-amber-600 focus:outline-none"
+        >
+          Submit Review
+        </button>
+      </div>
 
      
       {/* Sort and Filter Options */}
@@ -164,63 +220,7 @@ const RestaurantReviews = () => {
         ))}
       </div>
       
-       {/* Add Review Section */}
-       <div className="mb-6 mt-8">
-        <h2 className="text-xl font-semibold mb-2 text-gray-500 ">Add a Review</h2>
-        <div className='flex justify-between mt-4'>
-        <div className="flex flex-col mb-2 w-96">
-          <label htmlFor="userName" className="mr-2 text-gray-500 font-semibold mb-1">
-            Your Name
-          </label>
-          <input
-            type="text"
-            id="userName"
-            name="userName"
-            value={newReview.userName}
-            onChange={handleInputChange}
-            className="p-2 border border-gray-300 rounded h-12 outline-none"
-          />
-        </div>
-        <div className="flex flex-col mb-2 w-96">
-          <label htmlFor="rating" className="mr-2 text-gray-500 font-semibold mb-1">
-            Rating
-          </label>
-          <select
-            id="rating"
-            name="rating"
-            value={newReview.rating}
-            onChange={handleInputChange}
-            className="p-2 border border-gray-300 rounded h-12 outline-none"
-          >
-            {[1, 2, 3, 4, 5].map((value) => (
-              <option key={value} value={value}>
-                {value}
-              </option>
-            ))}
-          </select>
-        </div>
-        </div>
-        
-        <div className="flex flex-col mb-2 mt-3">
-          <label htmlFor="reviewText" className="mr-2 text-gray-500 font-semibold mb-1">
-            Review
-          </label>
-          <textarea
-            id="reviewText"
-            name="reviewText"
-            value={newReview.reviewText}
-            onChange={handleInputChange}
-            rows={5}
-            className="p-2 border border-gray-300 rounded outline-none"
-          />
-        </div>
-        <button
-          onClick={handleAddReview}
-          className="bg-amber-500 text-white px-4 py-2.5 mt-4 rounded-md hover:bg-amber-600 focus:outline-none"
-        >
-          Submit Review
-        </button>
-      </div>
+      
 
     </div>
   );

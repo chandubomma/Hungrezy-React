@@ -139,7 +139,7 @@ const Router = createBrowserRouter(
         <Route index element={<Home />} />
         <Route path="restaurants" element={<Restaurants />} />
         <Route path="recipes" element={<Recipes />} />
-        <Route path="restaurantmenu" element={<RestaurantMenu />} />
+        <Route path="restaurant/:id" element={<RestaurantMenu />} />
         <Route path="recipepage" element={<RecipePage />} />
         <Route path="about" element={<About />} />
         <Route path="profile" element={<Profile />} />

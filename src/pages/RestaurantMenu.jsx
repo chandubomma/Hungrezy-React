@@ -14,17 +14,21 @@ import {
   selectCartItems,
 } from "../redux/slices/cartSlice";
 import {toast} from "sonner";
+import { useParams } from "react-router";
 
 const RestaurantMenu = () => {
   const location = useLocation();
-  const restaurant = location.state?.restaurant;
+  const [restaurant,setRestaurant] = useState(null)
   const [foodItems, setFoodItems] = useState({});
   const [activeTab, setActiveTab] = useState("menu");
   const [isCategoryListVisible, setCategoryListVisible] = useState(false);
   const [isTableBooked,setTableBooked] = useState(false);
   const cartItems = useSelector(selectCartItems);
   const currentUser = useSelector(selectUser);
-
+  const {id} = useParams()
+  const queryParams = new URLSearchParams(location.search);
+  const show = queryParams.get('show');
+  const orderId = queryParams.get('orderId');
   // const initialVisibility = Object.keys(foodItems).reduce(
   //   (acc, category, index) => {
   //     acc[category] = index < 4;
@@ -38,11 +42,27 @@ const RestaurantMenu = () => {
     useState();
   const categoryRefs = useRef({});
 
+  useEffect(()=>{
+    switch(show){
+      case 'booktable' : {
+        setActiveTab(show);
+        break;
+      }
+      case 'reviews' : {
+        setActiveTab(show);
+        break;
+      }
+      default : setActiveTab('menu');
+    }
+  },[])
+
   useEffect(() => {
-    fetchMenu(restaurant.menu_id)
-      .then((menuItems) => {
-        setFoodItems(menuItems);
-        const initialVisibility = Object.keys(menuItems).reduce(
+    fetchRestaurant()
+      .then((res) => {
+        setRestaurant(res)
+        if(res.menu_id)delete res.menu_id._id
+        setFoodItems(res.menu_id);
+        const initialVisibility = Object.keys(res.menu_id).reduce(
           (acc, category, index) => {
             acc[category] = index < 4;
             return acc;
@@ -63,13 +83,15 @@ const RestaurantMenu = () => {
     }));
   };
 
-  const fetchMenu = async (menuId) => {
+  
+
+  const fetchRestaurant = async () => {
     try {
       const response = await fetch(`${
         import.meta.env.VITE_HUNGREZY_API
-      }/api/restaurant/menu/${menuId}`);
+      }/api/restaurant/${id}`);
       if (!response.ok) {
-        throw new Error('Failed to fetch menu items');
+        throw new Error('Failed to fetch restaurant');
       }
       const result = await response.json();
       console.log(result)
@@ -78,7 +100,7 @@ const RestaurantMenu = () => {
       delete data._id;
       return data; 
     } catch (error) {
-      console.error('Error fetching menu items:', error);
+      console.error('Error fetching restaurant:', error);
       throw error;
     }
   };
@@ -181,6 +203,8 @@ const RestaurantMenu = () => {
   const toggleCategoryList = () => {
     setCategoryListVisible((prevVisible) => !prevVisible);
   };
+
+  if(!restaurant)return <div>Loading...</div>
 
   return (
     <div className="container w-[55rem] mx-auto p-4 mt-28">
