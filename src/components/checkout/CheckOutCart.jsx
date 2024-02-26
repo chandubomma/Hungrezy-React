@@ -51,7 +51,7 @@ const CheckOutCart = () => {
               </div>
             </div>
 
-            <div className="flex items-center gap-6 w-1/3">
+            <div className="flex items-center gap-6 w-[20rem]">
               <div className="flex items-center gap-4">
                 <motion.button
                   onClick={() => handleRemoveItemFromCart({ ...item })}
