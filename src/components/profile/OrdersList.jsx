@@ -11,14 +11,34 @@ import { IoCheckmarkDoneSharp } from "react-icons/io5";
 import { FaRegCaretSquareUp } from "react-icons/fa";
 import { GrSquare } from "react-icons/gr";
 import { FaRupeeSign } from "react-icons/fa";
+import {toast} from 'sonner';
 
 
 
 const OrderCard = ({ order }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  const handleCancelOrder = () => {
-   
+  const {accessToken} = useAuth()
+  const handleCancelOrder = async() => {
+    const url = `${import.meta.env.VITE_HUNGREZY_API}/api/order/user/cancel/${order._id}`;
+    try{
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`, 
+        },
+      });
+      if (!response.ok) {
+        console.log('Failed to cancel order');
+        toast.error(`Unable to cancel Order ${order._id}`)
+        return;
+      }
+      toast.success(`Your order ${order._id} was cancelled successfully!`);
+      order.status = "cancelled";
+      setIsMenuOpen(false);
+    }catch(error){
+      console.log(error)
+    }
   };
 
   const handleMenuToggle = () => {
