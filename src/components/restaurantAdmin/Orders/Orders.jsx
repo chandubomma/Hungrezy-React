@@ -22,11 +22,15 @@ import { IoEye } from "react-icons/io5";
 import { HiMiniBolt } from "react-icons/hi2";
 import { useAuth } from "../../../AuthContext";
 import { format } from 'date-fns';
+import {toast} from 'sonner';
+import { MdCancel } from "react-icons/md";
 
 const Orders = () => {
   const [statusFilter, setStatusFilter] = useState("all");
   const [dateFilter, setDateFilter] = useState("all");
+  const [customerFilter,setCustomerFilter] = useState("all")
   const [orders, setOrders] = useState([]);
+  const [customers,setCustomers] = useState(null);
   const {user,accessToken,loading} = useAuth()
 
   const fetchRestaurantOrders = async(restaurantId,status,customerId)=>{
@@ -57,20 +61,60 @@ const Orders = () => {
     const fetchData = async () => {
       if (user) {
         const data = await fetchRestaurantOrders(user._id, 'all',null);
+        const temp = [];
         setOrders(data);
       }
     };
     if(!orders.length>0)fetchData();
   },[])
 
-  const handleAccept = (orderId) => {
-    const orderIndex = ordersData.findIndex(
-      (order) => order.orderId === orderId
+  useEffect(()=>{
+    const uniqueCustomersMap = new Map();
+    orders.forEach(order => {
+      const userIdString = order.userId._id;
+      if (!uniqueCustomersMap.has(userIdString)) {
+        uniqueCustomersMap.set(userIdString, order.userId);
+      }
+    });
+    setCustomers(Array.from(uniqueCustomersMap.values()));
+  },[orders])
+
+  const handleUpdateStatus = async(orderId,status) => {
+    const result = await updateOrderStatus(orderId,status)
+    if(!result)return;
+    const orderIndex = orders.findIndex(
+      (order) => order._id === orderId
     );
-    const newOrders = [...ordersData];
-    newOrders[orderIndex].status = "pending";
+    const newOrders = [...orders];
+    newOrders[orderIndex].status = status;
     setOrders(newOrders);
   };
+
+  const updateOrderStatus = async(orderId,status)=>{
+    let url = `${import.meta.env.VITE_HUNGREZY_API}/api/order/status/${orderId}`;
+    try{
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`, 
+        },
+        body : JSON.stringify({status})
+      });
+      if (!response.ok) {
+        console.log('Failed to update order status');
+        toast.error('Failed to update order status');
+        return false;
+      }
+      const result = await response.json();
+      toast.success("Order status updated successfully");
+      return true;
+    }catch(error){
+      console.log(error)
+      toast.error('Failed to update order status');
+      return false;
+    }
+  }
 
   // useEffect(() => {
   //   setOrders(ordersData);
@@ -79,13 +123,15 @@ const Orders = () => {
   const filteredOrders = orders.filter((order) => {
     if (
       (!statusFilter || statusFilter === "all") &&
-      (!dateFilter || dateFilter === "all")
+      (!dateFilter || dateFilter === "all") &&
+      (!customerFilter || customerFilter==="all")
     ) {
       return true;
     }
 
     const statusCondition =
       !statusFilter || statusFilter === order.status || statusFilter === "all";
+    const customerCondition = !customerFilter || customerFilter === order.userId._id || customerFilter==="all";
     const orderDate = new Date(order.orderedAt);
     const today = new Date();
     let lastWeek = new Date(today);
@@ -98,19 +144,19 @@ const Orders = () => {
     switch (dateFilter) {
       case "today":
         return (
-          statusCondition &&
+          statusCondition &&customerCondition&&
           orderDate.getDate() === today.getDate() &&
           orderDate.getMonth() === today.getMonth() &&
           orderDate.getFullYear() === today.getFullYear()
         );
       case "last-week":
-        return statusCondition && orderDate >= lastWeek;
+        return statusCondition && customerCondition && orderDate >= lastWeek;
       case "last-month":
-        return statusCondition && orderDate >= lastMonth;
+        return statusCondition && customerCondition && orderDate >= lastMonth;
       case "last-year":
-        return statusCondition && orderDate >= lastYear;
+        return statusCondition && customerCondition && orderDate >= lastYear;
       default:
-        return statusCondition;
+        return statusCondition && customerCondition;
     }
   });
 
@@ -148,7 +194,7 @@ const Orders = () => {
               Delivered
             </SelectItem>
             <SelectItem value="processing" className="cursor-pointer">
-              Pending
+              Processing
             </SelectItem>
             <SelectItem value="cancelled" className="cursor-pointer">
               Cancelled
@@ -183,6 +229,29 @@ const Orders = () => {
             </SelectItem>
           </Select>
         </div>
+        <div className="flex items-center gap-2">
+          <p className="text-sm font-semibold text-gray-500 pt-3">
+            Customer: &nbsp;
+          </p>
+          <Select
+            className="w-[10rem]"
+            placeholder="Customer"
+            value={customerFilter}
+            onValueChange={setCustomerFilter}
+            defaultValue="all"
+          >
+            <SelectItem value="all" className="cursor-pointer" defaultChecked>
+                  All
+            </SelectItem>
+            {
+              customers && customers.map((customer)=>(
+                <SelectItem value={customer._id} className="cursor-pointer">
+                  {customer.firstName+" "+customer.lastName}
+                </SelectItem>
+              ))
+            }
+          </Select>
+        </div>
       </div>
       <Table className="mt-4 h-[30rem] overflow-y-scroll">
         <TableHead>
@@ -200,7 +269,7 @@ const Orders = () => {
             <TableRow key={order._id}>
               <TableCell>{format(new Date(order.orderedAt), "MMM dd, yyyy, hh:mm:ss a")}</TableCell>
               <TableCell>{order._id}</TableCell>
-              <TableCell>{order.userId.firstName}</TableCell>
+              <TableCell>{order.userId.firstName+" "+order.userId.lastName}</TableCell>
               <TableCell>&#8377;{order.paymentDetails.amount}</TableCell>
               <TableCell>
                 <Badge
@@ -239,14 +308,24 @@ const Orders = () => {
                   >
                     <IoEye className="w-5 h-5 text-gray-500" />
                   </Link>
-                  {order.status === "new" && (
+                  {order.status === "placed" && (
                     <Badge
-                      onClick={() => handleAccept(order._id)}
+                      onClick={() => handleUpdateStatus(order._id,"processing")}
                       className="px-3 py-1 flex items-center w-28 cursor-pointer hover:scale-105 transition-all"
                       color={"green"}
                       icon={HiMiniBolt}
                     >
                       <Text>Accept</Text>
+                    </Badge>
+                  )}
+                  {order.status === "processing" && (
+                    <Badge
+                      onClick={() => handleUpdateStatus(order._id,"cancelled")}
+                      className="px-3 py-1 flex items-center w-28 cursor-pointer hover:scale-105 transition-all"
+                      color={"red"}
+                      icon={MdCancel}
+                    >
+                      <Text>Cancel</Text>
                     </Badge>
                   )}
                 </div>
