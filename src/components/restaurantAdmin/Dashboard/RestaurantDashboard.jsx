@@ -3,6 +3,7 @@ import Counter from "../../Counter";
 import Graphs from "./Graphs";
 import { ordersData } from "../../../data/orderItems";
 import { useEffect, useState } from "react";
+import { useAuth } from "../../../AuthContext";
 
 const RestaurantDashboard = () => {
   const [totalRevenue, setTotalRevenue] = useState(0);
@@ -10,30 +11,71 @@ const RestaurantDashboard = () => {
   const [pendingOrders, setPendingOrders] = useState(0);
   const [receivedOrders, setReceivedOrders] = useState(0);
   const [successfulOrders, setSuccessfulOrders] = useState(0);
-  useEffect(() => {
-    let totalRevenue = 0;
-    ordersData.forEach((order) => {
-      if (order.status === "delivered") {
-        totalRevenue += order.total;
+  const {user,accessToken,loading} = useAuth()
+
+  const fetchRestaurantOrderStats = async(restaurantId)=>{
+    let url = `${import.meta.env.VITE_HUNGREZY_API}/api/order/restaurant/stats/${restaurantId}`;
+    try{
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`, 
+        },
+      });
+      if (!response.ok) {
+        console.log('Failed to fetch order stats');
+        return null;
       }
-    });
-    setTotalRevenue(totalRevenue);
+      const result = await response.json();
+      console.log(result)
+      if(!result.data)return null
+      return result.data
+    }catch(error){
+      console.log(error)
+    }
+  }
 
-    const newOrders = ordersData.filter((order) => order.status === "new");
-    setNewOrders(newOrders.length);
+  useEffect(()=>{
+    const fetchData = async () => {
+      if (user) {
+        const data = await fetchRestaurantOrderStats(user._id);
+        if(data){
+          setTotalRevenue(data.totalRevenue);
+          setNewOrders(data.newOrders);
+          setPendingOrders(data.processingOrders);
+          setSuccessfulOrders(data.deliveredOrders);
+          setReceivedOrders(data.totalOrders);
+        }
+      }
+    };
+    fetchData();
+  },[])
 
-    const pendingOrders = ordersData.filter(
-      (order) => order.status === "pending"
-    );
-    setPendingOrders(pendingOrders.length);
-    const receivedOrders = ordersData.length;
-    setReceivedOrders(receivedOrders);
+  // useEffect(() => {
+  //   let totalRevenue = 0;
+  //   ordersData.forEach((order) => {
+  //     if (order.status === "delivered") {
+  //       totalRevenue += order.total;
+  //     }
+  //   });
+  //   setTotalRevenue(totalRevenue);
 
-    const successfulOrders = ordersData.filter(
-      (order) => order.status === "delivered"
-    );
-    setSuccessfulOrders(successfulOrders.length);
-  }, []);
+  //   const newOrders = ordersData.filter((order) => order.status === "new");
+  //   setNewOrders(newOrders.length);
+
+  //   const pendingOrders = ordersData.filter(
+  //     (order) => order.status === "pending"
+  //   );
+  //   setPendingOrders(pendingOrders.length);
+  //   const receivedOrders = ordersData.length;
+  //   setReceivedOrders(receivedOrders);
+
+  //   const successfulOrders = ordersData.filter(
+  //     (order) => order.status === "delivered"
+  //   );
+  //   setSuccessfulOrders(successfulOrders.length);
+  // }, []);
   return (
     <div className="w-full px-4">
       <div className="flex justify-between items-center">
