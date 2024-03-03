@@ -1,23 +1,35 @@
-import { Image } from "@chakra-ui/react";
+import {
+  Button,
+  Image,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  useDisclosure,
+} from "@chakra-ui/react";
 import { BadgeCheckIcon } from "@heroicons/react/outline";
 import { Badge, Select, SelectItem, Text } from "@tremor/react";
 import { useEffect, useState } from "react";
 import { RiDraftLine } from "react-icons/ri";
 import error from "../../../assets/error.png";
 import Skeleton from "./Skeleton";
+import { toast } from "sonner";
+import { IoEye } from "react-icons/io5";
 
 const OrdersTable = ({ customerId }) => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState("all");
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   useEffect(() => {
     setLoading(true);
     fetchOrders();
     setLoading(false);
   }, [customerId, statusFilter]);
-
-  console.log(orders);
 
   const fetchOrders = async () => {
     const response = await fetch(
@@ -33,7 +45,7 @@ const OrdersTable = ({ customerId }) => {
       }
     );
     if (!response.ok) {
-      setError("An error occurred while fetching orders");
+      toast.error("Failed to fetch orders");
       setOrders([]);
       return;
     }
@@ -44,6 +56,8 @@ const OrdersTable = ({ customerId }) => {
   if (loading) {
     return <Skeleton />;
   }
+
+  console.log(orders);
 
   return (
     <div className="px-4">
@@ -62,9 +76,15 @@ const OrdersTable = ({ customerId }) => {
             <SelectItem className="cursor-pointer" value="all">
               All
             </SelectItem>
-            <SelectItem className="cursor-pointer" value="processing">Processing</SelectItem>
-            <SelectItem className="cursor-pointer" value="delivered">Delivered</SelectItem>
-            <SelectItem className="cursor-pointer" value="cancelled">Cancelled</SelectItem>
+            <SelectItem className="cursor-pointer" value="processing">
+              Processing
+            </SelectItem>
+            <SelectItem className="cursor-pointer" value="delivered">
+              Delivered
+            </SelectItem>
+            <SelectItem className="cursor-pointer" value="cancelled">
+              Cancelled
+            </SelectItem>
           </Select>
         </div>
       </div>
@@ -90,6 +110,12 @@ const OrdersTable = ({ customerId }) => {
                   scope="col"
                   className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                 >
+                  Restaurant Name
+                </th>
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
                   Address
                 </th>
                 <th
@@ -105,13 +131,23 @@ const OrdersTable = ({ customerId }) => {
                 >
                   Status
                 </th>
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  Actions
+                </th>
               </tr>
             </thead>
+
             <tbody className="bg-white divide-y divide-gray-200">
               {orders.map((item) => (
                 <tr key={item._id}>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                     {new Date(item.orderedAt).toLocaleDateString()}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {item.restaurantId.name}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                     {item.address}
@@ -148,6 +184,11 @@ const OrdersTable = ({ customerId }) => {
                     ) : (
                       "N/A"
                     )}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <Button onClick={onOpen}>
+                      <IoEye className="w-6 h-6 text-gray-500" />
+                    </Button>
                   </td>
                 </tr>
               ))}

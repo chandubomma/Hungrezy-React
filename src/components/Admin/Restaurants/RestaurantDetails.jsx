@@ -58,7 +58,7 @@ const RestaurantDetails = () => {
     setRestaurant(result.data);
 
     const url = `${import.meta.env.VITE_HUNGREZY_API}/api/restaurant/menu/${
-      result.data.menu_id
+      result.data.menu_id._id
     }`;
     try {
       const response = await fetch(url);
