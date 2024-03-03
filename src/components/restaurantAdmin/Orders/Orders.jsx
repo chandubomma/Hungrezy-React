@@ -24,6 +24,7 @@ import { useAuth } from "../../../AuthContext";
 import { format } from 'date-fns';
 import {toast} from 'sonner';
 import { MdCancel } from "react-icons/md";
+import Counter from "../../Counter";
 
 const Orders = () => {
   const [statusFilter, setStatusFilter] = useState("all");
@@ -32,6 +33,14 @@ const Orders = () => {
   const [orders, setOrders] = useState([]);
   const [customers,setCustomers] = useState(null);
   const {user,accessToken,loading} = useAuth()
+  const emptyStats =  { 
+    totalOrders: 0,
+    averageRevenuePerOrder: 0, 
+    totalRevenue: 0, 
+    mostFrequentCategory: ['none'], 
+    mostFrequentFoodItem: ['none'] 
+  }
+  const [stats,setStats] = useState(emptyStats);
 
   const fetchRestaurantOrders = async(restaurantId,status,customerId)=>{
     let url = `${import.meta.env.VITE_HUNGREZY_API}/api/order/restaurant/${restaurantId}?status=${status}`;
@@ -45,7 +54,7 @@ const Orders = () => {
         },
       });
       if (!response.ok) {
-        console.log('Failed to fetch user orders');
+        console.log('Failed to fetch orders');
         return [];
       }
       const result = await response.json();
@@ -56,6 +65,37 @@ const Orders = () => {
       console.log(error)
     }
   }
+
+  const fetchRestaurantOrdersStats = async(restaurantId,status,date,customerId)=>{
+    let url = `${import.meta.env.VITE_HUNGREZY_API}/api/order/restaurant/stats/filters/${restaurantId}?status=${status}&date=${date}&customerId=${customerId}`;
+    try{
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`, 
+        },
+      });
+      if (!response.ok) {
+        console.log('Failed to fetch orders stats');
+        return emptyStats;
+      }
+      const result = await response.json();
+      return result.data
+    }catch(error){
+      console.log(error)
+    }
+  }
+
+  useEffect(()=>{
+    const fetchStats = async () => {
+      const data = await fetchRestaurantOrdersStats(user._id, statusFilter,dateFilter,customerFilter);
+      setStats(data);
+    };
+    fetchStats()
+  },[statusFilter,dateFilter,customerFilter])
+
+  console.log(stats);
 
   useEffect(()=>{
     const fetchData = async () => {
@@ -170,6 +210,28 @@ const Orders = () => {
             <FaChevronRight className="text-gray-500" />
           </span>
           <p className="text-orange-500 underline">Orders</p>
+        </div>
+      </div>
+      <div className="grid md:grid-cols-3 gap-6 grid-cols-1">
+        <div className="border-1 rounded-md items-center justify-center gap-y-3 p-3 flex flex-col hover:border-orange-500">
+          <Counter to={stats.totalOrders} />
+          <p className="text-lg font-medium">Total orders</p>
+        </div>
+        <div className="border-1 rounded-md items-center justify-center gap-y-3 p-3 flex flex-col hover:border-orange-500">
+          <Counter to={stats.totalRevenue} />
+          <p className="text-lg font-medium">Total Revenue</p>
+        </div>
+        <div className="border-1 rounded-md items-center justify-center gap-y-3 p-3 flex flex-col hover:border-orange-500">
+          <Counter to={stats.averageRevenuePerOrder} />
+          <p className="text-lg font-medium">ARPO</p>
+        </div>
+        <div className="border-1 rounded-md items-center justify-center gap-y-3 p-3 flex flex-col hover:border-orange-500">
+          <p className="text-lg font-medium text-orange-600">{stats.mostFrequentCategory[0]}</p>
+          <p className="text-lg font-medium">Frequent Category</p>
+        </div>
+        <div className="border-1 rounded-md items-center justify-center gap-y-3 p-3 flex flex-col hover:border-orange-500">
+          <p className="text-lg font-medium text-orange-600">{stats.mostFrequentFoodItem[0]}</p>
+          <p className="text-lg font-medium">Frequent Food Item</p>
         </div>
       </div>
       <div className="flex sm:flex-row flex-col gap-y-5 items-center mt-2 sm:gap-x-5">
