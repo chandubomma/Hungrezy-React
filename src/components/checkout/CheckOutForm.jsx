@@ -119,7 +119,7 @@ const CheckOutForm = () => {
                 placeholder="Full Name"
                 name="fullName"
                 type="text"
-                value={user.firstName + " " + user.lastName}
+                value={loading?'':user.firstName + " " + user.lastName}
               />
               <label htmlFor="fullName" className="text-gray-500">
                 Full Name
@@ -139,7 +139,7 @@ const CheckOutForm = () => {
                   placeholder="Enter Email"
                   name="email"
                   type="email"
-                  value={user.email}
+                  value={loading?'':user.email}
                 />
                 <label htmlFor="email" className="text-gray-500">
                   Email
@@ -157,7 +157,7 @@ const CheckOutForm = () => {
                   placeholder="Phone Number"
                   name="phone"
                   type="text"
-                  value={user.mobileNumber}
+                  value={loading?'':user.mobileNumber}
                 />
                 <label htmlFor="phone" className="text-gray-500">
                   Phone
