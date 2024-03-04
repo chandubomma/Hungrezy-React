@@ -1,13 +1,12 @@
 import {
+  Accordion,
+  AccordionButton,
+  AccordionIcon,
+  AccordionItem,
+  AccordionPanel,
+  Box,
   Button,
   Image,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
   useDisclosure,
 } from "@chakra-ui/react";
 import { BadgeCheckIcon } from "@heroicons/react/outline";
@@ -18,12 +17,13 @@ import error from "../../../assets/error.png";
 import Skeleton from "./Skeleton";
 import { toast } from "sonner";
 import { IoEye } from "react-icons/io5";
+import { RxCross2 } from "react-icons/rx";
+import { MdOutlinePending } from "react-icons/md";
 
 const OrdersTable = ({ customerId }) => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState("all");
-  const { isOpen, onOpen, onClose } = useDisclosure();
 
   useEffect(() => {
     setLoading(true);
@@ -57,12 +57,10 @@ const OrdersTable = ({ customerId }) => {
     return <Skeleton />;
   }
 
-  console.log(orders);
-
   return (
     <div className="px-4">
-      <div className="flex sm:flex-row flex-col gap-y-5 items-center mt-2 sm:gap-x-5">
-        <div className="flex items-center gap-2">
+      <div className="flex sm:flex-row flex-col gap-y-5 items-center sm:gap-x-5">
+        <div className="flex items-center gap-2 my-4">
           <p className="text-sm font-semibold text-gray-500 pt-3">
             Status: &nbsp;
           </p>
@@ -88,112 +86,75 @@ const OrdersTable = ({ customerId }) => {
           </Select>
         </div>
       </div>
-      {orders.length === 0 ? (
-        <div className="flex flex-col items-center justify-center my-20">
-          <p className="text-orange-600 text-base font-semibold text-center">
-            No orders found
-          </p>
-          <Image src={error} alt="No Orders" />
+
+      {orders.length === 0 && !loading ? (
+        <div className="flex flex-col items-center justify-center">
+          <Image src={error} alt="error" className="w-40 h-40" />
+          <Text className="text-lg font-semibold mt-5">No orders found</Text>
         </div>
       ) : (
-        <div className="overflow-scroll border border-gray-200 rounded-md h-[30rem] mb-10 mt-4">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th
-                  scope="col"
-                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                >
-                  Date
-                </th>
-                <th
-                  scope="col"
-                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                >
-                  Restaurant Name
-                </th>
-                <th
-                  scope="col"
-                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                >
-                  Address
-                </th>
-                <th
-                  scope="col"
-                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                >
-                  Price
-                </th>
+        <div className="flex flex-col gap-2 mb-10">
+          {orders.map((order, id) => (
+            <Accordion allowToggle key={id}>
+              <AccordionItem>
+                <h2>
+                  <AccordionButton>
+                    <Box as="span" flex="1" textAlign="left">
+                      <div className="flex items-center justify-between">
+                        <p className="text-md font-semibold">
+                          {order.restaurantId.name}
+                        </p>
 
-                <th
-                  scope="col"
-                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                >
-                  Status
-                </th>
-                <th
-                  scope="col"
-                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                >
-                  Actions
-                </th>
-              </tr>
-            </thead>
-
-            <tbody className="bg-white divide-y divide-gray-200">
-              {orders.map((item) => (
-                <tr key={item._id}>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {new Date(item.orderedAt).toLocaleDateString()}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {item.restaurantId.name}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {item.address}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {item.paymentDetails.method.charAt(0).toUpperCase() +
-                      item.paymentDetails.method.slice(1)}{" "}
-                    &#8377; {item.paymentDetails.amount}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {item.status ? (
-                      <Badge
-                        className="px-3 py-1 flex items-center w-28"
-                        color={
-                          item.status === "delivered"
-                            ? "green"
-                            : item.status === "processing"
-                            ? "blue"
-                            : "red"
-                        }
-                        icon={
-                          item.status === "delivered"
-                            ? BadgeCheckIcon
-                            : item.status === "processing"
-                            ? RiDraftLine
-                            : RiDraftLine
-                        }
+                        <Badge
+                          className="px-3 py-1 flex items-center w-28"
+                          color={
+                            order.status === "delivered"
+                              ? "green"
+                              : order.status === "processing"
+                              ? "yellow"
+                              : "red"
+                          }
+                          icon={
+                            order.status === "delivered"
+                              ? BadgeCheckIcon
+                              : order.status === "processing"
+                              ? MdOutlinePending
+                              : RxCross2
+                          }
+                        >
+                          <Text>
+                            {order.status.charAt(0).toUpperCase() +
+                              order.status.slice(1)}
+                          </Text>
+                        </Badge>
+                      </div>
+                    </Box>
+                    <AccordionIcon />
+                  </AccordionButton>
+                </h2>
+                <AccordionPanel pb={4}>
+                  <div>
+                    {order.foodItems.map((item, id) => (
+                      <div
+                        key={id}
+                        className="flex justify-between items-center"
                       >
-                        <Text>
-                          {item.status.charAt(0).toUpperCase() +
-                            item.status.slice(1)}
-                        </Text>
-                      </Badge>
-                    ) : (
-                      "N/A"
-                    )}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    <Button onClick={onOpen}>
-                      <IoEye className="w-6 h-6 text-gray-500" />
-                    </Button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                        <div className="flex items-center gap-2">
+                          <div className="flex gap-3">
+                            <p className="text-md font-normal">{item.name}</p>
+                            <p className="text-gray-500">{item.quantity} x</p>
+                          </div>
+                        </div>
+                        <p className="text-md font-semibold">
+                          ₹{item.price * item.quantity}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </AccordionPanel>
+              </AccordionItem>
+            </Accordion>
+          ))}
         </div>
       )}
     </div>
