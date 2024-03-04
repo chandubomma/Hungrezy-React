@@ -3,8 +3,7 @@ import { FaChevronRight } from "react-icons/fa6";
 import Counter from "../../Counter";
 import Graphs from "./Graphs";
 
-// Loading Skeleton Component for Restaurants
-const LoadingSkeletonRestaurants = () => (
+const LoadingSkeleton = () => (
   <div className="border-1 rounded-md animate-pulse items-center justify-center gap-y-3 p-3 flex flex-col">
     <div className="h-10 w-20 bg-gray-200 rounded-md"></div>
     <div className="h-8 w-16 bg-gray-200 rounded-md"></div>
@@ -12,10 +11,12 @@ const LoadingSkeletonRestaurants = () => (
 );
 
 const AdminDashboard = () => {
-  const [totalCustomers, setTotalCustomers] = useState(1000);
-  const [totalOrders, setTotalOrders] = useState(43450);
+  const [totalCustomers, setTotalCustomers] = useState(null);
+  const [totalOrders, setTotalOrders] = useState(null);
   const [totalRestaurants, setTotalRestaurants] = useState(null);
   const [loadingRestaurants, setLoadingRestaurants] = useState(true);
+  const [loadingCustomers, setLoadingCustomers] = useState(true);
+  const [loadingOrders, setLoadingOrders] = useState(true);
   const [restaurants, setRestaurants] = useState([
     {
       name: "approved",
@@ -34,9 +35,21 @@ const AdminDashboard = () => {
       value: 0,
     },
   ]);
+  const [customers, setCustomers] = useState([
+    {
+      name: "active",
+      value: 0,
+    },
+    {
+      name: "inactive",
+      value: 0,
+    },
+  ]);
 
   useEffect(() => {
     fetchRestaurants();
+    fetchCustomers();
+    fetchOrders();
   }, []);
 
   const fetchRestaurants = async () => {
@@ -50,8 +63,9 @@ const AdminDashboard = () => {
       }
 
       const result = await response.json();
-      setTotalRestaurants(result.total);
-      const { approved, suspended, inprogress, rejected } = result;
+
+      const { approved, suspended, inprogress, rejected, total } = result.data;
+      setTotalRestaurants(total);
 
       // Update the state with the extracted counts
       setRestaurants([
@@ -79,6 +93,57 @@ const AdminDashboard = () => {
     }
   };
 
+  const fetchCustomers = async () => {
+    try {
+      setLoadingCustomers(true);
+      const response = await fetch(
+        `${import.meta.env.VITE_HUNGREZY_API}/api/user/count`
+      );
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      const { inActiveUsers, activeUsers, totalUsers } = result.data;
+      setTotalCustomers(totalUsers);
+      setCustomers([
+        {
+          name: "active",
+          value: activeUsers,
+        },
+        {
+          name: "inactive",
+          value: inActiveUsers,
+        },
+      ]);
+
+      setLoadingCustomers(false);
+    } catch (error) {
+      console.error("Error fetching customers count:", error);
+      setLoadingCustomers(false);
+    }
+  };
+
+  const fetchOrders = async () => {
+    try {
+      setLoadingOrders(true);
+      const response = await fetch(
+        `${import.meta.env.VITE_HUNGREZY_API}/api/order/count`
+      );
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      const { totalOrders } = result.data;
+      setTotalOrders(totalOrders);
+      setLoadingOrders(false);
+    } catch (error) {
+      console.error("Error fetching orders count:", error);
+      setLoadingOrders(false);
+    }
+  };
+
   return (
     <div className="w-full px-4">
       <div className="flex justify-between items-center">
@@ -93,14 +158,18 @@ const AdminDashboard = () => {
       </div>
       <div className="grid md:grid-cols-3 gap-6 grid-cols-1">
         {/* Customers Card */}
-        <div className="border-1 rounded-md items-center justify-center gap-y-3 p-3 flex flex-col hover:border-orange-500">
-          <Counter to={totalCustomers} />
-          <p className="text-lg font-medium">Customers</p>
-        </div>
+        {loadingCustomers || totalCustomers === null ? (
+          <LoadingSkeleton />
+        ) : (
+          <div className="border-1 rounded-md items-center justify-center gap-y-3 p-3 flex flex-col hover:border-orange-500">
+            <Counter to={totalCustomers} />
+            <p className="text-lg font-medium">Customers</p>
+          </div>
+        )}
 
         {/* Restaurants Card */}
         {loadingRestaurants || totalRestaurants === null ? (
-          <LoadingSkeletonRestaurants />
+          <LoadingSkeleton />
         ) : (
           <div className="border-1 rounded-md items-center justify-center gap-y-3 p-3 flex flex-col hover:border-orange-500">
             <Counter to={totalRestaurants} />
@@ -109,13 +178,21 @@ const AdminDashboard = () => {
         )}
 
         {/* Orders Card */}
-        <div className="border-1 rounded-md items-center justify-center gap-y-3 p-3 flex flex-col hover:border-orange-500">
-          <Counter to={totalOrders} />
-          <p className="text-lg font-medium">Orders</p>
-        </div>
+        {loadingOrders || totalOrders === null ? (
+          <LoadingSkeleton />
+        ) : (
+          <div className="border-1 rounded-md items-center justify-center gap-y-3 p-3 flex flex-col hover:border-orange-500">
+            <Counter to={totalOrders} />
+            <p className="text-lg font-medium">Orders</p>
+          </div>
+        )}
       </div>
 
-      <Graphs restaurants={restaurants} loading={loadingRestaurants} />
+      <Graphs
+        customers={customers}
+        restaurants={restaurants}
+        loading={loadingRestaurants || loadingCustomers}
+      />
     </div>
   );
 };

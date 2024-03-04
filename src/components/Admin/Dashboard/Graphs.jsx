@@ -1,134 +1,49 @@
 import { useEffect, useState } from "react";
 import SparkChartComponent from "./SparkChartComponent";
 import PieChartComponent from "./PieChartComponent";
+import { toast } from "sonner";
 
-const customersData = [
-  {
-    month: "January",
-    customers: 100,
-  },
-  {
-    month: "February",
-    customers: 110,
-  },
-  {
-    month: "March",
-    customers: 150,
-  },
-  {
-    month: "April",
-    customers: 300,
-  },
-  {
-    month: "May",
-    customers: 250,
-  },
-  {
-    month: "June",
-    customers: 200,
-  },
-  {
-    month: "July",
-    customers: 90,
-  },
-  {
-    month: "August",
-    customers: 200,
-  },
-  {
-    month: "September",
-    customers: 400,
-  },
-  {
-    month: "October",
-    customers: 200,
-  },
-  {
-    month: "November",
-    customers: 300,
-  },
-  {
-    month: "December",
-    customers: 200,
-  },
-];
-
-const restaurantsData = [
-  {
-    month: "January",
-    restaurants: 100,
-  },
-  {
-    month: "February",
-    restaurants: 85,
-  },
-  {
-    month: "March",
-    restaurants: 150,
-  },
-  {
-    month: "April",
-    restaurants: 300,
-  },
-  {
-    month: "May",
-    restaurants: 250,
-  },
-  {
-    month: "June",
-    restaurants: 200,
-  },
-  {
-    month: "July",
-    restaurants: 90,
-  },
-  {
-    month: "August",
-    restaurants: 200,
-  },
-  {
-    month: "September",
-    restaurants: 400,
-  },
-  {
-    month: "October",
-    restaurants: 200,
-  },
-  {
-    month: "November",
-    restaurants: 300,
-  },
-  {
-    month: "December",
-    restaurants: 200,
-  },
-];
-
-const datahero = [
-  {
-    name: "approved",
-    value: 9800,
-  },
-  {
-    name: "suspended",
-    value: 4567,
-  },
-  {
-    name: "inprogress",
-    value: 3908,
-  },
-  {
-    name: "rejected",
-    value: 2400,
-  },
-];
-
-const Graphs = ({ restaurants, loading }) => {
+const Graphs = ({ customers, restaurants, loading }) => {
   const [totalCustomers, setTotalCustomers] = useState(0);
   const [customerPercentageChange, setCustomerPercentageChange] = useState(0);
   const [totalRestaurants, setTotalRestaurants] = useState(0);
   const [restauantsPercentageChange, setRestaurantsPercentageChange] =
     useState(0);
+  const [customersData, setCustomersData] = useState([]);
+  const [restaurantsData, setRestaurantsData] = useState([]);
+
+  useEffect(() => {
+    fetchCustomersData();
+    fetchRestaurantsData();
+  }, []);
+
+  const fetchCustomersData = async () => {
+    let url = `${import.meta.env.VITE_HUNGREZY_API}/api/user/count`;
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const result = await response.json();
+      setCustomersData(result.data.monthlyUsers);
+    } catch (error) {
+      toast.error("Failed to fetch customers data");
+    }
+  };
+
+  const fetchRestaurantsData = async () => {
+    let url = `${import.meta.env.VITE_HUNGREZY_API}/api/restaurant/count`;
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const result = await response.json();
+      setRestaurantsData(result.data.monthlyRestaurants);
+    } catch (error) {
+      toast.error("Failed to fetch restaurants data");
+    }
+  };
 
   useEffect(() => {
     let total = 0;
@@ -178,7 +93,7 @@ const Graphs = ({ restaurants, loading }) => {
       }
       setRestaurantsPercentageChange(percentage.toFixed(2));
     }
-  }, []);
+  }, [customersData, restaurantsData]);
 
   return (
     <div>
@@ -199,7 +114,11 @@ const Graphs = ({ restaurants, loading }) => {
       </div>
 
       <div className="flex my-10">
-        <PieChartComponent data={datahero} label={"Customers"} />
+        <PieChartComponent
+          data={customers}
+          label={"Customers"}
+          loading={loading}
+        />
         <PieChartComponent
           data={restaurants}
           label={"Restaurants"}

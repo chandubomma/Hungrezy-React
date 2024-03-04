@@ -17,7 +17,12 @@ const PieChartComponent = ({ data, label, loading }) => {
             ) : (
               <DonutChart
                 className="h-72 w-72"
-                colors={["green-400", "yellow-400", "blue-400", "red-400"]}
+                colors={[
+                  "orange-400",
+                  "orange-300",
+                  "orange-200",
+                  "orange-100",
+                ]}
                 data={data}
                 variant="pie"
                 valueFormatter={dataFormatter}
