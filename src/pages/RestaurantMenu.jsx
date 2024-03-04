@@ -246,7 +246,7 @@ const RestaurantMenu = () => {
         >
           Menu
         </button>
-        <button
+        {/* <button
           className={`px-4 py-2 text-xl font-semibold ${
             activeTab === "booktable"
               ? " text-amber-500 border-b-2 border-amber-500"
@@ -255,7 +255,7 @@ const RestaurantMenu = () => {
           onClick={() => switchTab("booktable")}
         >
           Book Table
-        </button>
+        </button> */}
         <button
           className={`px-4 py-2 text-xl font-semibold ${
             activeTab === "reviews"
