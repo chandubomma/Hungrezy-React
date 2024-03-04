@@ -7,9 +7,49 @@ import { FaLocationDot } from "react-icons/fa6";
 import { IoIosSend } from "react-icons/io";
 import Footer from "@/components/home/Footer";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { toast } from "sonner";
+import { useAuth } from "../AuthContext";
 
 const ContactUs = () => {
+  const { accessToken } = useAuth();
   const navigate = useNavigate();
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    message: "",
+    subject: "",
+  });
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const url = `${import.meta.env.VITE_HUNGREZY_API}/api/contact/`;
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify(form),
+    });
+    const data = await response.json();
+    if (response.ok) {
+      toast.success(data.message);
+      setForm({
+        name: "",
+        email: "",
+        message: "",
+        subject: "",
+      });
+    } else {
+      toast.error(data.message);
+    }
+  };
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: { opacity: 1, transition: { duration: 1 } },
@@ -114,7 +154,7 @@ const ContactUs = () => {
             We are here to help you. If you have any queries, please feel free
             to contact us.
           </p>
-          <form className="flex flex-col gap-4">
+          <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
             <motion.div variants={formVariants}>
               <div className="form-floating">
                 <input
@@ -123,6 +163,8 @@ const ContactUs = () => {
                   placeholder="Enter Name"
                   name="name"
                   type="text"
+                  value={form.name}
+                  onChange={handleChange}
                 />
                 <label htmlFor="name" className="text-gray-500">
                   Name
@@ -137,12 +179,38 @@ const ContactUs = () => {
                   placeholder="Enter Email"
                   name="email"
                   type="email"
+                  value={form.email}
+                  onChange={handleChange}
                 />
                 <label htmlFor="email" className="text-gray-500">
                   Email
                 </label>
               </div>
             </motion.div>
+
+            {/* SELECT BOX
+             */}
+
+            <motion.div variants={formVariants} className="form-floating mt-2">
+              <div className="form-floating">
+                <select
+                  className="form-select focus:shadow-none focus:border-amber-600 rounded-md"
+                  id="subject"
+                  name="subject"
+                  value={form.subject}
+                  onChange={handleChange}
+                >
+                  <option value="0">Select Subject</option>
+                  <option value="general">General</option>
+                  <option value="technical">Technical</option>
+                  <option value="other">Other</option>
+                </select>
+                <label htmlFor="subject" className="text-gray-500">
+                  Subject
+                </label>
+              </div>
+            </motion.div>
+
             {/* TextArea */}
             <motion.div variants={formVariants} className="form-floating mt-2">
               <div className="form-floating">
@@ -152,6 +220,8 @@ const ContactUs = () => {
                   placeholder="Enter Message"
                   name="message"
                   type="text"
+                  value={form.message}
+                  onChange={handleChange}
                 />
                 <label htmlFor="message" className="text-gray-500">
                   Message
@@ -159,7 +229,7 @@ const ContactUs = () => {
               </div>
             </motion.div>
             <motion.button
-              type="button"
+              type="submit"
               className="w-56 mx-auto py-3 px-8 bg-amber-500 hover:bg-amber-600 transition-colors duration-300 text-white rounded-full flex items-center"
               variants={formVariants}
             >

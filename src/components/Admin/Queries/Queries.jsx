@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Select, SelectItem } from "@tremor/react";
 import { useState } from "react";
 import { FaChevronRight } from "react-icons/fa6";
@@ -11,17 +11,47 @@ import {
   MenuList,
 } from "@chakra-ui/react";
 import error from "../../../assets/error.png";
-import { queriesData } from "../../../data/queries"; // Assuming you have queriesData
 import { BsThreeDotsVertical } from "react-icons/bs";
+import { toast } from "sonner";
 
 const AdminQueries = () => {
   const [statusFilter, setStatusFilter] = useState("all");
   const [typeFilter, setTypeFilter] = useState("all");
   const [state, setState] = useState(null);
+  const [queriesData, setQueriesData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const toggleModal = (state) => {
+  const toggleModal = async (id, state) => {
     setState(state);
-    console.log(state);
+    const url = `${import.meta.env.VITE_HUNGREZY_API}/api/contact/${id}`;
+    const response = await fetch(url, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ status: state }),
+    });
+    const result = await response.json();
+    if (!response.ok) {
+      const error = result.message;
+      toast.error(error);
+      return;
+    }
+    toast.success(result.message);
+    fetchQueries();
+  };
+
+  useEffect(() => {
+    setLoading(true);
+    fetchQueries();
+    setLoading(false);
+  }, [statusFilter, typeFilter, state]);
+
+  const fetchQueries = async () => {
+    const url = `${import.meta.env.VITE_HUNGREZY_API}/api/contact/`;
+    const response = await fetch(url);
+    const result = await response.json();
+    setQueriesData(result.data);
   };
 
   const filteredQueries = queriesData.filter((query) => {
@@ -36,7 +66,7 @@ const AdminQueries = () => {
       !statusFilter || statusFilter === query.status || statusFilter === "all";
 
     let typeCondition =
-      !typeFilter || typeFilter === query.type || typeFilter === "all";
+      !typeFilter || typeFilter === query.subject || typeFilter === "all";
 
     return statusCondition && typeCondition;
   });
@@ -66,9 +96,6 @@ const AdminQueries = () => {
           >
             <SelectItem value="all" className="cursor-pointer" defaultChecked>
               All
-            </SelectItem>
-            <SelectItem value="pending" className="cursor-pointer">
-              Pending
             </SelectItem>
             <SelectItem value="in-progress" className="cursor-pointer">
               In Progress
@@ -103,7 +130,7 @@ const AdminQueries = () => {
         </div>
       </div>
 
-      {filteredQueries.length === 0 && (
+      {filteredQueries.length === 0 && !loading && (
         <div className="flex flex-col items-center justify-center">
           <Image src={error} alt="error" />
           <p className="text-sm font-semibold text-gray-600 mt-4">
@@ -115,12 +142,12 @@ const AdminQueries = () => {
       {filteredQueries.length > 0 && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-6 pb-4">
           {filteredQueries.map((query) => (
-            <div key={query.id} className="bg-white p-6 rounded-lg shadow-md">
+            <div key={query._id} className="bg-white p-6 rounded-lg shadow-md">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-lg font-semibold text-gray-500">
-                  {query.type === "general"
+                  {query.subject === "general"
                     ? "General"
-                    : query.type === "technical"
+                    : query.subject === "technical"
                     ? "Technical"
                     : "Other"}
                 </h2>
@@ -135,25 +162,38 @@ const AdminQueries = () => {
                 >
                   {query.status}
                 </p>
-                {query.status === "in-progress" ? (
-                  <Menu>
-                    <MenuButton
-                      as={IconButton}
-                      aria-label="Options"
-                      icon={<BsThreeDotsVertical />}
-                      variant="outline"
-                      size="sm"
-                    />
-                    <MenuList>
-                      <MenuItem onClick={() => toggleModal(query.id)}>
-                        Mark as resolved
+
+                <Menu>
+                  <MenuButton
+                    as={IconButton}
+                    aria-label="Options"
+                    icon={<BsThreeDotsVertical />}
+                    variant="outline"
+                    size="sm"
+                  />
+                  <MenuList>
+                    {query.status !== "resolved" && (
+                      <MenuItem
+                        onClick={() => toggleModal(query._id, "resolved")}
+                      >
+                        Mark as Resolved
                       </MenuItem>
-                    </MenuList>
-                  </Menu>
-                ) : null}
+                    )}
+                    {query.status === "resolved" && (
+                      <MenuItem
+                        onClick={() => toggleModal(query._id, "in-progress")}
+                      >
+                        Mark as In Progress
+                      </MenuItem>
+                    )}
+                  </MenuList>
+                </Menu>
               </div>
-              <p className="text-sm text-gray-600">{query.from}</p>
-              <p className="text-sm text-gray-600">{query.content}</p>
+              <div className="flex items-center gap-2">
+                <p className="text-sm text-gray-600">{query.name}</p>
+                <p className="text-sm text-gray-600">{query.email}</p>
+              </div>
+              <p className="text-sm text-gray-600">{query.message}</p>
             </div>
           ))}
         </div>
