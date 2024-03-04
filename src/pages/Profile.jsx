@@ -26,6 +26,7 @@ const Profile = () => {
     };
 
     window.addEventListener("scroll", handleScroll);
+    if(!loading && !user)navigate('/signin')
     
     return () => {
       window.removeEventListener("scroll", handleScroll);

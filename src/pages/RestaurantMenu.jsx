@@ -301,7 +301,7 @@ const RestaurantMenu = () => {
 
       {activeTab == "reviews" && (
         <div>
-          <RestaurantReviews />
+          <RestaurantReviews restaurantId={restaurant._id} />
         </div>
       )}
 
