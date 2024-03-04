@@ -97,7 +97,6 @@ const RestaurantMenu = () => {
       console.log(result)
       const data = result.data;
       console.log(data)
-      delete data._id;
       return data; 
     } catch (error) {
       console.error('Error fetching restaurant:', error);
