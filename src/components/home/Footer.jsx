@@ -1,14 +1,65 @@
 import { motion, useAnimation } from "framer-motion";
-import { FaFacebook, FaTwitter, FaInstagram } from "react-icons/fa";
+import { FaFacebook, FaTwitter, FaInstagram, FaStar } from "react-icons/fa";
 import logo from "./../../assets/logoAsset.png";
 import { useInView } from "react-intersection-observer";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import {
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
+  useDisclosure,
+} from "@chakra-ui/react";
+import StarRatings from "react-star-ratings";
+import { IoIosSend } from "react-icons/io";
+import { toast } from "sonner";
 
 const Footer = () => {
+  const [form, setForm] = useState({
+    name: "",
+    rating: 0,
+    message: "",
+  });
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const url = `${import.meta.env.VITE_HUNGREZY_API}/api/review/`;
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(form),
+    });
+    const data = await response.json();
+    if (response.ok) {
+      toast.success(data.message);
+      setForm({
+        name: "",
+        rating: 0,
+        message: "",
+      });
+      onClose();
+    } else {
+      toast.error(data.message);
+    }
+  };
+
   const [ref, inView] = useInView({
     triggerOnce: true,
   });
   const controls = useAnimation();
+  const formVariants = {
+    hidden: { opacity: 0, x: -50 },
+    visible: { opacity: 1, x: 0, transition: { duration: 0.8 } },
+  };
 
   useEffect(() => {
     if (inView) {
@@ -113,6 +164,92 @@ const Footer = () => {
               <FaTwitter className="text-2xl hover:text-blue-400 cursor-pointer" />
             </motion.span>
           </motion.div>
+
+          <Modal isCentered isOpen={isOpen} onClose={onClose} size={"xl"}>
+            <ModalOverlay />
+
+            <ModalContent>
+              <ModalHeader>Review</ModalHeader>
+              <ModalBody>
+                <form
+                  className="flex flex-col gap-y-6 pb-4"
+                  onSubmit={handleSubmit}
+                >
+                  <motion.div variants={formVariants}>
+                    <div className="form-floating">
+                      <input
+                        className="form-control focus:shadow-none focus:border-amber-600 rounded-md"
+                        id="name"
+                        placeholder="Enter Name"
+                        name="name"
+                        type="text"
+                        value={form.name}
+                        onChange={handleChange}
+                      />
+                      <label htmlFor="name" className="text-gray-500">
+                        Name
+                      </label>
+                    </div>
+                  </motion.div>
+
+                  <StarRatings
+                    rating={form.rating}
+                    starRatedColor="orange"
+                    numberOfStars={5}
+                    starDimension="40px"
+                    starSpacing="10px"
+                    changeRating={(newRating) =>
+                      setForm({ ...form, rating: newRating })
+                    }
+                    starHoverColor="orange"
+                    name="rating"
+                  />
+
+                  <motion.div
+                    variants={formVariants}
+                    className="form-floating mt-2"
+                  >
+                    <div className="form-floating">
+                      <input
+                        className="form-control focus:shadow-none focus:border-amber-600 rounded-md"
+                        id="message"
+                        placeholder="Enter Email"
+                        name="message"
+                        value={form.message}
+                        onChange={handleChange}
+                        type="message"
+                      />
+                      <label htmlFor="message" className="text-gray-500">
+                        Message
+                      </label>
+                    </div>
+                  </motion.div>
+
+                  <motion.button
+                    type="submit"
+                    className="w-fit mx-auto py-2 px-4 bg-amber-500 hover:bg-amber-600 transition-colors duration-300 text-white rounded-full flex items-center"
+                    variants={formVariants}
+                  >
+                    <span className="align-baseline">Send</span>
+                    <IoIosSend className="ml-2 w-8 h-8 align-baseline" />
+                  </motion.button>
+                </form>
+              </ModalBody>
+              <ModalCloseButton />
+            </ModalContent>
+          </Modal>
+
+          <motion.button
+            className="mt-8"
+            variants={containerVariants}
+            whileHover={{ scale: 1.1 }}
+            onClick={onOpen}
+          >
+            <div className="flex gap-x-1 items-center">
+              <FaStar className="text-2xl mr-2" />
+              <span className="text-sm font-semibold">Review Us</span>
+            </div>
+          </motion.button>
         </motion.div>
       </div>
     </motion.footer>

@@ -42,16 +42,17 @@ const AdminQueries = () => {
   };
 
   useEffect(() => {
-    setLoading(true);
     fetchQueries();
-    setLoading(false);
   }, [statusFilter, typeFilter, state]);
 
   const fetchQueries = async () => {
     const url = `${import.meta.env.VITE_HUNGREZY_API}/api/contact/`;
     const response = await fetch(url);
     const result = await response.json();
-    setQueriesData(result.data);
+    if (response.ok) {
+      setQueriesData(result.data);
+      setLoading(false);
+    }
   };
 
   const filteredQueries = queriesData.filter((query) => {

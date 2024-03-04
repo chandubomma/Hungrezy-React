@@ -4,7 +4,7 @@ const AdminReviewCard = ({ review }) => {
   return (
     <>
       <div className="flex items-center mb-4">
-        <h3 className="text-lg font-semibold mr-2">{review.user}</h3>
+        <h3 className="text-lg font-semibold mr-2">{review.name}</h3>
         <div className="flex">
           {Array.from({ length: 5 }).map((_, index) => (
             <span key={index} className="text-yellow-400">
@@ -13,7 +13,7 @@ const AdminReviewCard = ({ review }) => {
           ))}
         </div>
       </div>
-      <p className="text-gray-600">{review.comment}</p>
+      <p className="text-gray-600">{review.message}</p>
     </>
   );
 };

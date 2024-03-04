@@ -45,7 +45,7 @@ const AdminSidebar = () => {
 
   return (
     <>
-      <div className="border-r left-0 w-[17.5rem] h-[70vh] overflow-y-scroll p-3 lg:flex flex-col gap-y-2 none hidden">
+      <div className="border-r left-0 w-[17.5rem] h-[70vh] overflow-y-auto p-3 lg:flex flex-col gap-y-2 none hidden">
         <Link to="dashboard">
           <div
             className={`${

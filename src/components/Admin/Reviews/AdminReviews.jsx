@@ -1,14 +1,29 @@
 import { Select, SelectItem } from "@tremor/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaChevronRight } from "react-icons/fa6";
 import AdminReviewCard from "./AdminReviewCard";
 import { Image } from "@chakra-ui/react";
 import error from "../../../assets/error.png";
-import { reviewsData } from "../../../data/reviews";
 
 const AdminReviews = () => {
   const [ratingFilter, setRatingFilter] = useState("all");
   const [dateFilter, setDateFilter] = useState("all");
+  const [reviewsData, setReviewsData] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchReviews();
+  }, [ratingFilter, dateFilter]);
+
+  const fetchReviews = async () => {
+    const url = `${import.meta.env.VITE_HUNGREZY_API}/api/review/`;
+    const response = await fetch(url);
+    const result = await response.json();
+    if (response.ok) {
+      setReviewsData(result.data);
+      setLoading(false);
+    }
+  };
 
   const filteredReviews = reviewsData.filter((review) => {
     if (
@@ -26,7 +41,7 @@ const AdminReviews = () => {
     if (ratingFilter === "below") {
       ratingCondition = review.rating < 3;
     }
-    const reviewDate = new Date(review.date);
+    const reviewDate = new Date(review.createdAt);
     const today = new Date();
     let lastWeek = new Date(today);
     lastWeek.setDate(today.getDate() - 7);
@@ -53,16 +68,6 @@ const AdminReviews = () => {
         return ratingCondition;
     }
   });
-
-  if (filteredReviews.length === 0)
-    return (
-      <div className="flex flex-col items-center justify-center my-20">
-        <p className="text-orange-600 text-base font-semibold text-center">
-          No Reviews Found, Please check back later
-        </p>
-        <Image src={error} alt="No Reviews" />
-      </div>
-    );
 
   return (
     <div className="px-4">
@@ -132,12 +137,21 @@ const AdminReviews = () => {
         </div>
       </div>
 
+      {filteredReviews.length === 0 && !loading && (
+        <div className="flex flex-col items-center justify-center my-20 w-full">
+          <p className="text-orange-600 text-base font-semibold text-center">
+            No Reviews Found, Please check back later
+          </p>
+          <Image src={error} alt="No Reviews" />
+        </div>
+      )}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-6 pb-4">
-        {filteredReviews.map((review) => (
-          <div key={review.id} className="bg-white p-6 rounded-lg shadow-md">
-            <AdminReviewCard review={review} />
-          </div>
-        ))}
+        {!loading &&
+          filteredReviews.map((review) => (
+            <div key={review.id} className="bg-white p-6 rounded-lg shadow-md">
+              <AdminReviewCard review={review} />
+            </div>
+          ))}
       </div>
     </div>
   );
