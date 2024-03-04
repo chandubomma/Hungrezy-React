@@ -18,7 +18,7 @@ import Skeleton from "./Skeleton";
 import { toast } from "sonner";
 import { IoEye } from "react-icons/io5";
 import { RxCross2 } from "react-icons/rx";
-import { MdOutlinePending } from "react-icons/md";
+import { MdFoodBank, MdOutlinePending } from "react-icons/md";
 
 const OrdersTable = ({ customerId }) => {
   const [orders, setOrders] = useState([]);
@@ -77,6 +77,9 @@ const OrdersTable = ({ customerId }) => {
             <SelectItem className="cursor-pointer" value="processing">
               Processing
             </SelectItem>
+            <SelectItem className="cursor-pointer" value="placed">
+              Placed
+            </SelectItem>
             <SelectItem className="cursor-pointer" value="delivered">
               Delivered
             </SelectItem>
@@ -112,6 +115,8 @@ const OrdersTable = ({ customerId }) => {
                               ? "green"
                               : order.status === "processing"
                               ? "yellow"
+                              : order.status === "placed"
+                              ? "blue"
                               : "red"
                           }
                           icon={
@@ -119,6 +124,8 @@ const OrdersTable = ({ customerId }) => {
                               ? BadgeCheckIcon
                               : order.status === "processing"
                               ? MdOutlinePending
+                              : order.status === "placed"
+                              ? MdFoodBank
                               : RxCross2
                           }
                         >

@@ -306,8 +306,8 @@ const Orders = () => {
                   All
             </SelectItem>
             {
-              customers && customers.map((customer)=>(
-                <SelectItem value={customer._id} className="cursor-pointer">
+              customers && customers.map((customer, id)=>(
+                <SelectItem value={customer._id} className="cursor-pointer" key={id}>
                   {customer.firstName+" "+customer.lastName}
                 </SelectItem>
               ))
