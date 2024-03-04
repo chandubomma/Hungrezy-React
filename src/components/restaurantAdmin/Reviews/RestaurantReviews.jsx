@@ -1,14 +1,46 @@
 import { Select, SelectItem } from "@tremor/react";
-import { useState } from "react";
+import { useState ,useEffect} from "react";
 import { FaChevronRight } from "react-icons/fa6";
 import ReviewCard from "./RestaurantReviewCard";
 import { Image } from "@chakra-ui/react";
 import error from "../../../assets/error.png";
 import { reviewsData } from "../../../data/reviews";
+import { useAuth } from "../../../AuthContext";
 
 const RestaurantReviews = () => {
   const [ratingFilter, setRatingFilter] = useState("all");
   const [dateFilter, setDateFilter] = useState("all");
+  const [reviewsData,setReviewsData] = useState([]);
+  const {user} = useAuth()
+  const getReviews = async(restaurantId)=>{
+    const url = `${import.meta.env.VITE_HUNGREZY_API}/api/review/restaurant/${restaurantId}`;
+    try{
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      if (!response.ok) {
+        console.error('Failed to fetch reviews');
+        return [];
+      }
+      const result = await response.json();
+      return result.data;
+    }catch(error){
+        console.error(error);
+    }
+  }
+
+  useEffect(()=>{
+    let reviews = []
+    const fetchReviews = async()=>{
+      reviews = await getReviews(user._id)
+      setReviewsData(reviews)
+    }
+    fetchReviews();
+  },[])
+
 
   const filteredReviews = reviewsData.filter((review) => {
     if (
@@ -134,7 +166,7 @@ const RestaurantReviews = () => {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-6 pb-4">
         {filteredReviews.map((review) => (
-          <div key={review.id} className="bg-white p-6 rounded-lg shadow-md">
+          <div key={review._id} className="bg-white p-6 rounded-lg shadow-md">
             <ReviewCard review={review} />
           </div>
         ))}

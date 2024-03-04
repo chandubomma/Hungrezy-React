@@ -52,8 +52,8 @@ const RestaurantReviews = ({restaurantId}) => {
       let temp=newReview;
       temp.userId=user._id;
       let newReviewObject = await postReview(temp,accessToken)
-      // setAllReviews((prevAllReviews) => [...prevAllReviews, newReviewObject]);
-      // setDisplayReviews((prevDisplayReviews) => [...prevDisplayReviews, newReviewObject]);
+      setAllReviews((prevAllReviews) => [...prevAllReviews, newReviewObject]);
+      setDisplayReviews((prevDisplayReviews) => [...prevDisplayReviews, newReviewObject]);
       setNewReview({
         userId: '',
         rating: 5,
@@ -121,9 +121,9 @@ const RestaurantReviews = ({restaurantId}) => {
     setDisplayReviews((prevDisplayReviews) => {
       switch (sortOption) {
         case 'newest':
-          return [...prevDisplayReviews].sort((a, b) => new Date(b.date) - new Date(a.date));
+          return [...prevDisplayReviews].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
         case 'oldest':
-          return [...prevDisplayReviews].sort((a, b) => new Date(a.date) - new Date(b.date));
+          return [...prevDisplayReviews].sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
         case 'highVotes':
           return [...prevDisplayReviews].sort((a, b) => b.helpfulVotes - a.helpfulVotes);
         case 'lowVotes':
@@ -138,7 +138,7 @@ const RestaurantReviews = ({restaurantId}) => {
     setDisplayReviews((prevDisplayReviews) => {
       switch (filterOption) {
         case 'all':
-          const uniqueReviews = new Map([...allReviews, ...prevDisplayReviews].map((review) => [review.id, review]));
+          const uniqueReviews = new Map([...allReviews, ...prevDisplayReviews].map((review) => [review._id, review]));
           return Array.from(uniqueReviews.values());
         default:
           const filterValue = parseInt(filterOption);
