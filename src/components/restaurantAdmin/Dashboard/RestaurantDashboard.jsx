@@ -1,7 +1,6 @@
 import { FaChevronRight } from "react-icons/fa";
 import Counter from "../../Counter";
 import Graphs from "./Graphs";
-import { ordersData } from "../../../data/orderItems";
 import { useEffect, useState } from "react";
 import { useAuth } from "../../../AuthContext";
 
@@ -11,7 +10,7 @@ const RestaurantDashboard = () => {
   const [pendingOrders, setPendingOrders] = useState(0);
   const [receivedOrders, setReceivedOrders] = useState(0);
   const [successfulOrders, setSuccessfulOrders] = useState(0);
-  const {user,accessToken,loading} = useAuth()
+  const {user,accessToken} = useAuth()
 
   const fetchRestaurantOrderStats = async(restaurantId)=>{
     let url = `${import.meta.env.VITE_HUNGREZY_API}/api/order/restaurant/stats/${restaurantId}`;

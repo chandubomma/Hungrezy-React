@@ -1,55 +1,47 @@
 import { BarChart } from "@tremor/react";
-import { ordersData } from "../../data/orderItems";
-
-const janToMar = ordersData.filter((order) => {
-  const orderDate = new Date(order.date);
-  return orderDate.getMonth() >= 0 && orderDate.getMonth() <= 2;
-});
-
-const aprToJun = ordersData.filter((order) => {
-  const orderDate = new Date(order.date);
-  return orderDate.getMonth() >= 3 && orderDate.getMonth() <= 5;
-});
-
-const julToSep = ordersData.filter((order) => {
-  const orderDate = new Date(order.date);
-  return orderDate.getMonth() >= 6 && orderDate.getMonth() <= 8;
-});
-
-const octToDec = ordersData.filter((order) => {
-  const orderDate = new Date(order.date);
-  return orderDate.getMonth() >= 9 && orderDate.getMonth() <= 11;
-});
-
-const chartdata = [
-  {
-    name: "Jan - Mar",
-    "Number of orders": janToMar.length,
-  },
-  {
-    name: "Apr - Jun",
-    "Number of orders": aprToJun.length,
-  },
-  {
-    name: "Jul - Sep",
-    "Number of orders": julToSep.length,
-  },
-  {
-    name: "Oct - Dec",
-    "Number of orders": octToDec.length,
-  },
-];
+import { useEffect, useState } from "react";
+import { useAuth } from "../../AuthContext";
 
 const valueFormatter = (number) =>
   `${number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
 
 export default function BarGraph() {
+  const [chartdata, setChartData] = useState([]);
+  const { user, accessToken } = useAuth();
+
+  useEffect(() => {
+    fetchChartData();
+  }, []);
+
+  const fetchChartData = async () => {
+    let url = `${
+      import.meta.env.VITE_HUNGREZY_API
+    }/api/order/restaurant/stats/${user._id}`;
+    try {
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      if (!response.ok) {
+        console.log("Failed to fetch order stats");
+        return null;
+      }
+      const result = await response.json();
+      setChartData(result.data.quarterlyOrders);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <BarChart
       className="mt-2"
       data={chartdata}
       index="name"
-      categories={["Number of orders"]}
+      categories={["orders"]}
       colors={["orange-300"]}
       valueFormatter={valueFormatter}
       yAxisWidth={48}
