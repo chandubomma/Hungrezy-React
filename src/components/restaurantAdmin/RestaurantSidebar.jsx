@@ -12,13 +12,12 @@ import {
   MdOutlineMenuBook,
   MdReviews,
 } from "react-icons/md";
-import { ordersData } from "../../data/orderItems";
 import BlinkingDot from "./BlinkingDot";
 import { useAuth } from "../../AuthContext";
 
 const RestaurantSidebar = () => {
   const [newOrders, setNewOrders] = useState(0);
-  const { signout, user } = useAuth();
+  const { signout, user, accessToken } = useAuth();
   const navigate = useNavigate();
   if (!user) navigate("/restaurant/signin");
 
@@ -33,15 +32,36 @@ const RestaurantSidebar = () => {
   };
 
   useEffect(() => {
-    const newOrders = ordersData.filter(
-      (order) =>
-        order.status === "new" &&
-        new Date(order.date).getDate() === new Date().getDate() &&
-        new Date(order.date).getMonth() === new Date().getMonth() &&
-        new Date(order.date).getFullYear() === new Date().getFullYear()
-    );
-    setNewOrders(newOrders.length);
+    fetchRestaurantOrders(user._id, "placed");
   }, []);
+
+  console.log(newOrders);
+
+  const fetchRestaurantOrders = async (restaurantId, status) => {
+    let url = `${
+      import.meta.env.VITE_HUNGREZY_API
+    }/api/order/restaurant/${restaurantId}?status=${status}`;
+
+    try {
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      if (!response.ok) {
+        console.log("Failed to fetch orders");
+        return [];
+      }
+      const result = await response.json();
+      setNewOrders(result.data.length);
+      if (!result.data) return [];
+      return result.data;
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <>
