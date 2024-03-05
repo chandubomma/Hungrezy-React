@@ -413,12 +413,12 @@ const Orders = () => {
                   )}
                   {order.status === "processing" && (
                     <Badge
-                      onClick={() => handleUpdateStatus(order._id, "cancelled")}
+                      onClick={() => handleUpdateStatus(order._id, "delivered")}
                       className="px-3 py-1 flex items-center w-28 cursor-pointer hover:scale-105 transition-all"
-                      color={"red"}
-                      icon={MdCancel}
+                      color={"green"}
+                      icon={BadgeCheckIcon}
                     >
-                      <Text>Cancel</Text>
+                      <Text>Deliver</Text>
                     </Badge>
                   )}
                 </div>
