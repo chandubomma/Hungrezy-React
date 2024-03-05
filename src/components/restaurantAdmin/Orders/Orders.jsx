@@ -21,140 +21,154 @@ import { Link } from "react-router-dom";
 import { IoEye } from "react-icons/io5";
 import { HiMiniBolt } from "react-icons/hi2";
 import { useAuth } from "../../../AuthContext";
-import { format } from 'date-fns';
-import {toast} from 'sonner';
+import { format } from "date-fns";
+import { toast } from "sonner";
 import { MdCancel } from "react-icons/md";
 import Counter from "../../Counter";
 
 const Orders = () => {
   const [statusFilter, setStatusFilter] = useState("all");
   const [dateFilter, setDateFilter] = useState("all");
-  const [customerFilter,setCustomerFilter] = useState("all")
+  const [customerFilter, setCustomerFilter] = useState("all");
   const [orders, setOrders] = useState([]);
-  const [customers,setCustomers] = useState(null);
-  const {user,accessToken,loading} = useAuth()
-  const emptyStats =  { 
+  const [customers, setCustomers] = useState(null);
+  const { user, accessToken, loading } = useAuth();
+  const emptyStats = {
     totalOrders: 0,
-    averageRevenuePerOrder: 0, 
-    totalRevenue: 0, 
-    mostFrequentCategory: ['none'], 
-    mostFrequentFoodItem: ['none'] 
-  }
-  const [stats,setStats] = useState(emptyStats);
+    averageRevenuePerOrder: 0,
+    totalRevenue: 0,
+    mostFrequentCategory: ["none"],
+    mostFrequentFoodItem: ["none"],
+  };
+  const [stats, setStats] = useState(emptyStats);
 
-  const fetchRestaurantOrders = async(restaurantId,status,customerId)=>{
-    let url = `${import.meta.env.VITE_HUNGREZY_API}/api/order/restaurant/${restaurantId}?status=${status}`;
-    if(customerId)url+=`&cutomerId=${customerId}`
-    try{
+  const fetchRestaurantOrders = async (restaurantId, status, customerId) => {
+    let url = `${
+      import.meta.env.VITE_HUNGREZY_API
+    }/api/order/restaurant/${restaurantId}?status=${status}`;
+    if (customerId) url += `&cutomerId=${customerId}`;
+    try {
       const response = await fetch(url, {
-        method: 'GET',
+        method: "GET",
         headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${accessToken}`, 
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
         },
       });
       if (!response.ok) {
-        console.log('Failed to fetch orders');
+        console.log("Failed to fetch orders");
         return [];
       }
       const result = await response.json();
-      console.log(result)
-      if(!result.data)return []
-      return result.data
-    }catch(error){
-      console.log(error)
+      console.log(result);
+      if (!result.data) return [];
+      return result.data;
+    } catch (error) {
+      console.log(error);
     }
-  }
+  };
 
-  const fetchRestaurantOrdersStats = async(restaurantId,status,date,customerId)=>{
-    let url = `${import.meta.env.VITE_HUNGREZY_API}/api/order/restaurant/stats/filters/${restaurantId}?status=${status}&date=${date}&customerId=${customerId}`;
-    try{
+  const fetchRestaurantOrdersStats = async (
+    restaurantId,
+    status,
+    date,
+    customerId
+  ) => {
+    let url = `${
+      import.meta.env.VITE_HUNGREZY_API
+    }/api/order/restaurant/stats/filters/${restaurantId}?status=${status}&date=${date}&customerId=${customerId}`;
+    try {
       const response = await fetch(url, {
-        method: 'GET',
+        method: "GET",
         headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${accessToken}`, 
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
         },
       });
       if (!response.ok) {
-        console.log('Failed to fetch orders stats');
+        console.log("Failed to fetch orders stats");
         return emptyStats;
       }
       const result = await response.json();
-      return result.data
-    }catch(error){
-      console.log(error)
+      return result.data;
+    } catch (error) {
+      console.log(error);
     }
-  }
+  };
 
-  useEffect(()=>{
+  useEffect(() => {
     const fetchStats = async () => {
-      const data = await fetchRestaurantOrdersStats(user._id, statusFilter,dateFilter,customerFilter);
+      const data = await fetchRestaurantOrdersStats(
+        user._id,
+        statusFilter,
+        dateFilter,
+        customerFilter
+      );
       setStats(data);
     };
-    fetchStats()
-  },[statusFilter,dateFilter,customerFilter])
+    fetchStats();
+  }, [statusFilter, dateFilter, customerFilter]);
 
   console.log(stats);
 
-  useEffect(()=>{
+  useEffect(() => {
     const fetchData = async () => {
       if (user) {
-        const data = await fetchRestaurantOrders(user._id, 'all',null);
+        const data = await fetchRestaurantOrders(user._id, "all", null);
         const temp = [];
         setOrders(data);
       }
     };
-    if(!orders.length>0)fetchData();
-  },[])
+    if (!orders.length > 0) fetchData();
+  }, []);
 
-  useEffect(()=>{
+  useEffect(() => {
     const uniqueCustomersMap = new Map();
-    orders.forEach(order => {
+    orders.forEach((order) => {
       const userIdString = order.userId._id;
       if (!uniqueCustomersMap.has(userIdString)) {
         uniqueCustomersMap.set(userIdString, order.userId);
       }
     });
     setCustomers(Array.from(uniqueCustomersMap.values()));
-  },[orders])
+  }, [orders]);
 
-  const handleUpdateStatus = async(orderId,status) => {
-    const result = await updateOrderStatus(orderId,status)
-    if(!result)return;
-    const orderIndex = orders.findIndex(
-      (order) => order._id === orderId
-    );
+  const handleUpdateStatus = async (orderId, status) => {
+    const result = await updateOrderStatus(orderId, status);
+    if (!result) return;
+    const orderIndex = orders.findIndex((order) => order._id === orderId);
     const newOrders = [...orders];
     newOrders[orderIndex].status = status;
     setOrders(newOrders);
   };
 
-  const updateOrderStatus = async(orderId,status)=>{
-    let url = `${import.meta.env.VITE_HUNGREZY_API}/api/order/status/${orderId}`;
-    try{
+  const updateOrderStatus = async (orderId, status) => {
+    let url = `${
+      import.meta.env.VITE_HUNGREZY_API
+    }/api/order/status/${orderId}`;
+    try {
       const response = await fetch(url, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${accessToken}`, 
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
         },
-        body : JSON.stringify({status})
+        body: JSON.stringify({ status }),
       });
       if (!response.ok) {
-        console.log('Failed to update order status');
-        toast.error('Failed to update order status');
+        console.log("Failed to update order status");
+        toast.error("Failed to update order status");
         return false;
       }
       const result = await response.json();
       toast.success("Order status updated successfully");
       return true;
-    }catch(error){
-      console.log(error)
-      toast.error('Failed to update order status');
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to update order status");
       return false;
     }
-  }
+  };
 
   // useEffect(() => {
   //   setOrders(ordersData);
@@ -164,14 +178,17 @@ const Orders = () => {
     if (
       (!statusFilter || statusFilter === "all") &&
       (!dateFilter || dateFilter === "all") &&
-      (!customerFilter || customerFilter==="all")
+      (!customerFilter || customerFilter === "all")
     ) {
       return true;
     }
 
     const statusCondition =
       !statusFilter || statusFilter === order.status || statusFilter === "all";
-    const customerCondition = !customerFilter || customerFilter === order.userId._id || customerFilter==="all";
+    const customerCondition =
+      !customerFilter ||
+      customerFilter === order.userId._id ||
+      customerFilter === "all";
     const orderDate = new Date(order.orderedAt);
     const today = new Date();
     let lastWeek = new Date(today);
@@ -184,7 +201,8 @@ const Orders = () => {
     switch (dateFilter) {
       case "today":
         return (
-          statusCondition &&customerCondition&&
+          statusCondition &&
+          customerCondition &&
           orderDate.getDate() === today.getDate() &&
           orderDate.getMonth() === today.getMonth() &&
           orderDate.getFullYear() === today.getFullYear()
@@ -226,15 +244,19 @@ const Orders = () => {
           <p className="text-lg font-medium">ARPO</p>
         </div>
         <div className="border-1 rounded-md items-center justify-center gap-y-3 p-3 flex flex-col hover:border-orange-500">
-          <p className="text-lg font-medium text-orange-600">{stats.mostFrequentCategory[0]}</p>
+          <p className="text-lg font-medium text-orange-600">
+            {stats.mostFrequentCategory[0]}
+          </p>
           <p className="text-lg font-medium">Frequent Category</p>
         </div>
         <div className="border-1 rounded-md items-center justify-center gap-y-3 p-3 flex flex-col hover:border-orange-500">
-          <p className="text-lg font-medium text-orange-600">{stats.mostFrequentFoodItem[0]}</p>
+          <p className="text-lg font-medium text-orange-600">
+            {stats.mostFrequentFoodItem[0]}
+          </p>
           <p className="text-lg font-medium">Frequent Food Item</p>
-        </div>
+        </div>``
       </div>
-      <div className="flex sm:flex-row flex-col gap-y-5 items-center mt-2 sm:gap-x-5">
+      <div className="flex sm:flex-row flex-col gap-y-5 items-center mt-14 sm:gap-x-5">
         <div className="flex items-center gap-2">
           <p className="text-sm font-semibold text-gray-500 pt-3">
             Status: &nbsp;
@@ -303,15 +325,18 @@ const Orders = () => {
             defaultValue="all"
           >
             <SelectItem value="all" className="cursor-pointer" defaultChecked>
-                  All
+              All
             </SelectItem>
-            {
-              customers && customers.map((customer, id)=>(
-                <SelectItem value={customer._id} className="cursor-pointer" key={id}>
-                  {customer.firstName+" "+customer.lastName}
+            {customers &&
+              customers.map((customer, id) => (
+                <SelectItem
+                  value={customer._id}
+                  className="cursor-pointer"
+                  key={id}
+                >
+                  {customer.firstName + " " + customer.lastName}
                 </SelectItem>
-              ))
-            }
+              ))}
           </Select>
         </div>
       </div>
@@ -329,9 +354,13 @@ const Orders = () => {
         <TableBody>
           {filteredOrders.map((order) => (
             <TableRow key={order._id}>
-              <TableCell>{format(new Date(order.orderedAt), "MMM dd, yyyy, hh:mm:ss a")}</TableCell>
+              <TableCell>
+                {format(new Date(order.orderedAt), "MMM dd, yyyy, hh:mm:ss a")}
+              </TableCell>
               <TableCell>{order._id}</TableCell>
-              <TableCell>{order.userId.firstName+" "+order.userId.lastName}</TableCell>
+              <TableCell>
+                {order.userId.firstName + " " + order.userId.lastName}
+              </TableCell>
               <TableCell>&#8377;{order.paymentDetails.amount}</TableCell>
               <TableCell>
                 <Badge
@@ -372,7 +401,9 @@ const Orders = () => {
                   </Link>
                   {order.status === "placed" && (
                     <Badge
-                      onClick={() => handleUpdateStatus(order._id,"processing")}
+                      onClick={() =>
+                        handleUpdateStatus(order._id, "processing")
+                      }
                       className="px-3 py-1 flex items-center w-28 cursor-pointer hover:scale-105 transition-all"
                       color={"green"}
                       icon={HiMiniBolt}
@@ -382,7 +413,7 @@ const Orders = () => {
                   )}
                   {order.status === "processing" && (
                     <Badge
-                      onClick={() => handleUpdateStatus(order._id,"cancelled")}
+                      onClick={() => handleUpdateStatus(order._id, "cancelled")}
                       className="px-3 py-1 flex items-center w-28 cursor-pointer hover:scale-105 transition-all"
                       color={"red"}
                       icon={MdCancel}

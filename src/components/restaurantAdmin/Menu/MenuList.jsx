@@ -24,7 +24,7 @@ import {
 } from "../../../redux/slices/menuSlice";
 
 const MenuList = () => {
-  const [statusFilter, setStatusFilter] = useState("published");
+  const [statusFilter, setStatusFilter] = useState("all");
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [loading, setLoading] = useState(true);
   const Menu = useSelector(selectMenu);
@@ -67,7 +67,7 @@ const MenuList = () => {
           category: category,
           quantity: 1,
           discount: 0,
-          available: true,
+          available: menuObject[category][item].availability,
         });
       }
     }

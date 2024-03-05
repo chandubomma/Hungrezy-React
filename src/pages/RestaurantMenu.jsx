@@ -7,28 +7,28 @@ import RestaurantReviews from "@/components/Restaurant/RestaurantReviews";
 import BookTable from "@/components/Restaurant/BookTable";
 import { useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { selectUser } from '../redux/slices/userSlice';
+import { selectUser } from "../redux/slices/userSlice";
 import {
   addToCart,
   removeFromCart,
   selectCartItems,
 } from "../redux/slices/cartSlice";
-import {toast} from "sonner";
+import { toast } from "sonner";
 import { useParams } from "react-router";
 
 const RestaurantMenu = () => {
   const location = useLocation();
-  const [restaurant,setRestaurant] = useState(null)
+  const [restaurant, setRestaurant] = useState(null);
   const [foodItems, setFoodItems] = useState({});
   const [activeTab, setActiveTab] = useState("menu");
   const [isCategoryListVisible, setCategoryListVisible] = useState(false);
-  const [isTableBooked,setTableBooked] = useState(false);
+  const [isTableBooked, setTableBooked] = useState(false);
   const cartItems = useSelector(selectCartItems);
   const currentUser = useSelector(selectUser);
-  const {id} = useParams()
+  const { id } = useParams();
   const queryParams = new URLSearchParams(location.search);
-  const show = queryParams.get('show');
-  const orderId = queryParams.get('orderId');
+  const show = queryParams.get("show");
+  const orderId = queryParams.get("orderId");
   // const initialVisibility = Object.keys(foodItems).reduce(
   //   (acc, category, index) => {
   //     acc[category] = index < 4;
@@ -38,42 +38,45 @@ const RestaurantMenu = () => {
   // );
   const dispatch = useDispatch();
 
-  const [categoryVisibility, setCategoryVisibility] =
-    useState();
+  const [categoryVisibility, setCategoryVisibility] = useState();
   const categoryRefs = useRef({});
 
-  useEffect(()=>{
-    switch(show){
-      case 'booktable' : {
+  useEffect(() => {
+    switch (show) {
+      case "booktable": {
         setActiveTab(show);
         break;
       }
-      case 'reviews' : {
+      case "reviews": {
         setActiveTab(show);
         break;
       }
-      default : setActiveTab('menu');
+      default:
+        setActiveTab("menu");
     }
-  },[])
+  }, []);
 
   useEffect(() => {
-    fetchRestaurant()
-      .then((res) => {
-        setRestaurant(res)
-        if(res.menu_id)delete res.menu_id._id
-        setFoodItems(res.menu_id);
-        const initialVisibility = Object.keys(res.menu_id).reduce(
-          (acc, category, index) => {
-            acc[category] = index < 4;
-            return acc;
-          },
-          {}
-        );
-        setCategoryVisibility(initialVisibility);
-      })
-      .catch((error) => {
-        console.error('Error fetching menu items:', error);
-      });
+    fetchRestaurant().then((res) => {
+      setRestaurant(res);
+
+      fetchMenu(res.menu_id)
+        .then((response) => {
+          if (response._id) delete response._id;
+          setFoodItems(response);
+          const initialVisibility = Object.keys(response).reduce(
+            (acc, category, index) => {
+              acc[category] = index < 4;
+              return acc;
+            },
+            {}
+          );
+          setCategoryVisibility(initialVisibility);
+        })
+        .catch((error) => {
+          console.error("Error fetching menu items:", error);
+        });
+    });
   }, []);
 
   const toggleCategoryVisibility = (category) => {
@@ -83,27 +86,47 @@ const RestaurantMenu = () => {
     }));
   };
 
-  
-
   const fetchRestaurant = async () => {
     try {
-      const response = await fetch(`${
-        import.meta.env.VITE_HUNGREZY_API
-      }/api/restaurant/${id}`);
+      const response = await fetch(
+        `${import.meta.env.VITE_HUNGREZY_API}/api/restaurant/${id}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${currentUser.token}`,
+          },
+        }
+      );
       if (!response.ok) {
-        throw new Error('Failed to fetch restaurant');
+        throw new Error("Failed to fetch restaurant");
       }
       const result = await response.json();
-      console.log(result)
+      console.log(result);
       const data = result.data;
-      console.log(data)
-      return data; 
+      console.log(data);
+      return data;
     } catch (error) {
-      console.error('Error fetching restaurant:', error);
+      console.error("Error fetching restaurant:", error);
       throw error;
     }
   };
-  
+
+  const fetchMenu = async (id) => {
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_HUNGREZY_API}/api/menu/${id}?availability=true`,
+      );
+      if (!response.ok) {
+        throw new Error("Failed to fetch menu");
+      }
+      const result = await response.json();
+      return result.data;
+    } catch (error) {
+      console.error("Error fetching menu:", error);
+      throw error;
+    }
+  };
 
   const handleIncrement = (category, itemName, price, veg_or_non_veg) => {
     dispatch(
@@ -203,7 +226,7 @@ const RestaurantMenu = () => {
     setCategoryListVisible((prevVisible) => !prevVisible);
   };
 
-  if(!restaurant)return <div>Loading...</div>
+  if (!restaurant) return <div>Loading...</div>;
 
   return (
     <div className="container w-[55rem] mx-auto p-4 mt-28">
@@ -287,15 +310,28 @@ const RestaurantMenu = () => {
 
       {activeTab == "booktable" && (
         <div>
-          {
-            isTableBooked? 
+          {isTableBooked ? (
             <div>
-              <h3 className="mt-5 text-lg text-green-500 font-semibold">Your table booking at {restaurant.name} is Successfull!</h3>
-              <h5 className="mt-2 text-gray-500">Go to Account/Table Bookings for Details.</h5>
-              <button onClick={()=>setTableBooked(false)} className="w-full py-2 mt-5 bg-orange-500 text-white font-bold rounded">Book another Table</button>
-            </div>:
-            <BookTable currentUser={currentUser} restaurant={restaurant} setTableBooked={setTableBooked}/>
-          }
+              <h3 className="mt-5 text-lg text-green-500 font-semibold">
+                Your table booking at {restaurant.name} is Successfull!
+              </h3>
+              <h5 className="mt-2 text-gray-500">
+                Go to Account/Table Bookings for Details.
+              </h5>
+              <button
+                onClick={() => setTableBooked(false)}
+                className="w-full py-2 mt-5 bg-orange-500 text-white font-bold rounded"
+              >
+                Book another Table
+              </button>
+            </div>
+          ) : (
+            <BookTable
+              currentUser={currentUser}
+              restaurant={restaurant}
+              setTableBooked={setTableBooked}
+            />
+          )}
         </div>
       )}
 

@@ -58,7 +58,7 @@ const RestaurantDetails = () => {
     setRestaurant(result.data);
 
     const url = `${import.meta.env.VITE_HUNGREZY_API}/api/restaurant/menu/${
-      result.data.menu_id._id
+      result.data.menu_id
     }`;
     try {
       const response = await fetch(url);
@@ -84,12 +84,13 @@ const RestaurantDetails = () => {
           category: category,
           quantity: 1,
           discount: 0,
-          available: true,
+          available: menuObject[category][item].availability,
         });
       }
     }
     return menuArray;
   };
+
 
   if (loading || !restaurant) {
     return <Skeleton />;

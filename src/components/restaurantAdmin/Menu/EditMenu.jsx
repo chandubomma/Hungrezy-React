@@ -73,7 +73,7 @@ const EditMenu = () => {
       price: result.data[category][item].price,
       category: category,
       veg_or_non_veg: result.data[category][item].veg_or_non_veg,
-      available: result.data[category][item].available,
+      available: result.data[category][item].availability,
     });
     setLoading(false);
   };

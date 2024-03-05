@@ -6,7 +6,7 @@ import { RiDraftLine } from "react-icons/ri";
 import error from "../../../assets/error.png";
 
 const MenuItemsTable = ({ Menu }) => {
-  const [statusFilter, setStatusFilter] = useState("published");
+  const [statusFilter, setStatusFilter] = useState("all");
   const [categoryFilter, setCategoryFilter] = useState("all");
 
   const filteredMenuItems = Menu.filter((menuItem) => {
