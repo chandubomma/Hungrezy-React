@@ -2,17 +2,35 @@ import { FaQuoteLeft, FaQuoteRight } from "react-icons/fa";
 import { motion, useAnimation } from "framer-motion";
 import testimonialsData from "./../../data/testimonals";
 import { useInView } from "react-intersection-observer";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const Testimonials = () => {
   const controls = useAnimation();
   const [ref, inView] = useInView({ triggerOnce: true });
+  const [testimonialsData, setTestimonialsData] = useState([]);
 
   useEffect(() => {
+    fetchTopReviews();
     if (inView) {
       controls.start("visible");
     }
   }, [controls, inView]);
+
+  const fetchTopReviews = async () => {
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_HUNGREZY_API}/api/review/top`
+      );
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      setTestimonialsData(result.data);
+    } catch (error) {
+      console.error("Error fetching top reviews:", error);
+    }
+  };
 
   const containerVariants = {
     hidden: { opacity: 0, y: 50 },
@@ -39,9 +57,9 @@ const Testimonials = () => {
         What our customers say
       </p>
       <div className="grid md:grid-cols-2 grid-cols-1 gap-x-10 justify-center mx-auto">
-        {testimonialsData.map((testimonial) => (
+        {testimonialsData.map((testimonial, id) => (
           <motion.div
-            key={testimonial.id}
+            key={id}
             className="md:w-[450px] w-[400px] bg-white rounded-lg shadow-md p-5 my-5 relative"
             variants={itemVariants}
             whileHover={{ scale: 1.05 }}
@@ -49,7 +67,7 @@ const Testimonials = () => {
             <FaQuoteLeft className="w-10 h-10 text-orange-300 absolute -left-2 -top-2" />
             <FaQuoteRight className="w-10 h-10 text-orange-300 absolute -right-2 -bottom-2" />
             <p className="text-gray-800 text-center font-light mt-2">
-              {testimonial.review}
+              {testimonial.message}
             </p>
             <p className="text-gray-600 text-center font-semibold mt-2">
               - {testimonial.name}

@@ -140,7 +140,7 @@ const Order = () => {
             </div>
           </div>
         </div>
-        <div className="border-t mt-4 pt-4 h-[15rem] overflow-y-scroll">
+        <div className="border-t mt-4 pt-4 h-[15rem] overflow-y-auto">
           <h2 className="text-lg font-semibold mb-2 text-tremor-background-emphasis">Items Ordered</h2>
           <ul>
             {order.foodItems.map((item, index) => (

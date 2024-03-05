@@ -6,7 +6,6 @@ import uliana from "../../assets/ulianaAsset.png";
 import jonathan from "../../assets/jonathanAsset.png";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
-import { ordersData } from "../../data/orderItems";
 import Counter from "../Counter";
 
 const Welcome = () => {
@@ -21,8 +20,25 @@ const Welcome = () => {
 
   useEffect(() => {
     controls.start("visible");
-    setCount(ordersData.length);
+    fetchOrders();
   }, [controls]);
+
+  const fetchOrders = async () => {
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_HUNGREZY_API}/api/order/count`
+      );
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      const { deliveredOrders } = result.data;
+      setCount(deliveredOrders);
+    } catch (error) {
+      console.error("Error fetching orders count:", error);
+    }
+  };
 
   return (
     <motion.div
