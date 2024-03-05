@@ -45,12 +45,12 @@ const Profile = () => {
     switch (activeTab) {
       case "orders":
         return <OrdersList />;
-      case "bookings":
-        return <TableBookings />;
+      // case "bookings":
+      //   return <TableBookings />;
       case "account":
         return <Account user={user} />;
-      case "address":
-        return <p>Address Book content goes here.</p>;
+      // case "address":
+      //   return <p>Address Book content goes here.</p>;
       case "help":
         return <p>Help content goes here.</p>;
       default:
@@ -99,7 +99,7 @@ const Profile = () => {
                     Your Orders
                   </div>
                 </li>
-                <li
+                {/* <li
                   className={`mb-2 cursor-pointer w-full py-6 px-3 font-bold  text-lg ${
                     activeTab === "bookings" ? "bg-white rounded-l-3xl" : ""
                   }`}
@@ -109,7 +109,7 @@ const Profile = () => {
                     <MdRestaurantMenu className="mr-3 text-2xl" />
                     Table Bookings
                   </div>
-                </li>
+                </li> */}
                 <li
                   className={`mb-2 cursor-pointer w-full py-6 px-3 font-bold  text-lg ${
                     activeTab === "account" ? "bg-white rounded-l-3xl" : ""
@@ -121,7 +121,7 @@ const Profile = () => {
                     Account
                   </div>
                 </li>
-                <li
+                {/* <li
                   className={`mb-2 cursor-pointer w-full py-6 px-3 font-bold  text-lg ${
                     activeTab === "address" ? "bg-white rounded-l-3xl" : ""
                   }`}
@@ -131,7 +131,7 @@ const Profile = () => {
                     <FaAddressBook className="mr-3 text-2xl" />
                     Address Book
                   </div>
-                </li>
+                </li> */}
                 <li
                   className={`mb-2 cursor-pointer w-full py-6 px-3 font-bold  text-lg ${
                     activeTab === "help" ? "bg-whit rounded-l-3xl" : ""
