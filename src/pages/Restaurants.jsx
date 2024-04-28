@@ -31,12 +31,11 @@ const Restaurants = () => {
         }
 
         const result = await response.json();
-        console.log(result)
-        const restaurants = result.data
+        console.log(result);
+        const restaurants = result.data;
         setData(restaurants);
         console.log(restaurants);
         setVisibleRestaurants(0);
-        setLoading(false);
       } catch (error) {
         setError(error.message);
       } finally {
@@ -132,7 +131,7 @@ const Restaurants = () => {
           />
         </div>
       )}
-      {data == null && !loading && (
+      {data == null && (
         <div className="h-fit">
           <NoDelivery />
         </div>
