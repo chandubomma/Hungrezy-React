@@ -30,7 +30,6 @@ import { CiViewList } from "react-icons/ci";
 import { RiPlayListAddFill } from "react-icons/ri";
 import { MdOutlineEditNote, MdReviews } from "react-icons/md";
 import { useAuth } from "../../AuthContext";
-import { useNavigate } from "react-router-dom";
 import useWebSocket from "../../hooks/useWebsocket";
 
 const RestaurantNavbar = () => {

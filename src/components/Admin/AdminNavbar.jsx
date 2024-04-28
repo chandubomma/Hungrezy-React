@@ -146,15 +146,6 @@ const AdminNavbar = () => {
                       >
                         All
                       </SelectItem>
-                      <SelectItem value="customers" className="cursor-pointer">
-                        Customers
-                      </SelectItem>
-                      <SelectItem
-                        value="restaurants"
-                        className="cursor-pointer"
-                      >
-                        Restaurants
-                      </SelectItem>
                     </Select>
                   </div>
                 </PopoverHeader>

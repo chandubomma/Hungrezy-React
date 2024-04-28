@@ -36,6 +36,7 @@ const Restaurants = () => {
         setData(restaurants);
         console.log(restaurants);
         setVisibleRestaurants(0);
+        setLoading(false);
       } catch (error) {
         setError(error.message);
       } finally {
@@ -131,7 +132,7 @@ const Restaurants = () => {
           />
         </div>
       )}
-      {data == null && (
+      {data == null && !loading && (
         <div className="h-fit">
           <NoDelivery />
         </div>

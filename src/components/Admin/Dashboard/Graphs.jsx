@@ -58,14 +58,18 @@ const Graphs = ({ customers, restaurants, loading }) => {
     if (customerIndex !== -1 && customerIndex > 0) {
       const previousMonthCustomers = customersData[customerIndex - 1].customers;
       const currentMonthCustomers = customersData[customerIndex].customers;
-      const change = currentMonthCustomers - previousMonthCustomers;
-      let percentage;
-      if (currentMonthCustomers > previousMonthCustomers) {
-        percentage = (change / currentMonthCustomers) * 100;
+      if (currentMonthCustomers !== 0 && previousMonthCustomers !== 0) {
+        const change = currentMonthCustomers - previousMonthCustomers;
+        let percentage;
+        if (currentMonthCustomers > previousMonthCustomers) {
+          percentage = (change / currentMonthCustomers) * 100;
+        } else {
+          percentage = (change / previousMonthCustomers) * 100;
+        }
+        setCustomerPercentageChange(percentage.toFixed(2));
       } else {
-        percentage = (change / previousMonthCustomers) * 100;
+        setCustomerPercentageChange(0); // Handle division by zero
       }
-      setCustomerPercentageChange(percentage.toFixed(2));
     }
 
     let totalRestaurants = 0;
@@ -84,14 +88,18 @@ const Graphs = ({ customers, restaurants, loading }) => {
         restaurantsData[restaurantIndex - 1].restaurants;
       const currentMonthRestaurants =
         restaurantsData[restaurantIndex].restaurants;
-      const change = currentMonthRestaurants - previousMonthRestaurants;
-      let percentage;
-      if (currentMonthRestaurants > previousMonthRestaurants) {
-        percentage = (change / currentMonthRestaurants) * 100;
+      if (currentMonthRestaurants !== 0 && previousMonthRestaurants !== 0) {
+        const change = currentMonthRestaurants - previousMonthRestaurants;
+        let percentage;
+        if (currentMonthRestaurants > previousMonthRestaurants) {
+          percentage = (change / currentMonthRestaurants) * 100;
+        } else {
+          percentage = (change / previousMonthRestaurants) * 100;
+        }
+        setRestaurantsPercentageChange(percentage.toFixed(2));
       } else {
-        percentage = (change / previousMonthRestaurants) * 100;
+        setRestaurantsPercentageChange(0); // Handle division by zero
       }
-      setRestaurantsPercentageChange(percentage.toFixed(2));
     }
   }, [customersData, restaurantsData]);
 
