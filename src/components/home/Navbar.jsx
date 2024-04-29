@@ -34,10 +34,10 @@ const Navbar = () => {
     setShowDropdown(!showDropdown);
   };
 
-  const handleLogout = () => {
+  const handleLogout = (e) => {
     signout();
     setShowDropdown(false);
-    window.location.reload();
+    e.preventDefault();
 
     // Implement your logout logic here
   };
